@@ -1,0 +1,26 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Frontend dependencies and build output
+node_modules/
+frontend/dist/
+
+# Local environment settings
+.env
+.env.*
+!.env.example
+!.env.template
+
+# OpenFOAM generated output
+processor[0-9]*/
+postProcessing/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
