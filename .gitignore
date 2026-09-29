@@ -24,3 +24,8 @@ postProcessing/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Generated CFD cases, logs and local reports (templates belong in source)
+/backend/runs/
+/runs/
+/validation-output/
