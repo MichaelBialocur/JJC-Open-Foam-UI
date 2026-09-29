@@ -6,6 +6,8 @@ A straight-pipe flow workflow: typed inputs → axisymmetric mesh → mesh check
 
 ## Next: heat transfer in the pipe
 
+First strengthen the flow baseline: the initial turbulent study still changes Darcy f by 3.74% from medium to fine. Extend mesh/angular sensitivity and compare corrected experimental data before claiming mesh independence or general model accuracy.
+
 Add coupled fluid/solid regions, conduction through aluminium/copper walls, explicit heated surface selection, coolant heating and energy conservation. Validate temperature and Nusselt-number outputs against appropriate research data and analytical limiting cases. Review field visualization while this is developed.
 
 ## Geometry builder

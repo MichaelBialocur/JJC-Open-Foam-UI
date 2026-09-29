@@ -41,7 +41,7 @@ An unavailable OpenFOAM installation produces an explicit error. The software ne
 - Uniform velocity inlet, no-slip wall, zero gauge pressure at the outlet.
 - Constant density and dynamic viscosity entered by the user. Temperature is recorded; properties are **not** automatically temperature-dependent.
 - Laminar below Re 2300; k–ω SST RANS from Re 4000. The transition interval is rejected explicitly. Regime cutoffs are application policy, not a universal prediction of transition.
-- SST uses radial grading, zero wall k, `omegaWallFunction`, and `nutLowReWallFunction`. The UI estimates y+ from the developed pressure gradient and first wall-cell position; it is a screening estimate, not an exported turbulence-model y+ field.
+- SST uses radial grading, near-zero wall k (1e-12 m²/s²), `omegaWallFunction`, and `nutLowReWallFunction`. The UI estimates y+ from the developed pressure gradient and first wall-cell position; it is a screening estimate, not an exported turbulence-model y+ field.
 - Material and wall thickness are stored for the thermal stage. **Solid conduction and heat transfer are not solved. Nonzero heat input is rejected.**
 - No compressibility, cavitation, roughness, multiphase flow, gravity, bends, manifolds, or CAD meshing yet. The user must check that constant-property incompressible assumptions fit the selected fluid and conditions.
 - Preview values use analytical geometry relations. Simulation results come from the written OpenFOAM fields.
