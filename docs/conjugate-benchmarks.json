@@ -1,0 +1,1725 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-30",
+  "openfoam": "Foundation 14 \u00b7 14-7b05503f98a8",
+  "baseline_flow_commit": "33b848481bda69840493adb9d02ad2808734a08f",
+  "method": "Actual native foamMultiRun fluid/solid energy, frozen computed flow. No reference temperatures used by solver. All powers full-pipe equivalents.",
+  "qualification": "Analytical solid resistance verification; no thermal experimental validation.",
+  "mesh_study": [
+    {
+      "mesh": "coarse",
+      "case_id": "e5f49ad6-371e-4624-a0a3-d5ebb2e0749b",
+      "reused_flow_case_id": "0e7eb2f7-600b-4add-8dbf-301f78cc705b",
+      "inputs": {
+        "geometry_type": "pipe",
+        "length_mm": 1000.0,
+        "inner_diameter_mm": 10.0,
+        "wall_thickness_mm": 2.0,
+        "material": "aluminium",
+        "thermal_mode": "conjugate",
+        "solid_conductivity_w_m_k": null,
+        "inlet_velocity_m_s": 0.010040080160320642,
+        "inlet_temperature_c": 20.0,
+        "applied_heat_w": 10.0,
+        "specific_heat_j_kg_k": 4182,
+        "thermal_conductivity_w_m_k": 0.6,
+        "turbulent_prandtl": 0.85,
+        "thermal_iterations": 1000,
+        "density_kg_m3": 998.0,
+        "dynamic_viscosity_pa_s": 0.001002,
+        "flow_model": "auto",
+        "mesh_level": "coarse",
+        "max_iterations": 2500,
+        "residual_tolerance": 1e-06,
+        "turbulence_intensity": 0.05,
+        "reference": "auto"
+      },
+      "thermal": {
+        "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+        "solution_iteration": 1000,
+        "mode": "conjugate",
+        "inlet_temperature_c": 20.0,
+        "outlet_bulk_temperature_c": 23.03812161841131,
+        "maximum_fluid_temperature_c": 24.16991495100001,
+        "applied_heat_w": 10.0,
+        "advected_heat_w": 9.99877478677406,
+        "inlet_conduction_loss_w": 0.001225174284227427,
+        "energy_balance_error_percent": 2.758664408020195e-09,
+        "net_kinetic_energy_transport_w": 3.921757812697347e-08,
+        "ideal_adiabatic_temperature_rise_k": 3.0384938987046533,
+        "wall_heat_flux_w_m2": 318.30988618379064,
+        "prandtl": 6.98394,
+        "developed_nusselt": 4.399689342385626,
+        "nusselt_drift_percent": 0.3419904215081827,
+        "validation": {
+          "status": "within_project_target",
+          "checks": {
+            "flow_converged": true,
+            "temperature_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "energy_balance_below_0_5_percent": true,
+            "solid_energy_balance_below_0_5_percent": true,
+            "local_interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "kind": "analytical",
+            "applicable": true,
+            "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+            "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+            "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+            "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+          },
+          "nusselt_error_percent": null,
+          "project_target_percent": 2,
+          "wall_resistance_error_percent": -0.14488030695607446
+        },
+        "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+        "solid": {
+          "conductivity_w_m_k": 200.0,
+          "radial_cells": 8,
+          "maximum_temperature_c": 24.172409566,
+          "mean_inner_temperature_c": 22.664115608325062,
+          "mean_outer_temperature_c": 22.66678929005002,
+          "mean_wall_drop_k": 0.002673681725000658,
+          "analytical_mean_wall_drop_k": 0.002677560983572594,
+          "resistance_error_percent": -0.14488030695607446,
+          "interface_fluid_heat_w": 9.999999998043549,
+          "interface_solid_heat_w": 9.999998282954463,
+          "interface_energy_error_percent": 1.715089085863042e-05,
+          "interface_local_flux_error_percent": 0.00041307383724885094,
+          "interface_temperature_jump_k": 0.0,
+          "solid_energy_error_percent": 1.717045536864248e-05,
+          "saved_field_change_over_temperature_scale": 3.2912564624353113e-10
+        }
+      },
+      "convergence": {
+        "iteration": 1000,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 1000,
+          "h": 4.63034511289e-12,
+          "e": 9.34218520498e-11
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.2912564624353113e-10,
+        "compared_iterations": [
+          950,
+          1000
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      }
+    },
+    {
+      "mesh": "medium",
+      "case_id": "dc058800-ebdc-4b18-96fd-f5f788321131",
+      "reused_flow_case_id": "5f4cf813-2af9-4569-bef6-5b3055d62bae",
+      "inputs": {
+        "geometry_type": "pipe",
+        "length_mm": 1000.0,
+        "inner_diameter_mm": 10.0,
+        "wall_thickness_mm": 2.0,
+        "material": "aluminium",
+        "thermal_mode": "conjugate",
+        "solid_conductivity_w_m_k": null,
+        "inlet_velocity_m_s": 0.010040080160320642,
+        "inlet_temperature_c": 20.0,
+        "applied_heat_w": 10.0,
+        "specific_heat_j_kg_k": 4182,
+        "thermal_conductivity_w_m_k": 0.6,
+        "turbulent_prandtl": 0.85,
+        "thermal_iterations": 1000,
+        "density_kg_m3": 998.0,
+        "dynamic_viscosity_pa_s": 0.001002,
+        "flow_model": "auto",
+        "mesh_level": "medium",
+        "max_iterations": 2500,
+        "residual_tolerance": 1e-06,
+        "turbulence_intensity": 0.05,
+        "reference": "auto"
+      },
+      "thermal": {
+        "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+        "solution_iteration": 1000,
+        "mode": "conjugate",
+        "inlet_temperature_c": 20.0,
+        "outlet_bulk_temperature_c": 23.037894908433657,
+        "maximum_fluid_temperature_c": 24.16868398700001,
+        "applied_heat_w": 10.0,
+        "advected_heat_w": 9.99802866061268,
+        "inlet_conduction_loss_w": 0.0019712997742950323,
+        "energy_balance_error_percent": 6.039613253960852e-10,
+        "net_kinetic_energy_transport_w": 3.9552627112103415e-08,
+        "ideal_adiabatic_temperature_rise_k": 3.0384938987046533,
+        "wall_heat_flux_w_m2": 318.30988618379064,
+        "prandtl": 6.98394,
+        "developed_nusselt": 4.385982169972318,
+        "nusselt_drift_percent": 0.3214630132520481,
+        "validation": {
+          "status": "within_project_target",
+          "checks": {
+            "flow_converged": true,
+            "temperature_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "energy_balance_below_0_5_percent": true,
+            "solid_energy_balance_below_0_5_percent": true,
+            "local_interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "kind": "analytical",
+            "applicable": true,
+            "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+            "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+            "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+            "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+          },
+          "nusselt_error_percent": null,
+          "project_target_percent": 2,
+          "wall_resistance_error_percent": -0.1789164131776544
+        },
+        "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+        "solid": {
+          "conductivity_w_m_k": 200.0,
+          "radial_cells": 16,
+          "maximum_temperature_c": 24.17116488000005,
+          "mean_inner_temperature_c": 22.66445185774586,
+          "mean_outer_temperature_c": 22.667124628133365,
+          "mean_wall_drop_k": 0.0026727703875001414,
+          "analytical_mean_wall_drop_k": 0.002677560983572594,
+          "resistance_error_percent": -0.1789164131776544,
+          "interface_fluid_heat_w": 9.999999995980504,
+          "interface_solid_heat_w": 9.999998792800138,
+          "interface_energy_error_percent": 1.2031803660050853e-05,
+          "interface_local_flux_error_percent": 0.0009404605962724717,
+          "interface_temperature_jump_k": 0.0,
+          "solid_energy_error_percent": 1.2071998618523592e-05,
+          "saved_field_change_over_temperature_scale": 3.2912564624353113e-10
+        }
+      },
+      "convergence": {
+        "iteration": 1000,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 1000,
+          "h": 5.24086555064e-12,
+          "e": 2.20700271967e-10
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.2912564624353113e-10,
+        "compared_iterations": [
+          950,
+          1000
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      }
+    },
+    {
+      "mesh": "fine",
+      "case_id": "f6a073e7-c2a4-4662-b979-06e20100853a",
+      "reused_flow_case_id": "b3c2da34-2115-49d8-a73e-2ff7632cd763",
+      "inputs": {
+        "geometry_type": "pipe",
+        "length_mm": 1000.0,
+        "inner_diameter_mm": 10.0,
+        "wall_thickness_mm": 2.0,
+        "material": "aluminium",
+        "thermal_mode": "conjugate",
+        "solid_conductivity_w_m_k": null,
+        "inlet_velocity_m_s": 0.010040080160320642,
+        "inlet_temperature_c": 20.0,
+        "applied_heat_w": 10.0,
+        "specific_heat_j_kg_k": 4182.0,
+        "thermal_conductivity_w_m_k": 0.6,
+        "turbulent_prandtl": 0.85,
+        "thermal_iterations": 2000,
+        "density_kg_m3": 998.0,
+        "dynamic_viscosity_pa_s": 0.001002,
+        "flow_model": "auto",
+        "mesh_level": "fine",
+        "max_iterations": 2500,
+        "residual_tolerance": 1e-06,
+        "turbulence_intensity": 0.05,
+        "reference": "auto"
+      },
+      "thermal": {
+        "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+        "solution_iteration": 2000,
+        "mode": "conjugate",
+        "inlet_temperature_c": 20.0,
+        "outlet_bulk_temperature_c": 23.037585438165138,
+        "maximum_fluid_temperature_c": 24.16694621900001,
+        "applied_heat_w": 10.0,
+        "advected_heat_w": 9.997010161699652,
+        "inlet_conduction_loss_w": 0.002989798373740811,
+        "energy_balance_error_percent": 2.900844009445791e-09,
+        "net_kinetic_energy_transport_w": 3.963652137356821e-08,
+        "ideal_adiabatic_temperature_rise_k": 3.0384938987046533,
+        "wall_heat_flux_w_m2": 318.30988618379064,
+        "prandtl": 6.98394,
+        "developed_nusselt": 4.382365776381632,
+        "nusselt_drift_percent": 0.31168525201166036,
+        "validation": {
+          "status": "within_project_target",
+          "checks": {
+            "flow_converged": true,
+            "temperature_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "energy_balance_below_0_5_percent": true,
+            "solid_energy_balance_below_0_5_percent": true,
+            "local_interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "kind": "analytical",
+            "applicable": true,
+            "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+            "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+            "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+            "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+          },
+          "nusselt_error_percent": null,
+          "project_target_percent": 2,
+          "wall_resistance_error_percent": -0.18742719040146794
+        },
+        "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+        "solid": {
+          "conductivity_w_m_k": 200.0,
+          "radial_cells": 32,
+          "maximum_temperature_c": 24.169420056000035,
+          "mean_inner_temperature_c": 22.66391182800629,
+          "mean_outer_temperature_c": 22.66658437051251,
+          "mean_wall_drop_k": 0.0026725425062497977,
+          "analytical_mean_wall_drop_k": 0.002677560983572594,
+          "resistance_error_percent": -0.18742719040146794,
+          "interface_fluid_heat_w": 10.000000003013014,
+          "interface_solid_heat_w": 10.000005034247227,
+          "interface_energy_error_percent": 5.031234213248582e-05,
+          "interface_local_flux_error_percent": 0.0019336264144786603,
+          "interface_temperature_jump_k": 0.0,
+          "solid_energy_error_percent": 5.0342472270870076e-05,
+          "saved_field_change_over_temperature_scale": 3.2912564624353113e-10
+        }
+      },
+      "convergence": {
+        "iteration": 2000,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 2000,
+          "h": 6.8512359644e-12,
+          "e": 5.16240005257e-10
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.2912564624353113e-10,
+        "compared_iterations": [
+          1950,
+          2000
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      }
+    }
+  ],
+  "sensitivity": {
+    "copper": {
+      "mesh": "medium",
+      "case_id": "8c5132f7-1df3-43a8-ad1c-9b51bdd23162",
+      "reused_flow_case_id": "5f4cf813-2af9-4569-bef6-5b3055d62bae",
+      "inputs": {
+        "geometry_type": "pipe",
+        "length_mm": 1000.0,
+        "inner_diameter_mm": 10.0,
+        "wall_thickness_mm": 2.0,
+        "material": "copper",
+        "thermal_mode": "conjugate",
+        "solid_conductivity_w_m_k": null,
+        "inlet_velocity_m_s": 0.010040080160320642,
+        "inlet_temperature_c": 20.0,
+        "applied_heat_w": 10.0,
+        "specific_heat_j_kg_k": 4182,
+        "thermal_conductivity_w_m_k": 0.6,
+        "turbulent_prandtl": 0.85,
+        "thermal_iterations": 2000,
+        "density_kg_m3": 998.0,
+        "dynamic_viscosity_pa_s": 0.001002,
+        "flow_model": "auto",
+        "mesh_level": "medium",
+        "max_iterations": 2500,
+        "residual_tolerance": 1e-06,
+        "turbulence_intensity": 0.05,
+        "reference": "auto"
+      },
+      "thermal": {
+        "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+        "solution_iteration": 2000,
+        "mode": "conjugate",
+        "inlet_temperature_c": 20.0,
+        "outlet_bulk_temperature_c": 23.037747410769896,
+        "maximum_fluid_temperature_c": 24.129806004000045,
+        "applied_heat_w": 10.0,
+        "advected_heat_w": 9.997543230433351,
+        "inlet_conduction_loss_w": 0.0024567302393288036,
+        "energy_balance_error_percent": 2.2530777243900957e-09,
+        "net_kinetic_energy_transport_w": 3.9552627112103415e-08,
+        "ideal_adiabatic_temperature_rise_k": 3.0384938987046533,
+        "wall_heat_flux_w_m2": 318.30988618379064,
+        "prandtl": 6.98394,
+        "heat_input_boundary": "solid outer wall",
+        "developed_nusselt": 4.383267894659347,
+        "nusselt_drift_percent": 0.5769144801651243,
+        "validation": {
+          "status": "within_project_target",
+          "checks": {
+            "flow_converged": true,
+            "temperature_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "energy_balance_below_0_5_percent": true,
+            "solid_energy_balance_below_0_5_percent": true,
+            "local_interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "kind": "analytical",
+            "applicable": true,
+            "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+            "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+            "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+            "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+          },
+          "nusselt_error_percent": null,
+          "project_target_percent": 2,
+          "wall_resistance_error_percent": -0.1789137809220298
+        },
+        "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+        "solid": {
+          "conductivity_w_m_k": 391.1,
+          "radial_cells": 16,
+          "maximum_temperature_c": 24.131043087000023,
+          "mean_inner_temperature_c": 22.67823389613335,
+          "mean_outer_temperature_c": 22.679600692583335,
+          "mean_wall_drop_k": 0.001366796450002757,
+          "analytical_mean_wall_drop_k": 0.0013692462201854228,
+          "resistance_error_percent": -0.1789137809220298,
+          "interface_fluid_heat_w": 9.999999986867232,
+          "interface_solid_heat_w": 10.000006140330619,
+          "interface_energy_error_percent": 6.153463386837643e-05,
+          "interface_local_flux_error_percent": 0.001881505844351688,
+          "interface_temperature_jump_k": 9.999894245993346e-10,
+          "solid_energy_error_percent": 6.140330619075485e-05,
+          "saved_field_change_over_temperature_scale": 3.2912564624353113e-10
+        },
+        "outer_wall_heat_flux_w_m2": 227.36420441699335
+      },
+      "convergence": {
+        "iteration": 2000,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 2000,
+          "h": 7.99479625493e-12,
+          "e": 3.58185091806e-10
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.2912564624353113e-10,
+        "compared_iterations": [
+          1950,
+          2000
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      }
+    },
+    "thicker_wall": {
+      "mesh": "medium",
+      "case_id": "6b5aabc8-70cf-4262-aa50-fe9b46a1b841",
+      "reused_flow_case_id": "5f4cf813-2af9-4569-bef6-5b3055d62bae",
+      "inputs": {
+        "geometry_type": "pipe",
+        "length_mm": 1000.0,
+        "inner_diameter_mm": 10.0,
+        "wall_thickness_mm": 4.0,
+        "material": "aluminium",
+        "thermal_mode": "conjugate",
+        "solid_conductivity_w_m_k": null,
+        "inlet_velocity_m_s": 0.010040080160320642,
+        "inlet_temperature_c": 20.0,
+        "applied_heat_w": 10.0,
+        "specific_heat_j_kg_k": 4182,
+        "thermal_conductivity_w_m_k": 0.6,
+        "turbulent_prandtl": 0.85,
+        "thermal_iterations": 2000,
+        "density_kg_m3": 998.0,
+        "dynamic_viscosity_pa_s": 0.001002,
+        "flow_model": "auto",
+        "mesh_level": "medium",
+        "max_iterations": 2500,
+        "residual_tolerance": 1e-06,
+        "turbulence_intensity": 0.05,
+        "reference": "auto"
+      },
+      "thermal": {
+        "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+        "solution_iteration": 2000,
+        "mode": "conjugate",
+        "inlet_temperature_c": 20.0,
+        "outlet_bulk_temperature_c": 23.03770768041926,
+        "maximum_fluid_temperature_c": 24.117265497000005,
+        "applied_heat_w": 10.0,
+        "advected_heat_w": 9.99741247370998,
+        "inlet_conduction_loss_w": 0.002587486806917275,
+        "energy_balance_error_percent": 6.95248303372864e-10,
+        "net_kinetic_energy_transport_w": 3.9552627112103415e-08,
+        "ideal_adiabatic_temperature_rise_k": 3.0384938987046533,
+        "wall_heat_flux_w_m2": 318.30988618379064,
+        "prandtl": 6.98394,
+        "heat_input_boundary": "solid outer wall",
+        "developed_nusselt": 4.381255911418282,
+        "nusselt_drift_percent": 0.6936872123806307,
+        "validation": {
+          "status": "within_project_target",
+          "checks": {
+            "flow_converged": true,
+            "temperature_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "energy_balance_below_0_5_percent": true,
+            "solid_energy_balance_below_0_5_percent": true,
+            "local_interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "kind": "analytical",
+            "applicable": true,
+            "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+            "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+            "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+            "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+          },
+          "nusselt_error_percent": null,
+          "project_target_percent": 2,
+          "wall_resistance_error_percent": -0.15359193294854911
+        },
+        "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+        "solid": {
+          "conductivity_w_m_k": 200.0,
+          "radial_cells": 16,
+          "maximum_temperature_c": 24.121427526000048,
+          "mean_inner_temperature_c": 22.683588240245854,
+          "mean_outer_temperature_c": 22.688258513708377,
+          "mean_wall_drop_k": 0.004670273462500537,
+          "analytical_mean_wall_drop_k": 0.004677457660133586,
+          "resistance_error_percent": -0.15359193294854911,
+          "interface_fluid_heat_w": 9.999999999017819,
+          "interface_solid_heat_w": 9.999999531867656,
+          "interface_energy_error_percent": 4.6715016210896465e-06,
+          "interface_local_flux_error_percent": 0.0004663220007689659,
+          "interface_temperature_jump_k": 0.0,
+          "solid_energy_error_percent": 4.68132343556249e-06,
+          "saved_field_change_over_temperature_scale": 3.2912564624353113e-10
+        },
+        "outer_wall_heat_flux_w_m2": 176.83882565766146
+      },
+      "convergence": {
+        "iteration": 2000,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 2000,
+          "h": 2.50717871149e-12,
+          "e": 1.41311308585e-10
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.2912564624353113e-10,
+        "compared_iterations": [
+          1950,
+          2000
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      }
+    },
+    "turbulent_air": {
+      "mesh": "medium",
+      "case_id": "128d81ae-428e-4ba8-b641-a430b864d094",
+      "reused_flow_case_id": "e5af2669-3309-4ed9-a902-161b4b34932d",
+      "inputs": {
+        "geometry_type": "pipe",
+        "length_mm": 25872.0,
+        "inner_diameter_mm": 129.36,
+        "wall_thickness_mm": 2.0,
+        "material": "aluminium",
+        "thermal_mode": "conjugate",
+        "solid_conductivity_w_m_k": null,
+        "inlet_velocity_m_s": 5.132,
+        "inlet_temperature_c": 26.98,
+        "applied_heat_w": 100.0,
+        "specific_heat_j_kg_k": 1007.0,
+        "thermal_conductivity_w_m_k": 0.0263,
+        "turbulent_prandtl": 0.85,
+        "thermal_iterations": 2000,
+        "density_kg_m3": 1.162,
+        "dynamic_viscosity_pa_s": 1.8487e-05,
+        "flow_model": "auto",
+        "mesh_level": "medium",
+        "max_iterations": 4000,
+        "residual_tolerance": 1e-06,
+        "turbulence_intensity": 0.05,
+        "reference": "superpipe_41727"
+      },
+      "thermal": {
+        "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+        "solution_iteration": 2000,
+        "mode": "conjugate",
+        "inlet_temperature_c": 26.98,
+        "outlet_bulk_temperature_c": 28.245955814615513,
+        "maximum_fluid_temperature_c": 28.76426975000004,
+        "applied_heat_w": 100.0,
+        "advected_heat_w": 99.91499922237251,
+        "inlet_conduction_loss_w": 0.0010500681486878766,
+        "energy_balance_error_percent": 6.579570310805138e-08,
+        "net_kinetic_energy_transport_w": 0.0839506436830966,
+        "ideal_adiabatic_temperature_rise_k": 1.2670328023507709,
+        "wall_heat_flux_w_m2": 9.510867203751056,
+        "prandtl": 0.7078482509505705,
+        "heat_input_boundary": "solid outer wall",
+        "developed_nusselt": 89.58047608131255,
+        "nusselt_drift_percent": 5.740062730031383e-06,
+        "validation": {
+          "status": "within_project_target",
+          "checks": {
+            "flow_converged": true,
+            "temperature_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "energy_balance_below_0_5_percent": true,
+            "solid_energy_balance_below_0_5_percent": true,
+            "local_interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "kind": "analytical",
+            "applicable": true,
+            "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+            "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+            "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+            "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+          },
+          "nusselt_error_percent": null,
+          "project_target_percent": 2,
+          "wall_resistance_error_percent": -0.19012980723488448
+        },
+        "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+        "solid": {
+          "conductivity_w_m_k": 200.0,
+          "radial_cells": 16,
+          "maximum_temperature_c": 28.76436272000001,
+          "mean_inner_temperature_c": 28.1354494739208,
+          "mean_outer_temperature_c": 28.1355429636792,
+          "mean_wall_drop_k": 9.348975833584442e-05,
+          "analytical_mean_wall_drop_k": 9.36678488362779e-05,
+          "resistance_error_percent": -0.19012980723488448,
+          "interface_fluid_heat_w": 99.99999970195029,
+          "interface_solid_heat_w": 100.00070921047383,
+          "interface_energy_error_percent": 0.0007095085235420129,
+          "interface_local_flux_error_percent": 0.0860824811057258,
+          "interface_temperature_jump_k": 0.0,
+          "solid_energy_error_percent": 0.0007092104738291027,
+          "saved_field_change_over_temperature_scale": 3.9462308766898926e-09
+        },
+        "outer_wall_heat_flux_w_m2": 9.22559824143099
+      },
+      "convergence": {
+        "iteration": 2000,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 2000,
+          "h": 5.78881080939e-10,
+          "e": 8.78651404758e-09
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.9462308766898926e-09,
+        "compared_iterations": [
+          1950,
+          2000
+        ],
+        "temperature_scale_k": 1.2670328023507709
+      }
+    }
+  },
+  "initial_fine_attempt": {
+    "mesh": "fine",
+    "case_id": "f6a073e7-c2a4-4662-b979-06e20100853a",
+    "reused_flow_case_id": "b3c2da34-2115-49d8-a73e-2ff7632cd763",
+    "inputs": {
+      "geometry_type": "pipe",
+      "length_mm": 1000.0,
+      "inner_diameter_mm": 10.0,
+      "wall_thickness_mm": 2.0,
+      "material": "aluminium",
+      "thermal_mode": "conjugate",
+      "solid_conductivity_w_m_k": null,
+      "inlet_velocity_m_s": 0.010040080160320642,
+      "inlet_temperature_c": 20.0,
+      "applied_heat_w": 10.0,
+      "specific_heat_j_kg_k": 4182,
+      "thermal_conductivity_w_m_k": 0.6,
+      "turbulent_prandtl": 0.85,
+      "thermal_iterations": 1000,
+      "density_kg_m3": 998.0,
+      "dynamic_viscosity_pa_s": 0.001002,
+      "flow_model": "auto",
+      "mesh_level": "fine",
+      "max_iterations": 2500,
+      "residual_tolerance": 1e-06,
+      "turbulence_intensity": 0.05,
+      "reference": "auto"
+    },
+    "thermal": {
+      "source": "OpenFOAM foamMultiRun \u00b7 native fluid/solid energy on frozen computed flow",
+      "solution_iteration": 1000,
+      "mode": "conjugate",
+      "inlet_temperature_c": 20.0,
+      "outlet_bulk_temperature_c": 23.03755174548104,
+      "maximum_fluid_temperature_c": 24.16686482800003,
+      "applied_heat_w": 10.0,
+      "advected_heat_w": 9.996899275565852,
+      "inlet_conduction_loss_w": 0.0029897983471230054,
+      "energy_balance_error_percent": 0.001108864505035001,
+      "net_kinetic_energy_transport_w": 3.963652137356821e-08,
+      "ideal_adiabatic_temperature_rise_k": 3.0384938987046533,
+      "wall_heat_flux_w_m2": 318.30988618379064,
+      "prandtl": 6.98394,
+      "developed_nusselt": 4.382344691018843,
+      "nusselt_drift_percent": 0.3120808082948179,
+      "validation": {
+        "status": "not_qualified",
+        "checks": {
+          "flow_converged": true,
+          "temperature_converged": false,
+          "mass_balance_below_0_5_percent": true,
+          "energy_balance_below_0_5_percent": true,
+          "solid_energy_balance_below_0_5_percent": true,
+          "local_interface_flux_mismatch_below_0_5_percent": false,
+          "interface_temperature_continuity": true
+        },
+        "reference": {
+          "kind": "analytical",
+          "applicable": true,
+          "title": "Mean wall temperature drop \u00b7 cylindrical conduction",
+          "url": "https://archive.nptel.ac.in/content/storage2/courses/103103032/module2/lec6/1.html",
+          "citation": "NPTEL, Heat Transfer, Module 2, Lecture 6, \u00a72.3.1 (cylindrical conduction).",
+          "conditions": "Steady constant-k annulus, no generation, insulated axial ends. Axial averaging reduces the solid conduction equation to the radial cylinder equation.",
+          "caveat": "Analytical verification of the mean solid resistance, not experimental validation of conjugate heat transfer. Local inner-wall flux is not uniform: Nu = 48/11 is not a qualified reference for this mode."
+        },
+        "nusselt_error_percent": null,
+        "project_target_percent": 2,
+        "wall_resistance_error_percent": -0.1874470311776677
+      },
+      "limitations": "Steady radial and axial wall conduction with perfect contact, insulated solid ends and uniform outer heating. Constant properties and frozen flow; no buoyancy, radiation or phase change. Turbulent thermal closure is not experimentally validated.",
+      "solid": {
+        "conductivity_w_m_k": 200.0,
+        "radial_cells": 32,
+        "maximum_temperature_c": 24.169338685000014,
+        "mean_inner_temperature_c": 22.663895838152143,
+        "mean_outer_temperature_c": 22.666568380127103,
+        "mean_wall_drop_k": 0.0026725419750009156,
+        "analytical_mean_wall_drop_k": 0.002677560983572594,
+        "resistance_error_percent": -0.1874470311776677,
+        "interface_fluid_heat_w": 9.999888858009347,
+        "interface_solid_heat_w": 10.045987905905692,
+        "interface_energy_error_percent": 0.4609904789634456,
+        "interface_local_flux_error_percent": 2.295109935596373,
+        "interface_temperature_jump_k": 3.0000251172168646e-09,
+        "solid_energy_error_percent": 0.4598790590569201,
+        "saved_field_change_over_temperature_scale": 2.6918270281397465e-05
+      }
+    },
+    "convergence": {
+      "iteration": 1000,
+      "solver_converged": false,
+      "residuals": {
+        "iteration": 1000,
+        "h": 9.09352036466e-08,
+        "e": 1.34858053936e-07
+      },
+      "converged": false,
+      "saved_field_change_over_temperature_scale": 2.7009762964391327e-05,
+      "compared_iterations": [
+        950,
+        1000
+      ],
+      "temperature_scale_k": 3.0384938987046533
+    }
+  },
+  "end_to_end_case_id": "d165fb06-203c-4223-957f-2aee2fe9f357",
+  "profile_sampling": "Every fourth fine-mesh axial cell and the last cell, without interpolation; full profiles are produced by the validation script.",
+  "fine_temperature_profile": [
+    {
+      "x_m": 0.00104166667,
+      "bulk_temperature_c": 20.03705396001351,
+      "wall_temperature_c": 20.580838149000044,
+      "nusselt": 52.10295696219278,
+      "outer_wall_temperature_c": 20.58963011100002,
+      "inner_wall_heat_flux_w_m2": 1699.9658517291812
+    },
+    {
+      "x_m": 0.009375,
+      "bulk_temperature_c": 20.068534082989515,
+      "wall_temperature_c": 20.645510375000015,
+      "nusselt": 10.156358600238928,
+      "outer_wall_temperature_c": 20.648342745000036,
+      "inner_wall_heat_flux_w_m2": 351.59868752968816
+    },
+    {
+      "x_m": 0.01770833333,
+      "bulk_temperature_c": 20.09393039800341,
+      "wall_temperature_c": 20.71419477300003,
+      "nusselt": 8.271566419681593,
+      "outer_wall_temperature_c": 20.716818962000048,
+      "inner_wall_heat_flux_w_m2": 307.83347853281134
+    },
+    {
+      "x_m": 0.02604166667,
+      "bulk_temperature_c": 20.117786997214466,
+      "wall_temperature_c": 20.781562448000045,
+      "nusselt": 7.473671500865298,
+      "outer_wall_temperature_c": 20.784138745999996,
+      "inner_wall_heat_flux_w_m2": 297.6503801706118
+    },
+    {
+      "x_m": 0.034375,
+      "bulk_temperature_c": 20.14126828975401,
+      "wall_temperature_c": 20.845997898999997,
+      "nusselt": 6.993146551109912,
+      "outer_wall_temperature_c": 20.848564984000006,
+      "inner_wall_heat_flux_w_m2": 295.69664618181673
+    },
+    {
+      "x_m": 0.04270833333,
+      "bulk_temperature_c": 20.16475661292492,
+      "wall_temperature_c": 20.907181492999996,
+      "nusselt": 6.655627239904967,
+      "outer_wall_temperature_c": 20.909752190999995,
+      "inner_wall_heat_flux_w_m2": 296.4781953246518
+    },
+    {
+      "x_m": 0.05104166667,
+      "bulk_temperature_c": 20.188377252248756,
+      "wall_temperature_c": 20.965213403999996,
+      "nusselt": 6.397682371660806,
+      "outer_wall_temperature_c": 20.967792108000026,
+      "inner_wall_heat_flux_w_m2": 298.1970572236637
+    },
+    {
+      "x_m": 0.059375,
+      "bulk_temperature_c": 20.212163866673563,
+      "wall_temperature_c": 21.020337150000046,
+      "nusselt": 6.190015624643979,
+      "outer_wall_temperature_c": 21.022924990000035,
+      "inner_wall_heat_flux_w_m2": 300.15631507264504
+    },
+    {
+      "x_m": 0.06770833333,
+      "bulk_temperature_c": 20.236115771659854,
+      "wall_temperature_c": 21.072834047000015,
+      "nusselt": 6.016973534747082,
+      "outer_wall_temperature_c": 21.07543081700004,
+      "inner_wall_heat_flux_w_m2": 302.07070312565816
+    },
+    {
+      "x_m": 0.07604166667,
+      "bulk_temperature_c": 20.2602197519588,
+      "wall_temperature_c": 21.122980229999996,
+      "nusselt": 5.8693154257830775,
+      "outer_wall_temperature_c": 21.125585202000025,
+      "inner_wall_heat_flux_w_m2": 303.82880295139034
+    },
+    {
+      "x_m": 0.084375,
+      "bulk_temperature_c": 20.284458908448528,
+      "wall_temperature_c": 21.17102980100003,
+      "nusselt": 5.741155547492786,
+      "outer_wall_temperature_c": 21.17364208800001,
+      "inner_wall_heat_flux_w_m2": 305.3964838810617
+    },
+    {
+      "x_m": 0.09270833333,
+      "bulk_temperature_c": 20.308816316137552,
+      "wall_temperature_c": 21.21720958200001,
+      "nusselt": 5.628513474725041,
+      "outer_wall_temperature_c": 21.21982829700005,
+      "inner_wall_heat_flux_w_m2": 306.77422423537973
+    },
+    {
+      "x_m": 0.10104166667,
+      "bulk_temperature_c": 20.333276460092748,
+      "wall_temperature_c": 21.261719024,
+      "nusselt": 5.528559106123647,
+      "outer_wall_temperature_c": 21.264343352000026,
+      "inner_wall_heat_flux_w_m2": 307.97697547213403
+    },
+    {
+      "x_m": 0.109375,
+      "bulk_temperature_c": 20.35782568903028,
+      "wall_temperature_c": 21.304732302000048,
+      "nusselt": 5.439196855364869,
+      "outer_wall_temperature_c": 21.30736151900004,
+      "inner_wall_heat_flux_w_m2": 309.02468829536207
+    },
+    {
+      "x_m": 0.11770833333,
+      "bulk_temperature_c": 20.38245223429965,
+      "wall_temperature_c": 21.346401157000003,
+      "nusselt": 5.358820336852245,
+      "outer_wall_temperature_c": 21.34903463400002,
+      "inner_wall_heat_flux_w_m2": 309.93774543920813
+    },
+    {
+      "x_m": 0.12604166667,
+      "bulk_temperature_c": 20.407146052378266,
+      "wall_temperature_c": 21.386857837000036,
+      "nusselt": 5.286165100682434,
+      "outer_wall_temperature_c": 21.38949503500004,
+      "inner_wall_heat_flux_w_m2": 310.7350946756944
+    },
+    {
+      "x_m": 0.134375,
+      "bulk_temperature_c": 20.431898608176084,
+      "wall_temperature_c": 21.426217836000035,
+      "nusselt": 5.2202138293160605,
+      "outer_wall_temperature_c": 21.42885829300002,
+      "inner_wall_heat_flux_w_m2": 311.4335390304872
+    },
+    {
+      "x_m": 0.14270833333,
+      "bulk_temperature_c": 20.456702654387925,
+      "wall_temperature_c": 21.464582319000044,
+      "nusselt": 5.160132669669848,
+      "outer_wall_temperature_c": 21.467225641000027,
+      "inner_wall_heat_flux_w_m2": 312.0475670676531
+    },
+    {
+      "x_m": 0.15104166667,
+      "bulk_temperature_c": 20.48155202920691,
+      "wall_temperature_c": 21.502040218000047,
+      "nusselt": 5.105227735646203,
+      "outer_wall_temperature_c": 21.504686069,
+      "inner_wall_heat_flux_w_m2": 312.5894763195651
+    },
+    {
+      "x_m": 0.159375,
+      "bulk_temperature_c": 20.50644148018614,
+      "wall_temperature_c": 21.538670018000005,
+      "nusselt": 5.054915496235413,
+      "outer_wall_temperature_c": 21.54131811000002,
+      "inner_wall_heat_flux_w_m2": 313.0696818871035
+    },
+    {
+      "x_m": 0.16770833333,
+      "bulk_temperature_c": 20.531366515049342,
+      "wall_temperature_c": 21.574541264000004,
+      "nusselt": 5.008699529483119,
+      "outer_wall_temperature_c": 21.57719134900003,
+      "inner_wall_heat_flux_w_m2": 313.496932454271
+    },
+    {
+      "x_m": 0.17604166667,
+      "bulk_temperature_c": 20.556323276884314,
+      "wall_temperature_c": 21.609715826000013,
+      "nusselt": 4.9661539258783565,
+      "outer_wall_temperature_c": 21.61236769200002,
+      "inner_wall_heat_flux_w_m2": 313.87857259691634
+    },
+    {
+      "x_m": 0.184375,
+      "bulk_temperature_c": 20.581308440799546,
+      "wall_temperature_c": 21.644248968,
+      "nusselt": 4.926911039761687,
+      "outer_wall_temperature_c": 21.646902431,
+      "inner_wall_heat_flux_w_m2": 314.2208050844413
+    },
+    {
+      "x_m": 0.19270833333,
+      "bulk_temperature_c": 20.606319128729297,
+      "wall_temperature_c": 21.678190244000007,
+      "nusselt": 4.89065040629602,
+      "outer_wall_temperature_c": 21.680845145000035,
+      "inner_wall_heat_flux_w_m2": 314.52881432373994
+    },
+    {
+      "x_m": 0.20104166667,
+      "bulk_temperature_c": 20.631352838243686,
+      "wall_temperature_c": 21.711584254,
+      "nusselt": 4.85709288658497,
+      "outer_wall_temperature_c": 21.714240452000013,
+      "inner_wall_heat_flux_w_m2": 314.80705952013676
+    },
+    {
+      "x_m": 0.209375,
+      "bulk_temperature_c": 20.65640738498371,
+      "wall_temperature_c": 21.744471280000027,
+      "nusselt": 4.825991528534362,
+      "outer_wall_temperature_c": 21.74712865500004,
+      "inner_wall_heat_flux_w_m2": 315.0592283911714
+    },
+    {
+      "x_m": 0.21770833333,
+      "bulk_temperature_c": 20.681480853752646,
+      "wall_temperature_c": 21.77688782900003,
+      "nusselt": 4.797128543164523,
+      "outer_wall_temperature_c": 21.77954627400004,
+      "inner_wall_heat_flux_w_m2": 315.2884840404448
+    },
+    {
+      "x_m": 0.22604166667,
+      "bulk_temperature_c": 20.706571558602263,
+      "wall_temperature_c": 21.80886709400005,
+      "nusselt": 4.7703113311975045,
+      "outer_wall_temperature_c": 21.811526514000036,
+      "inner_wall_heat_flux_w_m2": 315.4975729701888
+    },
+    {
+      "x_m": 0.234375,
+      "bulk_temperature_c": 20.731678009288828,
+      "wall_temperature_c": 21.840439342000025,
+      "nusselt": 4.745367418899817,
+      "outer_wall_temperature_c": 21.843099654000014,
+      "inner_wall_heat_flux_w_m2": 315.6887942150192
+    },
+    {
+      "x_m": 0.24270833333,
+      "bulk_temperature_c": 20.756798883396186,
+      "wall_temperature_c": 21.87163225200004,
+      "nusselt": 4.722142283835338,
+      "outer_wall_temperature_c": 21.87429338200002,
+      "inner_wall_heat_flux_w_m2": 315.86410735889075
+    },
+    {
+      "x_m": 0.25104166667,
+      "bulk_temperature_c": 20.78193300345606,
+      "wall_temperature_c": 21.902471203000005,
+      "nusselt": 4.700498029929207,
+      "outer_wall_temperature_c": 21.905133086000035,
+      "inner_wall_heat_flux_w_m2": 316.02525596500374
+    },
+    {
+      "x_m": 0.259375,
+      "bulk_temperature_c": 20.8070793161138,
+      "wall_temperature_c": 21.932979524000018,
+      "nusselt": 4.680310245820336,
+      "outer_wall_temperature_c": 21.935642099999995,
+      "inner_wall_heat_flux_w_m2": 316.1737367244668
+    },
+    {
+      "x_m": 0.26770833333,
+      "bulk_temperature_c": 20.832236876873765,
+      "wall_temperature_c": 21.96317870500002,
+      "nusselt": 4.661466030797913,
+      "outer_wall_temperature_c": 21.965841920000003,
+      "inner_wall_heat_flux_w_m2": 316.31081487714147
+    },
+    {
+      "x_m": 0.27604166667,
+      "bulk_temperature_c": 20.85740483462905,
+      "wall_temperature_c": 21.99308858500001,
+      "nusselt": 4.643863241907133,
+      "outer_wall_temperature_c": 21.995752390999996,
+      "inner_wall_heat_flux_w_m2": 316.4376013667358
+    },
+    {
+      "x_m": 0.284375,
+      "bulk_temperature_c": 20.88258242055275,
+      "wall_temperature_c": 22.02272751700002,
+      "nusselt": 4.627409785335494,
+      "outer_wall_temperature_c": 22.02539187100001,
+      "inner_wall_heat_flux_w_m2": 316.55511456014267
+    },
+    {
+      "x_m": 0.29270833333,
+      "bulk_temperature_c": 20.90776893820572,
+      "wall_temperature_c": 22.052112506000014,
+      "nusselt": 4.6120206836896545,
+      "outer_wall_temperature_c": 22.05477737000001,
+      "inner_wall_heat_flux_w_m2": 316.6641722348699
+    },
+    {
+      "x_m": 0.30104166667,
+      "bulk_temperature_c": 20.93296375439411,
+      "wall_temperature_c": 22.081259337999995,
+      "nusselt": 4.597619149662809,
+      "outer_wall_temperature_c": 22.08392467500005,
+      "inner_wall_heat_flux_w_m2": 316.76554587957924
+    },
+    {
+      "x_m": 0.309375,
+      "bulk_temperature_c": 20.958166291744362,
+      "wall_temperature_c": 22.11018268700002,
+      "nusselt": 4.584135355629061,
+      "outer_wall_temperature_c": 22.112848464000024,
+      "inner_wall_heat_flux_w_m2": 316.8599452653481
+    },
+    {
+      "x_m": 0.31770833333,
+      "bulk_temperature_c": 20.983376022462892,
+      "wall_temperature_c": 22.13889621200002,
+      "nusselt": 4.571504227166526,
+      "outer_wall_temperature_c": 22.14156239900001,
+      "inner_wall_heat_flux_w_m2": 316.9479258627148
+    },
+    {
+      "x_m": 0.32604166667,
+      "bulk_temperature_c": 21.00859246312666,
+      "wall_temperature_c": 22.167412644000024,
+      "nusselt": 4.559666260663411,
+      "outer_wall_temperature_c": 22.170079215000044,
+      "inner_wall_heat_flux_w_m2": 317.0299968542486
+    },
+    {
+      "x_m": 0.334375,
+      "bulk_temperature_c": 21.033815169316085,
+      "wall_temperature_c": 22.195743866000043,
+      "nusselt": 4.548567957015142,
+      "outer_wall_temperature_c": 22.19841079400004,
+      "inner_wall_heat_flux_w_m2": 317.1066982843811
+    },
+    {
+      "x_m": 0.34270833333,
+      "bulk_temperature_c": 21.059043731894405,
+      "wall_temperature_c": 22.22390097500005,
+      "nusselt": 4.538158392970737,
+      "outer_wall_temperature_c": 22.226568238000027,
+      "inner_wall_heat_flux_w_m2": 317.17840046475783
+    },
+    {
+      "x_m": 0.35104166667,
+      "bulk_temperature_c": 21.08427777354092,
+      "wall_temperature_c": 22.251894347000018,
+      "nusselt": 4.5283915939355035,
+      "outer_wall_temperature_c": 22.25456192300004,
+      "inner_wall_heat_flux_w_m2": 317.2455045715177
+    },
+    {
+      "x_m": 0.359375,
+      "bulk_temperature_c": 21.10951694500517,
+      "wall_temperature_c": 22.279733695000004,
+      "nusselt": 4.5192247513153765,
+      "outer_wall_temperature_c": 22.282401563999997,
+      "inner_wall_heat_flux_w_m2": 317.30835005883
+    },
+    {
+      "x_m": 0.36770833333,
+      "bulk_temperature_c": 21.13476092329188,
+      "wall_temperature_c": 22.307428112000025,
+      "nusselt": 4.510618309273351,
+      "outer_wall_temperature_c": 22.31009625600001,
+      "inner_wall_heat_flux_w_m2": 317.3672455242644
+    },
+    {
+      "x_m": 0.37604166667,
+      "bulk_temperature_c": 21.160009408408712,
+      "wall_temperature_c": 22.33498612400001,
+      "nusselt": 4.502536026870178,
+      "outer_wall_temperature_c": 22.337654525999994,
+      "inner_wall_heat_flux_w_m2": 317.42249956100517
+    },
+    {
+      "x_m": 0.384375,
+      "bulk_temperature_c": 21.185262121951325,
+      "wall_temperature_c": 22.362415725000005,
+      "nusselt": 4.49494360513038,
+      "outer_wall_temperature_c": 22.365084369000044,
+      "inner_wall_heat_flux_w_m2": 317.474343616791
+    },
+    {
+      "x_m": 0.39270833333,
+      "bulk_temperature_c": 21.210518804409105,
+      "wall_temperature_c": 22.389724415000046,
+      "nusselt": 4.487809290947803,
+      "outer_wall_temperature_c": 22.392393286000015,
+      "inner_wall_heat_flux_w_m2": 317.5229937088681
+    },
+    {
+      "x_m": 0.40104166667,
+      "bulk_temperature_c": 21.23577921458849,
+      "wall_temperature_c": 22.416919239000038,
+      "nusselt": 4.481104491974001,
+      "outer_wall_temperature_c": 22.419588324000017,
+      "inner_wall_heat_flux_w_m2": 317.568712142452
+    },
+    {
+      "x_m": 0.409375,
+      "bulk_temperature_c": 21.26104312688807,
+      "wall_temperature_c": 22.444006811999998,
+      "nusselt": 4.474801834195872,
+      "outer_wall_temperature_c": 22.446676097000022,
+      "inner_wall_heat_flux_w_m2": 317.611684075558
+    },
+    {
+      "x_m": 0.41770833333,
+      "bulk_temperature_c": 21.286310331214054,
+      "wall_temperature_c": 22.470993350000015,
+      "nusselt": 4.468875622831406,
+      "outer_wall_temperature_c": 22.47366282300004,
+      "inner_wall_heat_flux_w_m2": 317.652063806094
+    },
+    {
+      "x_m": 0.42604166667,
+      "bulk_temperature_c": 21.311580630783453,
+      "wall_temperature_c": 22.497884698000007,
+      "nusselt": 4.463302744214301,
+      "outer_wall_temperature_c": 22.500554348000037,
+      "inner_wall_heat_flux_w_m2": 317.6900519208139
+    },
+    {
+      "x_m": 0.434375,
+      "bulk_temperature_c": 21.33685384174845,
+      "wall_temperature_c": 22.524686350000025,
+      "nusselt": 4.458060574207518,
+      "outer_wall_temperature_c": 22.52735616700005,
+      "inner_wall_heat_flux_w_m2": 317.7257564279022
+    },
+    {
+      "x_m": 0.44270833333,
+      "bulk_temperature_c": 21.362129791781456,
+      "wall_temperature_c": 22.551403477000008,
+      "nusselt": 4.453129416512629,
+      "outer_wall_temperature_c": 22.554073451000022,
+      "inner_wall_heat_flux_w_m2": 317.7593779158669
+    },
+    {
+      "x_m": 0.45104166667,
+      "bulk_temperature_c": 21.387408319618203,
+      "wall_temperature_c": 22.57804094400001,
+      "nusselt": 4.448489789985111,
+      "outer_wall_temperature_c": 22.580711065000003,
+      "inner_wall_heat_flux_w_m2": 317.7910243911384
+    },
+    {
+      "x_m": 0.459375,
+      "bulk_temperature_c": 21.412689273851015,
+      "wall_temperature_c": 22.604603327000007,
+      "nusselt": 4.444123620938178,
+      "outer_wall_temperature_c": 22.60727358700001,
+      "inner_wall_heat_flux_w_m2": 317.8208038636557
+    },
+    {
+      "x_m": 0.46770833333,
+      "bulk_temperature_c": 21.437972512602983,
+      "wall_temperature_c": 22.631094937,
+      "nusselt": 4.44001433091067,
+      "outer_wall_temperature_c": 22.633765328000038,
+      "inner_wall_heat_flux_w_m2": 317.8488397712185
+    },
+    {
+      "x_m": 0.47604166667,
+      "bulk_temperature_c": 21.46325790259766,
+      "wall_temperature_c": 22.657519832000048,
+      "nusselt": 4.436146539918731,
+      "outer_wall_temperature_c": 22.660190346000036,
+      "inner_wall_heat_flux_w_m2": 317.875255552504
+    },
+    {
+      "x_m": 0.484375,
+      "bulk_temperature_c": 21.488545318706088,
+      "wall_temperature_c": 22.683881833000044,
+      "nusselt": 4.432505331540626,
+      "outer_wall_temperature_c": 22.686552462999998,
+      "inner_wall_heat_flux_w_m2": 317.90012835558883
+    },
+    {
+      "x_m": 0.49270833333,
+      "bulk_temperature_c": 21.513834643217535,
+      "wall_temperature_c": 22.71018453900001,
+      "nusselt": 4.429077032282764,
+      "outer_wall_temperature_c": 22.712855278999996,
+      "inner_wall_heat_flux_w_m2": 317.9235507590424
+    },
+    {
+      "x_m": 0.50104166667,
+      "bulk_temperature_c": 21.539125765786594,
+      "wall_temperature_c": 22.736431341000014,
+      "nusselt": 4.425848921729069,
+      "outer_wall_temperature_c": 22.739102184000046,
+      "inner_wall_heat_flux_w_m2": 317.9456153423111
+    },
+    {
+      "x_m": 0.509375,
+      "bulk_temperature_c": 21.564418582338817,
+      "wall_temperature_c": 22.76262543400003,
+      "nusselt": 4.4228093793202445,
+      "outer_wall_temperature_c": 22.765296374000002,
+      "inner_wall_heat_flux_w_m2": 317.96643011357924
+    },
+    {
+      "x_m": 0.51770833333,
+      "bulk_temperature_c": 21.589712995076525,
+      "wall_temperature_c": 22.78876982700001,
+      "nusselt": 4.419946542789186,
+      "outer_wall_temperature_c": 22.791440858000044,
+      "inner_wall_heat_flux_w_m2": 317.98602593207784
+    },
+    {
+      "x_m": 0.52604166667,
+      "bulk_temperature_c": 21.615008912041844,
+      "wall_temperature_c": 22.814867356000036,
+      "nusselt": 4.417250176182876,
+      "outer_wall_temperature_c": 22.817538473000013,
+      "inner_wall_heat_flux_w_m2": 318.00449537813006
+    },
+    {
+      "x_m": 0.534375,
+      "bulk_temperature_c": 21.640306246495697,
+      "wall_temperature_c": 22.840920693000044,
+      "nusselt": 4.414710332896368,
+      "outer_wall_temperature_c": 22.843591892000006,
+      "inner_wall_heat_flux_w_m2": 318.0219001684434
+    },
+    {
+      "x_m": 0.54270833333,
+      "bulk_temperature_c": 21.665604916944517,
+      "wall_temperature_c": 22.866932358000042,
+      "nusselt": 4.412317729445984,
+      "outer_wall_temperature_c": 22.869603632999997,
+      "inner_wall_heat_flux_w_m2": 318.0383020223562
+    },
+    {
+      "x_m": 0.55104166667,
+      "bulk_temperature_c": 21.69090484636007,
+      "wall_temperature_c": 22.892904724000005,
+      "nusselt": 4.410063713769069,
+      "outer_wall_temperature_c": 22.89557607100005,
+      "inner_wall_heat_flux_w_m2": 318.0537626600842
+    },
+    {
+      "x_m": 0.559375,
+      "bulk_temperature_c": 21.71620596247425,
+      "wall_temperature_c": 22.918840028000034,
+      "nusselt": 4.407940002823339,
+      "outer_wall_temperature_c": 22.921511444000032,
+      "inner_wall_heat_flux_w_m2": 318.06832837135045
+    },
+    {
+      "x_m": 0.56770833333,
+      "bulk_temperature_c": 21.741508196842176,
+      "wall_temperature_c": 22.944740378999995,
+      "nusselt": 4.4059390696496905,
+      "outer_wall_temperature_c": 22.947411859,
+      "inner_wall_heat_flux_w_m2": 318.08206087373935
+    },
+    {
+      "x_m": 0.57604166667,
+      "bulk_temperature_c": 21.766811484818902,
+      "wall_temperature_c": 22.97060776400002,
+      "nusselt": 4.4040536863805535,
+      "outer_wall_temperature_c": 22.973279304000016,
+      "inner_wall_heat_flux_w_m2": 318.0950064587282
+    },
+    {
+      "x_m": 0.584375,
+      "bulk_temperature_c": 21.792115765865844,
+      "wall_temperature_c": 22.99644405500004,
+      "nusselt": 4.402276893737508,
+      "outer_wall_temperature_c": 22.99911565100001,
+      "inner_wall_heat_flux_w_m2": 318.1071959837937
+    },
+    {
+      "x_m": 0.59270833333,
+      "bulk_temperature_c": 21.81742098218399,
+      "wall_temperature_c": 23.022251014999995,
+      "nusselt": 4.400602395829665,
+      "outer_wall_temperature_c": 23.02492266500002,
+      "inner_wall_heat_flux_w_m2": 318.11867573865885
+    },
+    {
+      "x_m": 0.60104166667,
+      "bulk_temperature_c": 21.84272707926374,
+      "wall_temperature_c": 23.048030306000044,
+      "nusselt": 4.399024100706079,
+      "outer_wall_temperature_c": 23.05070200700004,
+      "inner_wall_heat_flux_w_m2": 318.1294765843086
+    },
+    {
+      "x_m": 0.609375,
+      "bulk_temperature_c": 21.868034005427603,
+      "wall_temperature_c": 23.073783493000008,
+      "nusselt": 4.397536739824464,
+      "outer_wall_temperature_c": 23.07645524200001,
+      "inner_wall_heat_flux_w_m2": 318.1396602374502
+    },
+    {
+      "x_m": 0.61770833333,
+      "bulk_temperature_c": 21.893341711612436,
+      "wall_temperature_c": 23.099512048999998,
+      "nusselt": 4.3961347783670846,
+      "outer_wall_temperature_c": 23.102183841,
+      "inner_wall_heat_flux_w_m2": 318.14924212945317
+    },
+    {
+      "x_m": 0.62604166667,
+      "bulk_temperature_c": 21.918650151142288,
+      "wall_temperature_c": 23.125217356000007,
+      "nusselt": 4.394812834575487,
+      "outer_wall_temperature_c": 23.12788919100001,
+      "inner_wall_heat_flux_w_m2": 318.1582222611946
+    },
+    {
+      "x_m": 0.634375,
+      "bulk_temperature_c": 21.943959279066178,
+      "wall_temperature_c": 23.150900718000003,
+      "nusselt": 4.393566692438154,
+      "outer_wall_temperature_c": 23.153572592000046,
+      "inner_wall_heat_flux_w_m2": 318.16666234938185
+    },
+    {
+      "x_m": 0.64270833333,
+      "bulk_temperature_c": 21.9692690522063,
+      "wall_temperature_c": 23.17656335500004,
+      "nusselt": 4.392391828708611,
+      "outer_wall_temperature_c": 23.179235266000035,
+      "inner_wall_heat_flux_w_m2": 318.1745778262613
+    },
+    {
+      "x_m": 0.65104166667,
+      "bulk_temperature_c": 21.994579429020746,
+      "wall_temperature_c": 23.20220641000003,
+      "nusselt": 4.391283598219,
+      "outer_wall_temperature_c": 23.204878355000005,
+      "inner_wall_heat_flux_w_m2": 318.18195326046373
+    },
+    {
+      "x_m": 0.659375,
+      "bulk_temperature_c": 22.01989036875557,
+      "wall_temperature_c": 23.227830952000033,
+      "nusselt": 4.3902384956589176,
+      "outer_wall_temperature_c": 23.23050293,
+      "inner_wall_heat_flux_w_m2": 318.18883494171206
+    },
+    {
+      "x_m": 0.66770833333,
+      "bulk_temperature_c": 22.045201831006977,
+      "wall_temperature_c": 23.253437977000033,
+      "nusselt": 4.389252444505442,
+      "outer_wall_temperature_c": 23.256109984000034,
+      "inner_wall_heat_flux_w_m2": 318.1952074403911
+    },
+    {
+      "x_m": 0.67604166667,
+      "bulk_temperature_c": 22.070513775402844,
+      "wall_temperature_c": 23.27902840500002,
+      "nusselt": 4.3883218699868936,
+      "outer_wall_temperature_c": 23.28170044000001,
+      "inner_wall_heat_flux_w_m2": 318.2010707556236
+    },
+    {
+      "x_m": 0.684375,
+      "bulk_temperature_c": 22.095826160989873,
+      "wall_temperature_c": 23.304603086000043,
+      "nusselt": 4.387443247739463,
+      "outer_wall_temperature_c": 23.307275145999995,
+      "inner_wall_heat_flux_w_m2": 318.20640945954847
+    },
+    {
+      "x_m": 0.69270833333,
+      "bulk_temperature_c": 22.121138945022096,
+      "wall_temperature_c": 23.33016279200001,
+      "nusselt": 4.386613339847124,
+      "outer_wall_temperature_c": 23.332834874000014,
+      "inner_wall_heat_flux_w_m2": 318.21120812079624
+    },
+    {
+      "x_m": 0.70104166667,
+      "bulk_temperature_c": 22.146452082334463,
+      "wall_temperature_c": 23.35570821700003,
+      "nusselt": 4.385828765970068,
+      "outer_wall_temperature_c": 23.358380319000048,
+      "inner_wall_heat_flux_w_m2": 318.2154204505207
+    },
+    {
+      "x_m": 0.709375,
+      "bulk_temperature_c": 22.17176552375065,
+      "wall_temperature_c": 23.381239969000035,
+      "nusselt": 4.385086238342268,
+      "outer_wall_temperature_c": 23.383912088000045,
+      "inner_wall_heat_flux_w_m2": 318.2189847293834
+    },
+    {
+      "x_m": 0.71770833333,
+      "bulk_temperature_c": 22.197079214628843,
+      "wall_temperature_c": 23.406758566000008,
+      "nusselt": 4.384382995198391,
+      "outer_wall_temperature_c": 23.40943069800005,
+      "inner_wall_heat_flux_w_m2": 318.22185466766115
+    },
+    {
+      "x_m": 0.72604166667,
+      "bulk_temperature_c": 22.222393092724417,
+      "wall_temperature_c": 23.432264419000035,
+      "nusselt": 4.3837151529824,
+      "outer_wall_temperature_c": 23.43493656000004,
+      "inner_wall_heat_flux_w_m2": 318.2238759692003
+    },
+    {
+      "x_m": 0.734375,
+      "bulk_temperature_c": 22.247707085404613,
+      "wall_temperature_c": 23.45775782100003,
+      "nusselt": 4.383079861338757,
+      "outer_wall_temperature_c": 23.46042996700004,
+      "inner_wall_heat_flux_w_m2": 318.2249406231851
+    },
+    {
+      "x_m": 0.74270833333,
+      "bulk_temperature_c": 22.273021106758733,
+      "wall_temperature_c": 23.483238925000023,
+      "nusselt": 4.382473458470282,
+      "outer_wall_temperature_c": 23.485911071000032,
+      "inner_wall_heat_flux_w_m2": 318.2248480446159
+    },
+    {
+      "x_m": 0.75104166667,
+      "bulk_temperature_c": 22.298335052575112,
+      "wall_temperature_c": 23.508707715000014,
+      "nusselt": 4.381892195067136,
+      "outer_wall_temperature_c": 23.51137985400004,
+      "inner_wall_heat_flux_w_m2": 318.2233513561385
+    },
+    {
+      "x_m": 0.759375,
+      "bulk_temperature_c": 22.323648795473048,
+      "wall_temperature_c": 23.534163972000044,
+      "nusselt": 4.381331914210031,
+      "outer_wall_temperature_c": 23.536836096000002,
+      "inner_wall_heat_flux_w_m2": 318.2201265331991
+    },
+    {
+      "x_m": 0.76770833333,
+      "bulk_temperature_c": 22.34896217740709,
+      "wall_temperature_c": 23.559607226000026,
+      "nusselt": 4.380787772455047,
+      "outer_wall_temperature_c": 23.56227932500002,
+      "inner_wall_heat_flux_w_m2": 318.2147415395511
+    },
+    {
+      "x_m": 0.77604166667,
+      "bulk_temperature_c": 22.374275000707826,
+      "wall_temperature_c": 23.585036693999996,
+      "nusselt": 4.380254643675425,
+      "outer_wall_temperature_c": 23.58770875500005,
+      "inner_wall_heat_flux_w_m2": 318.20667176564086
+    },
+    {
+      "x_m": 0.784375,
+      "bulk_temperature_c": 22.399587016458952,
+      "wall_temperature_c": 23.610451203000025,
+      "nusselt": 4.379725867794263,
+      "outer_wall_temperature_c": 23.613123210000026,
+      "inner_wall_heat_flux_w_m2": 318.1951920107757
+    },
+    {
+      "x_m": 0.79270833333,
+      "bulk_temperature_c": 22.42489790956887,
+      "wall_temperature_c": 23.63584908300004,
+      "nusselt": 4.379193795452257,
+      "outer_wall_temperature_c": 23.638521016000027,
+      "inner_wall_heat_flux_w_m2": 318.1793919171244
+    },
+    {
+      "x_m": 0.80104166667,
+      "bulk_temperature_c": 22.450207278993275,
+      "wall_temperature_c": 23.661228039000036,
+      "nusselt": 4.378648903744171,
+      "outer_wall_temperature_c": 23.663899873000048,
+      "inner_wall_heat_flux_w_m2": 318.15808339290226
+    },
+    {
+      "x_m": 0.809375,
+      "bulk_temperature_c": 22.475514613598193,
+      "wall_temperature_c": 23.68658497800004,
+      "nusselt": 4.378079907668522,
+      "outer_wall_temperature_c": 23.689256680000028,
+      "inner_wall_heat_flux_w_m2": 318.1297697496317
+    },
+    {
+      "x_m": 0.81770833333,
+      "bulk_temperature_c": 22.500819259841933,
+      "wall_temperature_c": 23.71191578500003,
+      "nusselt": 4.377471689328049,
+      "outer_wall_temperature_c": 23.714587313000038,
+      "inner_wall_heat_flux_w_m2": 318.0924451153889
+    },
+    {
+      "x_m": 0.82604166667,
+      "bulk_temperature_c": 22.5261203806279,
+      "wall_temperature_c": 23.73721504400004,
+      "nusselt": 4.376806789552542,
+      "outer_wall_temperature_c": 23.739886344000013,
+      "inner_wall_heat_flux_w_m2": 318.04364072628107
+    },
+    {
+      "x_m": 0.834375,
+      "bulk_temperature_c": 22.55141690305709,
+      "wall_temperature_c": 23.762475667000047,
+      "nusselt": 4.376061667492203,
+      "outer_wall_temperature_c": 23.765146670000036,
+      "inner_wall_heat_flux_w_m2": 317.98007003827604
+    },
+    {
+      "x_m": 0.84270833333,
+      "bulk_temperature_c": 22.57670744982181,
+      "wall_temperature_c": 23.78768842100004,
+      "nusselt": 4.375206873863574,
+      "outer_wall_temperature_c": 23.79035903900001,
+      "inner_wall_heat_flux_w_m2": 317.89753615301885
+    },
+    {
+      "x_m": 0.85104166667,
+      "bulk_temperature_c": 22.601990252579185,
+      "wall_temperature_c": 23.81284132600001,
+      "nusselt": 4.374205492206518,
+      "outer_wall_temperature_c": 23.815511445000027,
+      "inner_wall_heat_flux_w_m2": 317.79068493609225
+    },
+    {
+      "x_m": 0.859375,
+      "bulk_temperature_c": 22.627263038785657,
+      "wall_temperature_c": 23.837918865000006,
+      "nusselt": 4.373009174730205,
+      "outer_wall_temperature_c": 23.84058834000001,
+      "inner_wall_heat_flux_w_m2": 317.6525421285556
+    },
+    {
+      "x_m": 0.86770833333,
+      "bulk_temperature_c": 22.652522887696136,
+      "wall_temperature_c": 23.86290098300003,
+      "nusselt": 4.371556926180519,
+      "outer_wall_temperature_c": 23.865569625000035,
+      "inner_wall_heat_flux_w_m2": 317.4742047493756
+    },
+    {
+      "x_m": 0.87604166667,
+      "bulk_temperature_c": 22.677766044143084,
+      "wall_temperature_c": 23.88776178400002,
+      "nusselt": 4.369769685008113,
+      "outer_wall_temperature_c": 23.890429353000002,
+      "inner_wall_heat_flux_w_m2": 317.2441621809481
+    },
+    {
+      "x_m": 0.884375,
+      "bulk_temperature_c": 22.702987679007947,
+      "wall_temperature_c": 23.912467871000047,
+      "nusselt": 4.36754635345966,
+      "outer_wall_temperature_c": 23.91513405500001,
+      "inner_wall_heat_flux_w_m2": 316.947648127007
+    },
+    {
+      "x_m": 0.89270833333,
+      "bulk_temperature_c": 22.72818158144304,
+      "wall_temperature_c": 23.936976189999996,
+      "nusselt": 4.364755939072942,
+      "outer_wall_temperature_c": 23.939640591,
+      "inner_wall_heat_flux_w_m2": 316.5656068090998
+    },
+    {
+      "x_m": 0.90104166667,
+      "bulk_temperature_c": 22.753339762574797,
+      "wall_temperature_c": 23.961231275000046,
+      "nusselt": 4.361230062903685,
+      "outer_wall_temperature_c": 23.963893380000002,
+      "inner_wall_heat_flux_w_m2": 316.07356660291174
+    },
+    {
+      "x_m": 0.909375,
+      "bulk_temperature_c": 22.778451945822894,
+      "wall_temperature_c": 23.98516169000004,
+      "nusselt": 4.356751031029345,
+      "outer_wall_temperature_c": 23.987820838000005,
+      "inner_wall_heat_flux_w_m2": 315.4400353258165
+    },
+    {
+      "x_m": 0.91770833333,
+      "bulk_temperature_c": 22.803504910398033,
+      "wall_temperature_c": 24.008675455000002,
+      "nusselt": 4.351036738596448,
+      "outer_wall_temperature_c": 24.011330797000028,
+      "inner_wall_heat_flux_w_m2": 314.62447895024746
+    },
+    {
+      "x_m": 0.92604166667,
+      "bulk_temperature_c": 22.82848164825134,
+      "wall_temperature_c": 24.031654160000016,
+      "nusselt": 4.343720606785059,
+      "outer_wall_temperature_c": 24.03430460300001,
+      "inner_wall_heat_flux_w_m2": 313.57471396800366
+    },
+    {
+      "x_m": 0.934375,
+      "bulk_temperature_c": 22.853360277024876,
+      "wall_temperature_c": 24.053945397000007,
+      "nusselt": 4.334326189586818,
+      "outer_wall_temperature_c": 24.05658953400001,
+      "inner_wall_heat_flux_w_m2": 312.2236517001864
+    },
+    {
+      "x_m": 0.94270833333,
+      "bulk_temperature_c": 22.878112644038367,
+      "wall_temperature_c": 24.075353011000004,
+      "nusselt": 4.3222307409785525,
+      "outer_wall_temperature_c": 24.077989032999994,
+      "inner_wall_heat_flux_w_m2": 310.48494710532185
+    },
+    {
+      "x_m": 0.95104166667,
+      "bulk_temperature_c": 22.902702527533847,
+      "wall_temperature_c": 24.095624566000026,
+      "nusselt": 4.306616651947995,
+      "outer_wall_temperature_c": 24.09825014500001,
+      "inner_wall_heat_flux_w_m2": 308.24747492005156
+    },
+    {
+      "x_m": 0.959375,
+      "bulk_temperature_c": 22.927083324456532,
+      "wall_temperature_c": 24.114435215000015,
+      "nusselt": 4.286405621568435,
+      "outer_wall_temperature_c": 24.117047356,
+      "inner_wall_heat_flux_w_m2": 305.36830910432946
+    },
+    {
+      "x_m": 0.96770833333,
+      "bulk_temperature_c": 22.951195073543545,
+      "wall_temperature_c": 24.131366943000046,
+      "nusselt": 4.260163337892242,
+      "outer_wall_temperature_c": 24.133961794000015,
+      "inner_wall_heat_flux_w_m2": 301.66349584022004
+    },
+    {
+      "x_m": 0.97604166667,
+      "bulk_temperature_c": 22.974960627285895,
+      "wall_temperature_c": 24.145881867000014,
+      "nusselt": 4.2259658256275845,
+      "outer_wall_temperature_c": 24.148454469,
+      "inner_wall_heat_flux_w_m2": 296.89638861200103
+    },
+    {
+      "x_m": 0.984375,
+      "bulk_temperature_c": 22.99828072374021,
+      "wall_temperature_c": 24.15728787100005,
+      "nusselt": 4.181200348941514,
+      "outer_wall_temperature_c": 24.159831843999996,
+      "inner_wall_heat_flux_w_m2": 290.7624653129137
+    },
+    {
+      "x_m": 0.99270833333,
+      "bulk_temperature_c": 23.021027648421295,
+      "wall_temperature_c": 24.16469440100002,
+      "nusselt": 4.1222667242018876,
+      "outer_wall_temperature_c": 24.16720153900002,
+      "inner_wall_heat_flux_w_m2": 282.86996386387847
+    },
+    {
+      "x_m": 0.99895833333,
+      "bulk_temperature_c": 23.03758543816525,
+      "wall_temperature_c": 24.16694621900001,
+      "nusselt": 4.066426588902066,
+      "outer_wall_temperature_c": 24.169420056000035,
+      "inner_wall_heat_flux_w_m2": 275.54776245897966
+    }
+  ]
+}

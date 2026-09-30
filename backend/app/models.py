@@ -12,6 +12,9 @@ class PipeDefinition(BaseModel):
     inner_diameter_mm: float = Field(default=10, gt=0, le=2000)
     wall_thickness_mm: float = Field(default=2, gt=0, le=500)
     material: Literal["aluminium", "copper"] = "aluminium"
+    # Missing mode in a saved v0.3 run must retain its original fluid-only meaning.
+    thermal_mode: Literal["fluid_only", "conjugate"] = "fluid_only"
+    solid_conductivity_w_m_k: float | None = Field(default=None, gt=0, le=10000)
     inlet_velocity_m_s: float = Field(default=1, gt=0, le=100)
     inlet_temperature_c: float = Field(default=20, ge=-100, le=500)
     applied_heat_w: float = Field(default=0, ge=0, le=1e7)
@@ -59,6 +62,14 @@ class PipeDefinition(BaseModel):
         return self.thermal_conductivity_w_m_k / (self.density_kg_m3 * self.specific_heat_j_kg_k)
 
     @property
+    def solid_conductivity(self):
+        return self.solid_conductivity_w_m_k or {"aluminium": 200.0, "copper": 391.1}[self.material]
+
+    @property
+    def solid_radial_cells(self):
+        return {"coarse": 8, "medium": 16, "fine": 32}[self.mesh_level]
+
+    @property
     def prandtl(self):
         return self.nu / self.thermal_diffusivity
 
@@ -96,14 +107,16 @@ class PipeDefinition(BaseModel):
                         "applied_heat_w": self.applied_heat_w, "enabled": self.applied_heat_w > 0,
                         "prandtl": self.prandtl, "ideal_temperature_rise_k": self.ideal_temperature_rise,
                         "wall_heat_flux_w_m2": self.applied_heat_w / (pi * self.diameter_m * self.length_m),
-                        "model": "Passive fluid energy transport; uniform inner-wall heat flux"},
+                        "mode": self.thermal_mode, "solid_conductivity_w_m_k": self.solid_conductivity,
+                        "model": "Coupled fluid–solid energy; uniform outer-wall heat input" if self.thermal_mode == "conjugate" else "Passive fluid energy transport; uniform inner-wall heat flux"},
             "mesh": {"axial": self.mesh_shape[0], "radial": self.mesh_shape[1],
-                     "cells": self.mesh_shape[0] * self.mesh_shape[1], "type": "5° axisymmetric wedge"},
+                     "solid_radial": self.solid_radial_cells,
+                     "cells": self.mesh_shape[0] * (self.mesh_shape[1] + (self.solid_radial_cells if self.applied_heat_w > 0 and self.thermal_mode == "conjugate" else 0)), "type": "5° axisymmetric wedge"},
             "run_errors": self.run_errors(),
             "notes": ["Constant fluid properties are explicit inputs; temperature does not update them automatically.",
                       "Smooth, straight circular pipe; uniform inlet, no-slip wall, zero gauge outlet pressure.",
-                      "Heat input enters the fluid through the inner wall. Solid conduction, buoyancy and temperature feedback on flow are not solved.",
-                      "Wall material and thickness are stored geometry metadata; solid conduction is not solved."],
+                      "Conjugate mode solves radial and axial wall conduction with perfect thermal contact and insulated solid ends; power enters the outer surface. Fluid-only mode applies power directly at the inner wall.",
+                      "Flow is frozen during heating; buoyancy, radiation, phase change and temperature feedback on flow are not solved."],
         }
 
 
@@ -117,4 +130,6 @@ PRESETS = {
                     reference="superpipe_41727", max_iterations=4000).model_dump()},
     "heated_laminar": {"name": "Heated pipe · analytical check", "description": "Re 100 water, 10 W into a 100D pipe. Compare Nu with 48/11 and check energy conservation; constant properties, no buoyancy.",
                        "inputs": PipeDefinition(length_mm=1000, inlet_velocity_m_s=100 * 1.002e-3 / (998 * .01), applied_heat_w=10).model_dump()},
+    "heated_wall": {"name": "Solid wall · conduction check", "description": "Re 100 water, 10 W at the outer surface of a 2 mm aluminium wall. Coupled fluid/solid temperatures; compare mean wall drop with cylindrical conduction.",
+                    "inputs": PipeDefinition(length_mm=1000, inlet_velocity_m_s=100 * 1.002e-3 / (998 * .01), applied_heat_w=10, thermal_mode="conjugate", thermal_iterations=2000).model_dump()},
 }

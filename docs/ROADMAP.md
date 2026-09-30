@@ -6,13 +6,17 @@ A straight-pipe flow workflow: typed inputs → axisymmetric mesh → mesh check
 
 ## Delivered in v0.3
 
-Round plot ticks and explicit zero baselines; interactive 3D pipe geometry; computed field slices, cell probes, temperature/speed/pressure colour maps and VTK export. A one-way fluid energy solve adds uniform inner-wall heating with explicit constant properties. Three laminar thermal meshes were checked against Nu = 48/11 and energy conservation; see the measured thermal benchmark report. The 3D view revolves the axisymmetric solution. Solid conduction and a full 3D flow solve remain future work.
+Round plot ticks and explicit zero baselines; interactive 3D pipe geometry; computed field slices, cell probes, temperature/speed/pressure colour maps and VTK export. A one-way fluid energy solve adds uniform inner-wall heating with explicit constant properties. Three laminar thermal meshes were checked against Nu = 48/11 and energy conservation; see the measured thermal benchmark report. The 3D view revolves the axisymmetric solution. Solid conduction followed in v0.4; full 3D flow remains future work.
 
-## Next: conjugate heat transfer and stronger reference evidence
+## Delivered in v0.4
+
+Native coupled fluid/solid temperature solves with radial and axial wall conduction, outer-wall heating, insulated solid ends and perfect thermal contact. Wall material, conductivity and thickness affect the solution. Fluid/solid/combined temperature views, both wall-temperature profiles and solid VTK export are included. Three meshes, material/thickness sensitivity and independent interface/energy checks are recorded in [CONJUGATE_BENCHMARKS.md](CONJUGATE_BENCHMARKS.md).
+
+## Next: stronger reference evidence and thermal boundary options
 
 First strengthen the flow baseline: the initial turbulent study still changes Darcy f by 3.74% from medium to fine. Extend mesh/angular sensitivity and compare corrected experimental data before claiming mesh independence or general model accuracy.
 
-Add coupled fluid/solid regions, conduction through aluminium/copper walls and explicit heated surface selection. Extend fluid heating to temperature-dependent properties where needed. Compare thermal predictions with a traceable heated-pipe experiment, including boundary conditions and measurement uncertainty; current analytical agreement is not experimental validation. Review field visualization while this is developed.
+Add selectable heated surfaces, external convection, contact resistance and temperature-dependent properties where needed. Compare thermal predictions with a traceable heated-pipe experiment, including boundary conditions and measurement uncertainty; current analytical agreement is not experimental validation. Review field visualization while this is developed.
 
 ## Geometry builder
 

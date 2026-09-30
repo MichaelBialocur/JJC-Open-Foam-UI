@@ -43,11 +43,12 @@ def build_fields(case, spec, result):
     }
     if result.get("thermal_solved"):
         time = result['thermal']['solution_iteration']
-        t = read_internal(case / 'thermal' / str(time) / 'T', count=nx * nr)[order] - 273.15
+        region_path = 'fluid/T' if result['thermal'].get('mode') == 'conjugate' else 'T'
+        t = read_internal(case / 'thermal' / str(time) / region_path, count=nx * nr)[order] - 273.15
         scalar_fields["temperature"] = {"label": "Fluid temperature", "unit": "°C", "values": t.tolist()}
     for field in scalar_fields.values():
         field.update(min=min(field["values"]), max=max(field["values"]))
-    return {
+    data = {
         "schema_version": 1, "source": "Computed OpenFOAM cell fields; no reference profiles used",
         "representation": "Axisymmetric wedge revolved for display; not a full 3D flow solution",
         "ordering": "axial-major, radial-minor", "nx": nx, "nr": nr,
@@ -59,6 +60,24 @@ def build_fields(case, spec, result):
         "flow_converged": result["convergence"]["converged"],
         "thermal_converged": result.get("thermal", {}).get("convergence", {}).get("converged"),
     }
+    if result.get('thermal', {}).get('mode') == 'conjugate':
+        solid_centres = read_internal(case / 'thermal/0/solid/C', 3)
+        solid_points = mesh_points(case / 'thermal/constant/solid/polyMesh/points')
+        sr = spec.solid_radial_cells
+        sx = np.unique(np.round(solid_centres[:,0], 11))
+        solid_order = np.concatenate([ids[np.argsort(solid_centres[ids,1])] for x in sx
+            for ids in [np.flatnonzero(np.round(solid_centres[:,0],11)==x)]])
+        if len(solid_centres) != nx*sr or len(sx) != nx:
+            raise ValueError('Unexpected solid grid.')
+        values = (read_internal(case / 'thermal' / str(time) / 'solid/T', count=nx*sr)[solid_order]-273.15).tolist()
+        data['solid'] = {'nx':nx,'nr':sr,'source':data['source'],'representation':data['representation'],
+            'x_edges_m':np.unique(np.round(solid_points[:,0],12)).tolist(),
+            'r_edges_m':np.unique(np.round(np.linalg.norm(solid_points[:,1:],axis=1),12)).tolist(),
+            'cell_x_m':solid_centres[solid_order,0].tolist(),
+            'cell_r_m':np.linalg.norm(solid_centres[solid_order,1:],axis=1).tolist(),
+            'fields':{'temperature':{'label':'Solid temperature','unit':'°C','values':values,'min':min(values),'max':max(values)}},
+            'flow_converged':data['flow_converged'],'thermal_converged':data['thermal_converged']}
+    return data
 
 
 @lru_cache(maxsize=8)

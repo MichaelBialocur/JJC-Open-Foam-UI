@@ -33,7 +33,7 @@ def foam_environment():
     env = dict(item.decode().split("=", 1) for item in proc.stdout.split(b"\0") if b"=" in item)
     if env.get("WM_PROJECT_VERSION") != "14":
         raise RuntimeError("Foundation OpenFOAM 14 is required. Detected: " + env.get("WM_PROJECT_VERSION", "unknown"))
-    for exe in ("blockMesh", "checkMesh", "foamRun", "foamPostProcess"):
+    for exe in ("blockMesh", "checkMesh", "foamRun", "foamMultiRun", "foamPostProcess"):
         if not shutil.which(exe, path=env.get("PATH")):
             raise RuntimeError(f"OpenFOAM executable is missing: {exe}")
     env["LC_ALL"] = "C"
@@ -154,14 +154,25 @@ class JobManager:
             if spec.applied_heat_w > 0:
                 thermal_case = prepare_thermal(case, spec, result["solution_iteration"])
                 self.update(job_id, status="heating")
-                self._command(job_id, "thermal", ["foamRun", "-case", str(thermal_case)], env)
+                coupled = spec.thermal_mode == "conjugate"
+                if coupled:
+                    args = ["-case", str(thermal_case), "-region", "solid"]
+                    self._command(job_id, "solidMesh", ["blockMesh", *args], env, 180)
+                    self._command(job_id, "solidCheck", ["checkMesh", *args], env, 180)
+                    if "Mesh OK." not in (case / "log.solidCheck").read_text():
+                        raise RuntimeError("Solid mesh quality checks did not pass.")
+                    self._command(job_id, "solidCentres", ["foamPostProcess", *args, "-func", "writeCellCentres", "-time", "0"], env, 120)
+                self._command(job_id, "thermal", ["foamMultiRun" if coupled else "foamRun", "-case", str(thermal_case)], env)
                 self.update(job_id, status="processing")
                 result["thermal"] = analyse_thermal(case, spec, result)
                 result["thermal_solved"] = True
                 # Put the final temperature beside its frozen U/p fields so
                 # ParaView can inspect all three in the main pipe.foam case.
-                shutil.copy2(thermal_case / str(result["thermal"]["solution_iteration"]) / "T",
-                             case / f"{result['solution_iteration']:g}" / "T")
+                # Multi-region coupled BCs refer to neighbouring regions; keep
+                # them in thermal/conjugate.foam rather than a broken root T.
+                if not coupled:
+                    shutil.copy2(thermal_case / str(result["thermal"]["solution_iteration"]) / "T",
+                                 case / f"{result['solution_iteration']:g}" / "T")
                 (case / "results.json").write_text(json.dumps(result, indent=2, allow_nan=False))
             if self.cancel_events[job_id].is_set():
                 raise Cancelled()
@@ -180,7 +191,7 @@ class JobManager:
         if details:
             case = self.root / job_id
             logs = []
-            for name in ("blockMesh", "checkMesh", "centres", "volumes", "foamRun", "thermal"):
+            for name in ("blockMesh", "checkMesh", "centres", "volumes", "foamRun", "solidMesh", "solidCheck", "solidCentres", "thermal"):
                 file = case / f"log.{name}"
                 if file.exists():
                     with file.open("rb") as stream:

@@ -14,6 +14,22 @@ export function locateCell(edges, coordinate) {
   return lo
 }
 
+export function combinedTemperature(data) {
+  const solid=data.solid
+  if(!solid || data.nx!==solid.nx || data.x_edges_m.some((x,i)=>Math.abs(x-solid.x_edges_m[i])>1e-10) ||
+      Math.abs(data.r_edges_m.at(-1)-solid.r_edges_m[0])>1e-10) throw new Error('Fluid and solid grids do not share an interface')
+  const nr=data.nr+solid.nr,values=[],cellX=[],cellR=[]
+  for(let i=0;i<data.nx;i++) for(const grid of [data,solid]) for(let j=0;j<grid.nr;j++){
+    const cell=i*grid.nr+j
+    values.push(grid.fields.temperature.values[cell]);cellX.push(grid.cell_x_m[cell]);cellR.push(grid.cell_r_m[cell])
+  }
+  return {...data,nr,r_edges_m:[...data.r_edges_m,...solid.r_edges_m.slice(1)],cell_x_m:cellX,cell_r_m:cellR,
+    interface_radius_m:solid.r_edges_m[0],
+    fields:{temperature:{label:'Fluid + solid temperature',unit:'°C',values,
+      min:Math.min(data.fields.temperature.min,solid.fields.temperature.min),
+      max:Math.max(data.fields.temperature.max,solid.fields.temperature.max)}}}
+}
+
 export function pipeShell(length, inner, outer, cutaway = false) {
   const positions = [], start = cutaway ? Math.PI / 2 : 0, end = 2 * Math.PI, count = 64
   const point = (x, r, a) => [x, r * Math.cos(a), r * Math.sin(a)]

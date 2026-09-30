@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Viewport from './Viewport'
 import Chart from './Chart'
 import { niceScale, tickLabel } from './axes'
-import { fieldColor, locateCell } from './fieldGeometry'
+import { fieldColor, locateCell, combinedTemperature } from './fieldGeometry'
 
 function FieldMap({ data, field, range, station, onPick }) {
   const canvas = useRef(null)
@@ -22,6 +22,10 @@ function FieldMap({ data, field, range, station, onPick }) {
     const x=data.cell_x_m[station*data.nr]/length*width
     ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.setLineDash([6,4]);ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,height);ctx.stroke()
     ctx.setLineDash([2,6]);ctx.strokeStyle='#ffffff88';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,height/2);ctx.lineTo(width,height/2);ctx.stroke()
+    if(data.interface_radius_m){
+      ctx.setLineDash([]);ctx.strokeStyle='#ffffffcc'
+      for(const sign of [-1,1]){const y=height/2+sign*data.interface_radius_m/radius*height/2;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(width,y);ctx.stroke()}
+    }
   },[data,field,range,station])
   function pick(event){
     const rect=canvas.current.getBoundingClientRect(),length=data.x_edges_m.at(-1),radius=data.r_edges_m.at(-1)
@@ -35,7 +39,7 @@ function FieldMap({ data, field, range, station, onPick }) {
 }
 
 export default function FieldViewer({ jobId, spec }) {
-  const [data,setData]=useState(null),[error,setError]=useState('')
+  const [savedData,setData]=useState(null),[error,setError]=useState(''),[domain,setDomain]=useState('fluid')
   const [field,setField]=useState('speed'),[mode,setMode]=useState('cutaway'),[fraction,setFraction]=useState(.8)
   const [wire,setWire]=useState(false),[picked,setPicked]=useState(null)
   useEffect(()=>{
@@ -45,6 +49,7 @@ export default function FieldViewer({ jobId, spec }) {
     }).then(setData).catch(e=>{if(e.name!=='AbortError')setError(e.message)})
     return()=>controller.abort()
   },[jobId])
+  const data=useMemo(()=>!savedData?null:domain==='combined'?combinedTemperature(savedData):domain==='solid'?savedData.solid:savedData,[savedData,domain])
   const range=useMemo(()=>data?niceScale(data.fields[field].min,data.fields[field].max,{includeZero:field!=='temperature',intervals:4}):null,[data,field])
   if(error)return <section className="panel"><h2>Computed field viewer</h2><p className="notice warn">{error}</p></section>
   if(!data)return <section className="panel"><h2>Computed field viewer</h2><p className="muted">Loading saved mesh and cell fields…</p></section>
@@ -54,6 +59,7 @@ export default function FieldViewer({ jobId, spec }) {
   return <section className="panel field-viewer">
     <div className="panel-heading"><h2>Computed field viewer</h2><span className="badge">{(data.nx*data.nr).toLocaleString()} computed cells</span></div>
     <div className="field-toolbar">
+      {savedData.solid&&<label>Region<select value={domain} onChange={e=>{setDomain(e.target.value);setField('temperature');setPicked(null)}}><option value="fluid">Fluid</option><option value="solid">Solid wall</option><option value="combined">Fluid + solid</option></select></label>}
       <label>Colour by<select value={field} onChange={e=>setField(e.target.value)}>{Object.entries(data.fields).map(([key,f])=><option key={key} value={key}>{f.label} ({f.unit})</option>)}</select></label>
       <label>3D view<select value={mode} onChange={e=>setMode(e.target.value)}><option value="cutaway">Cutaway</option><option value="cross">Cross-section</option><option value="axial">Axial section</option></select></label>
       <label className="check-label"><input type="checkbox" checked={wire} onChange={e=>setWire(e.target.checked)}/> Cell outlines</label>
@@ -64,10 +70,10 @@ export default function FieldViewer({ jobId, spec }) {
     <label className="slice-control">Section position · x = {Number(data.cell_x_m[station*data.nr].toPrecision(5))} m · station {station+1}/{data.nx}
       <input type="range" min="0" max="1" step={1/(data.nx-1)} value={fraction} onChange={e=>setFraction(Number(e.target.value))}/></label>
     <FieldMap data={data} field={field} range={range} station={station} onPick={setPicked}/>
-    <div className="probe" aria-live="polite"><b>Cell probe</b><span>x {Number(data.cell_x_m[selected].toPrecision(5))} m</span><span>r {Number((data.cell_r_m[selected]*1000).toPrecision(5))} mm</span>
+    <div className="probe" aria-live="polite"><b>Cell probe · {domain==='solid'||(domain==='combined'&&data.cell_r_m[selected]>data.interface_radius_m)?'solid':'fluid'}</b><span>x {Number(data.cell_x_m[selected].toPrecision(5))} m</span><span>r {Number((data.cell_r_m[selected]*1000).toPrecision(5))} mm</span>
       {Object.entries(data.fields).map(([key,f])=><span key={key}>{f.label}: <b>{Number(f.values[selected].toPrecision(6))} {f.unit}</b></span>)}</div>
-    <details><summary>Plot the selected cross-section</summary><Chart title={`${item.label} at x = ${Number(data.cell_x_m[station*data.nr].toPrecision(4))} m`} xLabel="r / R · centre → wall" yLabel={`${item.label} (${item.unit})`} xDomain={[0,1]} zeroBaseline={field!=='temperature'} series={[{name:'Computed cell values',color:'#59b9fa',points:profile}]}/></details>
-    <p className="muted">{data.representation}. Colours show cell values without smoothing. Section positions snap to computed cell centres; the solid wall is an uncoloured geometry outline.</p>
-    <div className="exports"><a href={`/api/jobs/${jobId}/section.vtk`}>Export section to ParaView (.vtk)</a><a href={`/api/jobs/${jobId}/case.zip`}>Download full OpenFOAM case</a></div>
+    <details><summary>Plot the selected cross-section</summary><Chart title={`${item.label} at x = ${Number(data.cell_x_m[station*data.nr].toPrecision(4))} m`} xLabel={domain==='fluid'?'r / R · centre → inner wall':'r / R_outer · centre → outer wall'} yLabel={`${item.label} (${item.unit})`} xDomain={[0,1]} zeroBaseline={field!=='temperature'} series={[{name:'Computed cell values',color:'#59b9fa',points:profile}]}/></details>
+    <p className="muted">{data.representation}. Colours show cell values without smoothing. Section positions snap to computed cell centres. {savedData.solid?'Select Fluid + solid to see both temperature fields on one colour scale; white lines in the map mark their interface.':'The solid wall is an uncoloured geometry outline.'}</p>
+    <div className="exports"><a href={`/api/jobs/${jobId}/section.vtk`}>Fluid section (.vtk)</a>{savedData.solid&&<a href={`/api/jobs/${jobId}/solid-section.vtk`}>Solid section (.vtk)</a>}<a href={`/api/jobs/${jobId}/case.zip`}>Download full OpenFOAM case</a></div>
   </section>
 }

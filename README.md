@@ -1,6 +1,6 @@
-# Pipe CFD · v0.3
+# Pipe CFD · v0.4
 
-A local React/FastAPI interface to **Foundation OpenFOAM 14**. Generate a straight circular pipe, inspect its 3D geometry, mesh it, and solve steady flow and optional fluid heating. Inspect actual pressure, speed and temperature fields, and compare results with traceable analytical or experimental references.
+A local React/FastAPI interface to **Foundation OpenFOAM 14**. Generate a straight circular pipe, inspect its 3D geometry, mesh it, and solve steady flow and optional coupled fluid–solid heating. Inspect actual pressure, speed, fluid temperature and solid temperature fields, and compare results with traceable analytical or experimental references.
 
 ## Start on your Windows PC
 
@@ -27,16 +27,17 @@ The server binds to localhost. It is a local engineering tool, not an authentica
 
 ## First run
 
-1. Click **Heated pipe · analytical check**, choose **Coarse**, then **Run simulation**. The preset adds 10 W through the inner wall to water entering at 20 °C, Re 100.
-2. Follow meshing, flow and temperature stages. Inspect the heat balance, outlet temperature and Nusselt comparison.
+1. Click **Solid wall · conduction check**, choose **Coarse**, then **Run simulation**. The preset adds 10 W at the outside of a 2 mm aluminium wall around water entering at 20 °C, Re 100.
+2. Follow meshing, flow and temperature stages. Inspect heat balance, outlet temperature, maximum solid temperature, interface continuity and the cylindrical wall-conduction comparison.
 3. In **Computed field viewer**, choose speed, pressure or temperature. Orbit, zoom, select a cutaway/axial/cross-section view, move the section slider and click a cell to probe its values. **End view** looks down the pipe; **Reset view** restores the initial camera.
 4. The axial colour map also supports probing. The optional section plot follows the slider. Colours are computed cell values without smoothing; a single global colour scale applies along the whole pipe.
-5. **Enlarge diameter for viewing** makes slender pipes legible and states the scale factor. Uncheck it for true proportions. The wall geometry includes thickness; it has no computed solid-temperature field.
-6. Click **Run three-mesh study** to compare flow and thermal metrics. Use **Laminar verification · Re 100** for flow only or **Princeton experiment · Re 41,727** for the existing turbulent flow experiment.
+5. Select **Region → Fluid + solid** for both computed temperature fields on one colour scale, or **Solid wall** to inspect only the annulus. White lines in the axial map mark the interface. **Enlarge diameter for viewing** states its scale factor; uncheck for true proportions.
+6. Change wall thickness/material under **Wall geometry**. Aluminium and copper set documented room-temperature conductivities; an explicit conductivity override is supported. The temperature plot shows inner and outer walls; a separate wall-drop plot resolves their small difference.
+7. Click **Run three-mesh study** to compare flow and thermal metrics. **Heated pipe · analytical check** retains the fluid-only uniform inner-flux Nu benchmark. Use **Laminar verification · Re 100** for flow only or **Princeton experiment · Re 41,727** for the existing turbulent flow experiment.
 
 An unavailable OpenFOAM installation produces an explicit error. The software never returns analytical or reference curves as CFD output. Runs and results persist under `runs/`; startup marks unfinished runs as interrupted. Cancelled/failed runs keep their logs and cases. Existing v0.2 flow runs can be viewed directly; run a new heated case to get temperatures.
 
-Exports include results JSON, velocity CSV, thermal-profile CSV, the computed meridional section as a ParaView-readable `.vtk` structured grid, and the full OpenFOAM case ZIP. Extract the ZIP and open `pipe.foam` at the latest flow iteration to see U, p and the final T together. The `thermal/thermal.foam` subcase retains the temperature solve and its separate iteration history. Both histories are steady-solver iterations, **not physical time**.
+Exports include results JSON, velocity CSV, thermal-profile CSV, separate fluid and solid meridional `.vtk` sections, and the full OpenFOAM case ZIP. For coupled heating, open **`thermal/conjugate.foam`** in ParaView and select the fluid and solid regions at the latest iteration. Original hydraulic pressure/velocity are in `pipe.foam`; the thermal subcase uses a constant thermodynamic pressure and frozen flow. For fluid-only heating, `pipe.foam` contains U, p and final T together, while `thermal/thermal.foam` retains the temperature history. These are steady-solver iterations, **not physical time**. Old saved runs retain their original thermal mode; they are not retroactively assigned solid temperatures.
 
 The 3D display revolves an axisymmetric solution; it does not add a circumferential flow calculation. WebGL is used when available. Without WebGL, the interactive SVG geometry/cross-section and 2D axial map remain available. Linear charts use decimal 1/2/5 tick steps; pressure and speed include a clearly marked zero while retaining any actual negative data. Temperature charts can use a focused range, and residuals use integer powers of ten.
 
@@ -47,8 +48,9 @@ The 3D display revolves an axisymmetric solution; it does not add a circumferent
 - Constant density, dynamic viscosity, heat capacity and fluid conductivity entered by the user. Properties are **not** automatically temperature-dependent.
 - Laminar below Re 2300; k–ω SST RANS from Re 4000. The transition interval is rejected explicitly. Regime cutoffs are application policy, not a universal prediction of transition.
 - SST uses radial grading, near-zero wall k (1e-12 m²/s²), `omegaWallFunction`, and `nutLowReWallFunction`. The UI estimates y+ from the developed pressure gradient and first wall-cell position; it is a screening estimate, not an exported turbulence-model y+ field.
-- Positive heat input enables a second OpenFOAM **fluid energy transport** solve on the computed frozen velocity/flux field. Uniform power enters through the inner wall; inlet temperature is fixed and the outlet has zero temperature gradient. The heat capacity, conductivity and turbulent Prandtl number are explicit inputs. 0 W runs flow only.
-- Wall thickness and material are geometry metadata. **Solid conduction, temperature feedback on flow, buoyancy, radiation, viscous heating and phase change are not solved.** This is a constant-property forced-convection model, not conjugate heat transfer.
+- Positive heat input enables a thermal solve on computed frozen velocity/flux/turbulence fields. In **Coupled fluid + solid wall** mode, native `foamMultiRun` fluid/solid modules solve radial and axial wall conduction with perfect thermal contact. Uniform power enters the **outer** wall; solid ends are insulated. Inlet fluid temperature is fixed and the outlet has zero temperature gradient. Wall thickness and conductivity affect the computed temperatures.
+- **Fluid only** mode retains the prescribed inner-wall flux and `scalarTransport` benchmark. The heat capacity, fluid conductivity and turbulent Prandtl number are explicit inputs in both modes. 0 W runs flow only. The UI defaults to coupled mode; legacy API inputs with no mode retain fluid-only behavior.
+- **Temperature feedback on flow, buoyancy, radiation, temperature-dependent properties and phase change are not solved.** Coupled mode includes the native fluid equation's kinetic-energy transport in its energy balance; it does not provide a viscous-heating model or a compressible flow calculation.
 - No compressibility, cavitation, roughness, multiphase flow, gravity, bends, manifolds, or CAD meshing yet. The user must check that constant-property incompressible assumptions fit the selected fluid and conditions.
 - Preview values use analytical geometry relations. Simulation results come from the written OpenFOAM fields.
 
@@ -60,9 +62,11 @@ The developed pressure gradient is fitted over 65–85% of the pipe length. The 
 
 The wedge approximates a cylinder with planar circumferential faces. Axial/radial refinement alone does not remove its small fixed angular approximation; use an angular-refinement study before claiming sub-percent geometric accuracy.
 
-Thermal results use OpenFOAM's `scalarTransport` through the `functions` solver module with `incompressibleFluid` supplying the frozen fields. Diffusivity is `k/(rho Cp) + nut/Prt` (the turbulent term is omitted for laminar flow). The conservative first-order upwind temperature discretization is independent of the unchanged flow discretization. Outlet mixing temperature uses boundary face fluxes. The reported heat balance includes heat diffusing out of the fixed-temperature inlet. The Nusselt number uses the computed inner-wall and mixing temperatures; it is never used to generate those temperatures.
+Fluid-only thermal results use OpenFOAM's `scalarTransport` through `functions` with `incompressibleFluid` supplying frozen fields. Coupled heating uses constant-density `fluid` and `solid` modules with conformal `mappedWall` / `coupledTemperature` interfaces, and disables flow/model updates. A separate 8/16/32-layer solid annulus shares the fluid mesh's axial stations. The fluid equation uses conservative upwind advection and `k/(rho Cp) + nut/Prt` diffusion (no turbulent term in laminar flow). Outlet mixing temperature uses boundary face fluxes. Heat balance includes inlet conduction and, in native coupled mode, net kinetic-energy transport.
 
-See [validation methods and sources](docs/VALIDATION.md), [flow benchmarks](docs/BENCHMARKS.md), [thermal benchmarks](docs/THERMAL_BENCHMARKS.md), and the [roadmap](docs/ROADMAP.md).
+Local Nu uses computed interface heat flux and wall/mixing temperatures. **Nu = 48/11 is not used to qualify coupled cases**, because solid axial conduction redistributes the inner-wall flux. Instead, compare the mean solid temperature drop with `Q ln(ro/ri)/(2 pi L k_s)`; insulated ends make this axial-mean relation valid even with axial conduction. Both interface fluxes, interface temperature continuity, whole-system energy balance and saved-field stationarity are checked. Fine coupled meshes use 2,000 thermal iterations by default; unconverged results remain flagged.
+
+See [validation methods and sources](docs/VALIDATION.md), [flow benchmarks](docs/BENCHMARKS.md), [fluid-only thermal benchmarks](docs/THERMAL_BENCHMARKS.md), [coupled wall benchmarks](docs/CONJUGATE_BENCHMARKS.md), and the [roadmap](docs/ROADMAP.md).
 
 ## Tests and reproducible CFD benchmarks
 
@@ -75,7 +79,7 @@ npm --prefix frontend test
 .venv/bin/python scripts/validate.py --case all
 ```
 
-The final command runs all three presets on all three meshes and saves `validation-output/summary.json` and full cases. Allow tens of minutes for the complete serial study. For a short complete heating check use `--case heated_laminar --meshes coarse`. Validation has its own run directory. Experimental disagreements remain in the report; a solver failure or failed laminar/thermal verification gives a nonzero exit status. To repeat only the new energy solve on existing matching laminar benchmark fields, use `scripts/validate_thermal.py <coarse-case> <medium-case> <fine-case>`; it records the reused flow provenance.
+The final command runs all four presets on all three meshes and saves `validation-output/summary.json` and full cases. Allow tens of minutes for the complete serial study. For a short complete coupled check use `--case heated_wall --meshes coarse`. Validation has its own run directory. Experimental disagreements remain in the report; a solver failure or failed laminar/thermal verification gives a nonzero exit status. To reuse existing converged flow fields for the thermal mesh study, use `scripts/validate_conjugate.py <coarse-case> <medium-case> <fine-case>` (or `validate_thermal.py` for fluid-only heating); provenance and exact inputs are recorded.
 
 ## Source layout
 
@@ -86,6 +90,7 @@ The final command runs all three presets on all three meshes and saves `validati
 | `backend/app/runner.py` | Job queue, processes, cancellation and saved run records |
 | `backend/app/results.py` | Field parsing, pressure/flow metrics and validation gates |
 | `backend/app/thermal.py` | OpenFOAM fluid-energy subcase, heat balance and thermal verification |
+| `backend/app/conjugate.py` | Native fluid/solid coupling, solid mesh, interface conservation and wall resistance |
 | `backend/app/fields.py` | Actual mesh/cell data for the viewer and VTK export |
 | `backend/app/references.py` | Reference data and provenance |
 | `frontend/src` | Inputs, run monitoring, comparison plots and exports |

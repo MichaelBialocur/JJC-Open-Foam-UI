@@ -22,7 +22,7 @@ async def lifespan(app):
     app.state.jobs.close()
 
 
-app = FastAPI(title="Pipe CFD", version="0.3.0", lifespan=lifespan)
+app = FastAPI(title="Pipe CFD", version="0.4.0", lifespan=lifespan)
 
 
 @app.get("/")
@@ -165,8 +165,17 @@ def thermal_csv(job_id: UUID):
     if not thermal:
         raise HTTPException(409, "This run has no computed temperature field")
     output = io.StringIO()
-    writer = csv.DictWriter(output, fieldnames=["x_m", "bulk_temperature_c", "wall_temperature_c", "nusselt"])
+    writer = csv.DictWriter(output, fieldnames=list(thermal["profile"][0]))
     writer.writeheader()
     writer.writerows(thermal["profile"])
     return Response(output.getvalue(), media_type="text/csv",
                     headers={"Content-Disposition": f'attachment; filename="thermal-{job_id}.csv"'})
+
+
+@app.get("/api/jobs/{job_id}/solid-section.vtk")
+def solid_vtk(job_id: UUID):
+    data = json.loads(get_fields(job_id))
+    if 'solid' not in data:
+        raise HTTPException(409, "This run has no computed solid temperature field")
+    return Response(meridional_vtk(data['solid']), media_type="application/octet-stream",
+                    headers={"Content-Disposition": f'attachment; filename="solid-section-{job_id}.vtk"'})

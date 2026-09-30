@@ -12,7 +12,7 @@ from backend.app.runner import ACTIVE, JobManager, health
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--case', choices=['laminar', 'superpipe', 'heated_laminar', 'all'], default='laminar')
+    parser.add_argument('--case', choices=[*PRESETS, 'all'], default='laminar')
     parser.add_argument('--meshes', nargs='+', choices=['coarse', 'medium', 'fine'], default=['coarse', 'medium', 'fine'])
     parser.add_argument('--output', default='validation-output')
     args = parser.parse_args()
@@ -25,7 +25,7 @@ def main():
     rows = []
     failed = False
     try:
-        for name in (['laminar','superpipe','heated_laminar'] if args.case == 'all' else [args.case]):
+        for name in (list(PRESETS) if args.case == 'all' else [args.case]):
             previous_f = None
             for mesh in args.meshes:
                 spec = PipeDefinition(**{**PRESETS[name]['inputs'], 'mesh_level': mesh})
@@ -43,7 +43,7 @@ def main():
                     failed = True
                     continue
                 f = result['darcy_friction_factor']
-                row = {'case':name, 'mesh':mesh, 'run_id':run['id'], 'cells':spec.mesh_shape[0]*spec.mesh_shape[1],
+                row = {'case':name, 'mesh':mesh, 'run_id':run['id'], 'cells':spec.summary()['mesh']['cells'],
                        'status':snapshot['status'], 'reynolds':spec.reynolds, 'darcy_f':f,
                        'friction_error_percent':result['validation']['friction_error_percent'],
                        'profile_rmse_percent':result['validation']['profile_rmse_percent_of_bulk'],
@@ -62,7 +62,7 @@ def main():
                     print(json.dumps({k:row['thermal'][k] for k in ['developed_nusselt','outlet_bulk_temperature_c','energy_balance_error_percent']}), flush=True)
                 # Verification must pass; experiments may expose model error, which is reported.
                 failed |= snapshot['status'] != 'completed'
-                if name in ('laminar', 'heated_laminar'):
+                if name in ('laminar', 'heated_laminar', 'heated_wall'):
                     failed |= result['validation']['status'] != 'within_project_target'
                 (root/'summary.json').write_text(json.dumps({'openfoam':status,'results':rows},indent=2))
     except KeyboardInterrupt:

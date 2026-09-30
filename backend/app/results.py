@@ -37,7 +37,7 @@ def convergence(log: str):
     iteration = 0
     rows = {}
     for line in log.splitlines():
-        match = re.match(r"Time = (\d+(?:\.\d+)?)", line)
+        match = re.match(r"\s*Time = (\d+(?:\.\d+)?)", line)
         if match:
             iteration = int(float(match[1]))
         match = re.search(rf"Solving for (\w+), Initial residual = ({NUMBER})", line)
@@ -62,10 +62,19 @@ def patch_flux(path: Path, name, count):
 def read_patch(path: Path, name, count):
     """Read a scalar boundary value array in its OpenFOAM face order."""
     text = path.read_text()
-    match = re.search(r"\b" + re.escape(name) + r"\s*\{([^{}]*)\}", text, re.S)
+    match = re.search(r"\b" + re.escape(name) + r"\s*\{", text)
     if not match:
         raise ValueError(f"Missing {name} scalar patch")
-    block = match[1]
+    # Boundary conditions can contain nested Function1 dictionaries (e.g. Q).
+    depth, end = 1, match.end()
+    while end < len(text) and depth:
+        depth += (text[end] == "{") - (text[end] == "}")
+        end += 1
+    if depth:
+        raise ValueError(f"Unclosed {name} patch")
+    block = text[match.end():end-1]
+    while re.search(r"\{[^{}]*\}", block):
+        block = re.sub(r"\{[^{}]*\}", "", block)
     values = re.search(r"value\s+nonuniform\s+List<scalar>\s+(\d+)\s*\((.*?)\)\s*;", block, re.S)
     if values:
         data = np.fromstring(values[2], sep=" ")
