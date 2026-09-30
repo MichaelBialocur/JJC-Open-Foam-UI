@@ -12,7 +12,7 @@ from backend.app.runner import ACTIVE, JobManager, health
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--case', choices=['laminar', 'superpipe', 'all'], default='laminar')
+    parser.add_argument('--case', choices=['laminar', 'superpipe', 'heated_laminar', 'all'], default='laminar')
     parser.add_argument('--meshes', nargs='+', choices=['coarse', 'medium', 'fine'], default=['coarse', 'medium', 'fine'])
     parser.add_argument('--output', default='validation-output')
     args = parser.parse_args()
@@ -25,7 +25,7 @@ def main():
     rows = []
     failed = False
     try:
-        for name in (['laminar','superpipe'] if args.case == 'all' else [args.case]):
+        for name in (['laminar','superpipe','heated_laminar'] if args.case == 'all' else [args.case]):
             previous_f = None
             for mesh in args.meshes:
                 spec = PipeDefinition(**{**PRESETS[name]['inputs'], 'mesh_level': mesh})
@@ -54,10 +54,15 @@ def main():
                        'change_from_previous_mesh_percent':None if previous_f is None else 100*abs(f-previous_f)/abs(f),
                        'convergence_basis':result['convergence']['convergence_basis']}
                 rows.append(row); previous_f = f
-                print(json.dumps(row), flush=True)
+                if result.get('thermal'):
+                    row['thermal'] = result['thermal']
+                    failed |= result['thermal']['validation']['status'] != 'within_project_target'
+                print(json.dumps({k:v for k,v in row.items() if k != 'thermal'}), flush=True)
+                if 'thermal' in row:
+                    print(json.dumps({k:row['thermal'][k] for k in ['developed_nusselt','outlet_bulk_temperature_c','energy_balance_error_percent']}), flush=True)
                 # Verification must pass; experiments may expose model error, which is reported.
                 failed |= snapshot['status'] != 'completed'
-                if name == 'laminar':
+                if name in ('laminar', 'heated_laminar'):
                     failed |= result['validation']['status'] != 'within_project_target'
                 (root/'summary.json').write_text(json.dumps({'openfoam':status,'results':rows},indent=2))
     except KeyboardInterrupt:

@@ -1,0 +1,3105 @@
+{
+  "date": "2026-09-30",
+  "openfoam": "Foundation 14",
+  "build": "14-7b05503f98a8",
+  "model": "passive-fluid-energy-v1",
+  "method": "OpenFOAM scalarTransport, functions solver, frozen computed U/phi/nut, steady upwind temperature advection",
+  "flow_baseline_commit": "2476f71aeccc6b26be96b3341f4b9935e22d14c5",
+  "inputs": {
+    "geometry_type": "pipe",
+    "length_mm": 1000.0,
+    "inner_diameter_mm": 10,
+    "wall_thickness_mm": 2,
+    "material": "aluminium",
+    "inlet_velocity_m_s": 0.010040080160320642,
+    "inlet_temperature_c": 20,
+    "applied_heat_w": 10.0,
+    "specific_heat_j_kg_k": 4182,
+    "thermal_conductivity_w_m_k": 0.6,
+    "turbulent_prandtl": 0.85,
+    "thermal_iterations": 200,
+    "density_kg_m3": 998,
+    "dynamic_viscosity_pa_s": 0.001002,
+    "flow_model": "auto",
+    "mesh_level": "medium",
+    "max_iterations": 2500,
+    "residual_tolerance": 1e-06,
+    "turbulence_intensity": 0.05,
+    "reference": "auto"
+  },
+  "reference": {
+    "kind": "analytical",
+    "title": "Fully developed laminar pipe \u00b7 uniform wall heat flux",
+    "url": "https://archive.nptel.ac.in/content/storage2/courses/103105052/AdvHeatMass_L_29.pdf",
+    "citation": "S. Chakraborty, NPTEL / IIT Kharagpur, Advanced Heat and Mass Transfer, Lecture 29, pp. 5\u20137.",
+    "nusselt": 4.363636363636363,
+    "conditions": "Smooth circular pipe; fully developed laminar velocity and temperature profiles; constant properties; negligible axial diffusion and viscous heating.",
+    "caveat": "Analytical verification, not experimental validation. Turbulent heat transfer has no experimental qualification in this release."
+  },
+  "results": [
+    {
+      "mesh": "coarse",
+      "cells": 1920,
+      "flow_case_id": "0e7eb2f7-600b-4add-8dbf-301f78cc705b",
+      "nusselt": 4.398776613060477,
+      "nusselt_error_percent": 0.8052973826359278,
+      "energy_error_percent": 1.7226220450083929e-09,
+      "outlet_bulk_temperature_c": 23.038344383026015,
+      "advected_heat_w": 9.999507928331031,
+      "inlet_conduction_loss_w": 0.0004920714967073024,
+      "nusselt_drift_percent": 0.24292622409734643,
+      "thermal_case_id": "f5f2174a-e6a4-4bdc-8923-0813f44aba4e",
+      "validation": {
+        "status": "within_project_target",
+        "checks": {
+          "flow_converged": true,
+          "temperature_converged": true,
+          "mass_balance_below_0_5_percent": true,
+          "energy_balance_below_0_5_percent": true,
+          "inlet_conduction_below_1_percent_input": true,
+          "developed_velocity_profile": true,
+          "nusselt_drift_below_2_percent": true,
+          "thermal_entrance_length_satisfied": true,
+          "laminar_reference_applicable": true
+        },
+        "reference": {
+          "kind": "analytical",
+          "title": "Fully developed laminar pipe \u00b7 uniform wall heat flux",
+          "url": "https://archive.nptel.ac.in/content/storage2/courses/103105052/AdvHeatMass_L_29.pdf",
+          "citation": "S. Chakraborty, NPTEL / IIT Kharagpur, Advanced Heat and Mass Transfer, Lecture 29, pp. 5\u20137.",
+          "nusselt": 4.363636363636363,
+          "conditions": "Smooth circular pipe; fully developed laminar velocity and temperature profiles; constant properties; negligible axial diffusion and viscous heating.",
+          "caveat": "Analytical verification, not experimental validation. Turbulent heat transfer has no experimental qualification in this release.",
+          "applicable": true
+        },
+        "nusselt_error_percent": 0.8052973826359278,
+        "project_target_percent": 2
+      },
+      "convergence": {
+        "iteration": 200,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 200,
+          "T": 5.29910977312e-12
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 0.0,
+        "compared_iterations": [
+          150,
+          200
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      },
+      "maximum_fluid_temperature_c": 24.246581809857673,
+      "nusselt_change_from_coarser_percent": null
+    },
+    {
+      "mesh": "medium",
+      "cells": 7680,
+      "flow_case_id": "5f4cf813-2af9-4569-bef6-5b3055d62bae",
+      "nusselt": 4.385176543589284,
+      "nusselt_error_percent": 0.49362912392110214,
+      "energy_error_percent": 7.632650067534996e-10,
+      "outlet_bulk_temperature_c": 23.038329280950848,
+      "advected_heat_w": 9.999458225823842,
+      "inlet_conduction_loss_w": 0.0005417740998320687,
+      "nusselt_drift_percent": 0.22614237556923691,
+      "thermal_case_id": "9750ff5d-5c6d-424d-9f2d-8ed41451a865",
+      "validation": {
+        "status": "within_project_target",
+        "checks": {
+          "flow_converged": true,
+          "temperature_converged": true,
+          "mass_balance_below_0_5_percent": true,
+          "energy_balance_below_0_5_percent": true,
+          "inlet_conduction_below_1_percent_input": true,
+          "developed_velocity_profile": true,
+          "nusselt_drift_below_2_percent": true,
+          "thermal_entrance_length_satisfied": true,
+          "laminar_reference_applicable": true
+        },
+        "reference": {
+          "kind": "analytical",
+          "title": "Fully developed laminar pipe \u00b7 uniform wall heat flux",
+          "url": "https://archive.nptel.ac.in/content/storage2/courses/103105052/AdvHeatMass_L_29.pdf",
+          "citation": "S. Chakraborty, NPTEL / IIT Kharagpur, Advanced Heat and Mass Transfer, Lecture 29, pp. 5\u20137.",
+          "nusselt": 4.363636363636363,
+          "conditions": "Smooth circular pipe; fully developed laminar velocity and temperature profiles; constant properties; negligible axial diffusion and viscous heating.",
+          "caveat": "Analytical verification, not experimental validation. Turbulent heat transfer has no experimental qualification in this release.",
+          "applicable": true
+        },
+        "nusselt_error_percent": 0.49362912392110214,
+        "project_target_percent": 2
+      },
+      "convergence": {
+        "iteration": 200,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 200,
+          "T": 8.17576227433e-12
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 0.0,
+        "compared_iterations": [
+          150,
+          200
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      },
+      "maximum_fluid_temperature_c": 24.250102031412382,
+      "nusselt_change_from_coarser_percent": 0.3101373305271975
+    },
+    {
+      "mesh": "fine",
+      "cells": 30720,
+      "flow_case_id": "b3c2da34-2115-49d8-a73e-2ff7632cd763",
+      "nusselt": 4.381636133639371,
+      "nusselt_error_percent": 0.4124947292355907,
+      "energy_error_percent": 1.9917045790407428e-08,
+      "outlet_bulk_temperature_c": 23.03832175127809,
+      "advected_heat_w": 9.999433444870572,
+      "inlet_conduction_loss_w": 0.0005665571211318857,
+      "nusselt_drift_percent": 0.21889959492958647,
+      "thermal_case_id": "ad1c3644-f0ae-4c01-a5e8-5e6f1a3332d8",
+      "validation": {
+        "status": "within_project_target",
+        "checks": {
+          "flow_converged": true,
+          "temperature_converged": true,
+          "mass_balance_below_0_5_percent": true,
+          "energy_balance_below_0_5_percent": true,
+          "inlet_conduction_below_1_percent_input": true,
+          "developed_velocity_profile": true,
+          "nusselt_drift_below_2_percent": true,
+          "thermal_entrance_length_satisfied": true,
+          "laminar_reference_applicable": true
+        },
+        "reference": {
+          "kind": "analytical",
+          "title": "Fully developed laminar pipe \u00b7 uniform wall heat flux",
+          "url": "https://archive.nptel.ac.in/content/storage2/courses/103105052/AdvHeatMass_L_29.pdf",
+          "citation": "S. Chakraborty, NPTEL / IIT Kharagpur, Advanced Heat and Mass Transfer, Lecture 29, pp. 5\u20137.",
+          "nusselt": 4.363636363636363,
+          "conditions": "Smooth circular pipe; fully developed laminar velocity and temperature profiles; constant properties; negligible axial diffusion and viscous heating.",
+          "caveat": "Analytical verification, not experimental validation. Turbulent heat transfer has no experimental qualification in this release.",
+          "applicable": true
+        },
+        "nusselt_error_percent": 0.4124947292355907,
+        "project_target_percent": 2
+      },
+      "convergence": {
+        "iteration": 200,
+        "solver_converged": false,
+        "residuals": {
+          "iteration": 200,
+          "T": 1.35900024018e-11
+        },
+        "converged": true,
+        "saved_field_change_over_temperature_scale": 3.2910693848213493e-10,
+        "compared_iterations": [
+          150,
+          200
+        ],
+        "temperature_scale_k": 3.0384938987046533
+      },
+      "maximum_fluid_temperature_c": 24.250955086300053,
+      "nusselt_change_from_coarser_percent": 0.08080109442982374
+    }
+  ],
+  "fine_temperature_profile": [
+    {
+      "x_m": 0.00104166667,
+      "bulk_temperature_c": 20.007039779252125,
+      "wall_temperature_c": 20.109363506300042,
+      "nusselt": 51.846868002037205
+    },
+    {
+      "x_m": 0.003125,
+      "bulk_temperature_c": 20.01418719096631,
+      "wall_temperature_c": 20.239127032300075,
+      "nusselt": 23.58481600357347
+    },
+    {
+      "x_m": 0.00520833333,
+      "bulk_temperature_c": 20.019095135364125,
+      "wall_temperature_c": 20.325227849300063,
+      "nusselt": 17.32962381419981
+    },
+    {
+      "x_m": 0.00729166667,
+      "bulk_temperature_c": 20.026324937041863,
+      "wall_temperature_c": 20.389079923300073,
+      "nusselt": 14.624650165259515
+    },
+    {
+      "x_m": 0.009375,
+      "bulk_temperature_c": 20.03164127775318,
+      "wall_temperature_c": 20.440437849300054,
+      "nusselt": 12.977517765511774
+    },
+    {
+      "x_m": 0.01145833333,
+      "bulk_temperature_c": 20.038700197972275,
+      "wall_temperature_c": 20.484717144300078,
+      "nusselt": 11.89453632515297
+    },
+    {
+      "x_m": 0.01354166667,
+      "bulk_temperature_c": 20.044351669228433,
+      "wall_temperature_c": 20.52370161330009,
+      "nusselt": 11.067415017653124
+    },
+    {
+      "x_m": 0.015625,
+      "bulk_temperature_c": 20.05114975635604,
+      "wall_temperature_c": 20.55913328530005,
+      "nusselt": 10.443576351300521
+    },
+    {
+      "x_m": 0.01770833333,
+      "bulk_temperature_c": 20.057057004689625,
+      "wall_temperature_c": 20.591534986300076,
+      "nusselt": 9.925880863688162
+    },
+    {
+      "x_m": 0.01979166667,
+      "bulk_temperature_c": 20.06365595855175,
+      "wall_temperature_c": 20.621693309300042,
+      "nusselt": 9.506827388195342
+    },
+    {
+      "x_m": 0.021875,
+      "bulk_temperature_c": 20.06973381320114,
+      "wall_temperature_c": 20.649850127300056,
+      "nusselt": 9.145001857033204
+    },
+    {
+      "x_m": 0.02395833333,
+      "bulk_temperature_c": 20.076206826475186,
+      "wall_temperature_c": 20.676418658300065,
+      "nusselt": 8.83882071034832
+    },
+    {
+      "x_m": 0.02604166667,
+      "bulk_temperature_c": 20.082388721672487,
+      "wall_temperature_c": 20.70154840230009,
+      "nusselt": 8.568330490047941
+    },
+    {
+      "x_m": 0.028125,
+      "bulk_temperature_c": 20.088788857882093,
+      "wall_temperature_c": 20.72547793630008,
+      "nusselt": 8.332426218008715
+    },
+    {
+      "x_m": 0.03020833333,
+      "bulk_temperature_c": 20.0950312290675,
+      "wall_temperature_c": 20.748313599300047,
+      "nusselt": 8.120783617413998
+    },
+    {
+      "x_m": 0.03229166667,
+      "bulk_temperature_c": 20.101391578305822,
+      "wall_temperature_c": 20.770203836300084,
+      "nusselt": 7.932218206705421
+    },
+    {
+      "x_m": 0.034375,
+      "bulk_temperature_c": 20.107668357724435,
+      "wall_temperature_c": 20.79122905530005,
+      "nusselt": 7.761073432901679
+    },
+    {
+      "x_m": 0.03645833333,
+      "bulk_temperature_c": 20.11400808748391,
+      "wall_temperature_c": 20.811487816300087,
+      "nusselt": 7.606192051967205
+    },
+    {
+      "x_m": 0.03854166667,
+      "bulk_temperature_c": 20.12030441084596,
+      "wall_temperature_c": 20.831042680300072,
+      "nusselt": 7.464301554782635
+    },
+    {
+      "x_m": 0.040625,
+      "bulk_temperature_c": 20.12663411357039,
+      "wall_temperature_c": 20.849962865300085,
+      "nusselt": 7.334375630781447
+    },
+    {
+      "x_m": 0.04270833333,
+      "bulk_temperature_c": 20.132941717040183,
+      "wall_temperature_c": 20.86829785830008,
+      "nusselt": 7.214415535634758
+    },
+    {
+      "x_m": 0.04479166667,
+      "bulk_temperature_c": 20.13926702878365,
+      "wall_temperature_c": 20.886098581300075,
+      "nusselt": 7.103562713511844
+    },
+    {
+      "x_m": 0.046875,
+      "bulk_temperature_c": 20.145581359603398,
+      "wall_temperature_c": 20.903404657300086,
+      "nusselt": 7.000530052129888
+    },
+    {
+      "x_m": 0.04895833333,
+      "bulk_temperature_c": 20.151905163778224,
+      "wall_temperature_c": 20.920254965300046,
+      "nusselt": 6.904621774121942
+    },
+    {
+      "x_m": 0.05104166667,
+      "bulk_temperature_c": 20.158223700332883,
+      "wall_temperature_c": 20.936681563300056,
+      "nusselt": 6.814967157642496
+    },
+    {
+      "x_m": 0.053125,
+      "bulk_temperature_c": 20.164547397739113,
+      "wall_temperature_c": 20.952714997300063,
+      "nusselt": 6.731010983812449
+    },
+    {
+      "x_m": 0.05520833333,
+      "bulk_temperature_c": 20.17086871435771,
+      "wall_temperature_c": 20.968381459300076,
+      "nusselt": 6.652137916759223
+    },
+    {
+      "x_m": 0.05729166667,
+      "bulk_temperature_c": 20.177192927366093,
+      "wall_temperature_c": 20.983705486300096,
+      "nusselt": 6.577907201769896
+    },
+    {
+      "x_m": 0.059375,
+      "bulk_temperature_c": 20.183516187463624,
+      "wall_temperature_c": 20.998708674300076,
+      "nusselt": 6.507867596176944
+    },
+    {
+      "x_m": 0.06145833333,
+      "bulk_temperature_c": 20.18984114304652,
+      "wall_temperature_c": 21.013411073300063,
+      "nusselt": 6.441668855122744
+    },
+    {
+      "x_m": 0.06354166667,
+      "bulk_temperature_c": 20.196165828763355,
+      "wall_temperature_c": 21.027830643300092,
+      "nusselt": 6.3789698409749205
+    },
+    {
+      "x_m": 0.065625,
+      "bulk_temperature_c": 20.202491561163754,
+      "wall_temperature_c": 21.041983998300054,
+      "nusselt": 6.31949084357087
+    },
+    {
+      "x_m": 0.06770833333,
+      "bulk_temperature_c": 20.208817332656395,
+      "wall_temperature_c": 21.055886196300094,
+      "nusselt": 6.262967507635066
+    },
+    {
+      "x_m": 0.06979166667,
+      "bulk_temperature_c": 20.215143788426076,
+      "wall_temperature_c": 21.069551155300076,
+      "nusselt": 6.209174891761206
+    },
+    {
+      "x_m": 0.071875,
+      "bulk_temperature_c": 20.221470408008713,
+      "wall_temperature_c": 21.08299160030009,
+      "nusselt": 6.157903969395998
+    },
+    {
+      "x_m": 0.07395833333,
+      "bulk_temperature_c": 20.227797500478744,
+      "wall_temperature_c": 21.096219305300053,
+      "nusselt": 6.10897232229384
+    },
+    {
+      "x_m": 0.07604166667,
+      "bulk_temperature_c": 20.234124792704847,
+      "wall_temperature_c": 21.109245099300097,
+      "nusselt": 6.062211937887904
+    },
+    {
+      "x_m": 0.078125,
+      "bulk_temperature_c": 20.24045242793909,
+      "wall_temperature_c": 21.122079022300056,
+      "nusselt": 6.017473614864366
+    },
+    {
+      "x_m": 0.08020833333,
+      "bulk_temperature_c": 20.246780258943488,
+      "wall_temperature_c": 21.134730357300043,
+      "nusselt": 5.974620397642621
+    },
+    {
+      "x_m": 0.08229166667,
+      "bulk_temperature_c": 20.253108348040314,
+      "wall_temperature_c": 21.147207731300057,
+      "nusselt": 5.933529168075327
+    },
+    {
+      "x_m": 0.084375,
+      "bulk_temperature_c": 20.259436612832815,
+      "wall_temperature_c": 21.15951915030007,
+      "nusselt": 5.894086985242551
+    },
+    {
+      "x_m": 0.08645833333,
+      "bulk_temperature_c": 20.265765076461264,
+      "wall_temperature_c": 21.17167207530008,
+      "nusselt": 5.85619139329971
+    },
+    {
+      "x_m": 0.08854166667,
+      "bulk_temperature_c": 20.27209369091662,
+      "wall_temperature_c": 21.183673459300053,
+      "nusselt": 5.819748258715589
+    },
+    {
+      "x_m": 0.090625,
+      "bulk_temperature_c": 20.27842246107741,
+      "wall_temperature_c": 21.195529793300068,
+      "nusselt": 5.784671633659833
+    },
+    {
+      "x_m": 0.09270833333,
+      "bulk_temperature_c": 20.284751357674395,
+      "wall_temperature_c": 21.207247149300088,
+      "nusselt": 5.750882354032941
+    },
+    {
+      "x_m": 0.09479166667,
+      "bulk_temperature_c": 20.291080377610456,
+      "wall_temperature_c": 21.21883120930005,
+      "nusselt": 5.718307748717649
+    },
+    {
+      "x_m": 0.096875,
+      "bulk_temperature_c": 20.2974095015706,
+      "wall_temperature_c": 21.23028730230004,
+      "nusselt": 5.686880709972505
+    },
+    {
+      "x_m": 0.09895833333,
+      "bulk_temperature_c": 20.303738724100356,
+      "wall_temperature_c": 21.241620434300046,
+      "nusselt": 5.656539318375544
+    },
+    {
+      "x_m": 0.10104166667,
+      "bulk_temperature_c": 20.31006803173807,
+      "wall_temperature_c": 21.252835307300074,
+      "nusselt": 5.627226259595523
+    },
+    {
+      "x_m": 0.103125,
+      "bulk_temperature_c": 20.316397418177075,
+      "wall_temperature_c": 21.26393635030007,
+      "nusselt": 5.598888436006982
+    },
+    {
+      "x_m": 0.10520833333,
+      "bulk_temperature_c": 20.32272687374575,
+      "wall_temperature_c": 21.274927734300093,
+      "nusselt": 5.57147655447543
+    },
+    {
+      "x_m": 0.10729166667,
+      "bulk_temperature_c": 20.329056392598375,
+      "wall_temperature_c": 21.285813396300057,
+      "nusselt": 5.5449447970636445
+    },
+    {
+      "x_m": 0.109375,
+      "bulk_temperature_c": 20.335385967395723,
+      "wall_temperature_c": 21.296597057300062,
+      "nusselt": 5.5192504804099
+    },
+    {
+      "x_m": 0.11145833333,
+      "bulk_temperature_c": 20.341715593135348,
+      "wall_temperature_c": 21.307282233300043,
+      "nusselt": 5.494353832299912
+    },
+    {
+      "x_m": 0.11354166667,
+      "bulk_temperature_c": 20.34804526435653,
+      "wall_temperature_c": 21.317872255300074,
+      "nusselt": 5.4702176978684065
+    },
+    {
+      "x_m": 0.115625,
+      "bulk_temperature_c": 20.354374976499287,
+      "wall_temperature_c": 21.328370278300042,
+      "nusselt": 5.446807351043148
+    },
+    {
+      "x_m": 0.11770833333,
+      "bulk_temperature_c": 20.36070472533902,
+      "wall_temperature_c": 21.338779298300096,
+      "nusselt": 5.424090265089598
+    },
+    {
+      "x_m": 0.11979166667,
+      "bulk_temperature_c": 20.36703450739799,
+      "wall_temperature_c": 21.34910215630009,
+      "nusselt": 5.402035975485728
+    },
+    {
+      "x_m": 0.121875,
+      "bulk_temperature_c": 20.373364319352447,
+      "wall_temperature_c": 21.359341560300095,
+      "nusselt": 5.380615849338384
+    },
+    {
+      "x_m": 0.12395833333,
+      "bulk_temperature_c": 20.379694157993868,
+      "wall_temperature_c": 21.369500079300053,
+      "nusselt": 5.359803023535106
+    },
+    {
+      "x_m": 0.12604166667,
+      "bulk_temperature_c": 20.386024020829268,
+      "wall_temperature_c": 21.37958016630006,
+      "nusselt": 5.339572196210434
+    },
+    {
+      "x_m": 0.128125,
+      "bulk_temperature_c": 20.39235390568348,
+      "wall_temperature_c": 21.38958415630009,
+      "nusselt": 5.319899558251006
+    },
+    {
+      "x_m": 0.13020833333,
+      "bulk_temperature_c": 20.3986838099309,
+      "wall_temperature_c": 21.399514279300092,
+      "nusselt": 5.3007626487167325
+    },
+    {
+      "x_m": 0.13229166667,
+      "bulk_temperature_c": 20.405013732135615,
+      "wall_temperature_c": 21.409372664300065,
+      "nusselt": 5.282140278572436
+    },
+    {
+      "x_m": 0.134375,
+      "bulk_temperature_c": 20.411343670336976,
+      "wall_temperature_c": 21.419161345300097,
+      "nusselt": 5.26401243153825
+    },
+    {
+      "x_m": 0.13645833333,
+      "bulk_temperature_c": 20.417673623305802,
+      "wall_temperature_c": 21.42888227030005,
+      "nusselt": 5.2463601705732055
+    },
+    {
+      "x_m": 0.13854166667,
+      "bulk_temperature_c": 20.42400358933503,
+      "wall_temperature_c": 21.438537301300073,
+      "nusselt": 5.22916558332429
+    },
+    {
+      "x_m": 0.140625,
+      "bulk_temperature_c": 20.430333567586104,
+      "wall_temperature_c": 21.44812822530008,
+      "nusselt": 5.212411687879689
+    },
+    {
+      "x_m": 0.14270833333,
+      "bulk_temperature_c": 20.436663556513565,
+      "wall_temperature_c": 21.457656753300057,
+      "nusselt": 5.196082389606021
+    },
+    {
+      "x_m": 0.14479166667,
+      "bulk_temperature_c": 20.442993555639305,
+      "wall_temperature_c": 21.467124527300086,
+      "nusselt": 5.180162417241152
+    },
+    {
+      "x_m": 0.146875,
+      "bulk_temperature_c": 20.449323563937867,
+      "wall_temperature_c": 21.47653312530008,
+      "nusselt": 5.164637255415059
+    },
+    {
+      "x_m": 0.14895833333,
+      "bulk_temperature_c": 20.45565358029353,
+      "wall_temperature_c": 21.48588406330009,
+      "nusselt": 5.149493105899539
+    },
+    {
+      "x_m": 0.15104166667,
+      "bulk_temperature_c": 20.46198360454713,
+      "wall_temperature_c": 21.49517879630008,
+      "nusselt": 5.13471685899828
+    },
+    {
+      "x_m": 0.153125,
+      "bulk_temperature_c": 20.46831363549876,
+      "wall_temperature_c": 21.504418728300095,
+      "nusselt": 5.120296007218899
+    },
+    {
+      "x_m": 0.15520833333,
+      "bulk_temperature_c": 20.474643673026605,
+      "wall_temperature_c": 21.513605206300042,
+      "nusselt": 5.106218661450306
+    },
+    {
+      "x_m": 0.15729166667,
+      "bulk_temperature_c": 20.480973716512096,
+      "wall_temperature_c": 21.52273953130009,
+      "nusselt": 5.092473466130661
+    },
+    {
+      "x_m": 0.159375,
+      "bulk_temperature_c": 20.48730376550145,
+      "wall_temperature_c": 21.53182295730005,
+      "nusselt": 5.0790495870111
+    },
+    {
+      "x_m": 0.16145833333,
+      "bulk_temperature_c": 20.493633819684874,
+      "wall_temperature_c": 21.540856691300064,
+      "nusselt": 5.0659366917257955
+    },
+    {
+      "x_m": 0.16354166667,
+      "bulk_temperature_c": 20.49996387858937,
+      "wall_temperature_c": 21.549841899300077,
+      "nusselt": 5.053124901251434
+    },
+    {
+      "x_m": 0.165625,
+      "bulk_temperature_c": 20.506293941835565,
+      "wall_temperature_c": 21.558779706300072,
+      "nusselt": 5.040604774762967
+    },
+    {
+      "x_m": 0.16770833333,
+      "bulk_temperature_c": 20.512624009180854,
+      "wall_temperature_c": 21.567671200300083,
+      "nusselt": 5.028367275308273
+    },
+    {
+      "x_m": 0.16979166667,
+      "bulk_temperature_c": 20.518954080301626,
+      "wall_temperature_c": 21.57651743330007,
+      "nusselt": 5.016403749892093
+    },
+    {
+      "x_m": 0.171875,
+      "bulk_temperature_c": 20.525284155054408,
+      "wall_temperature_c": 21.585319420300095,
+      "nusselt": 5.004705922213116
+    },
+    {
+      "x_m": 0.17395833333,
+      "bulk_temperature_c": 20.531614233243886,
+      "wall_temperature_c": 21.594078143300067,
+      "nusselt": 4.993265860154552
+    },
+    {
+      "x_m": 0.17604166667,
+      "bulk_temperature_c": 20.537944314640583,
+      "wall_temperature_c": 21.60279455630007,
+      "nusselt": 4.982075940990691
+    },
+    {
+      "x_m": 0.178125,
+      "bulk_temperature_c": 20.544274399082042,
+      "wall_temperature_c": 21.611469579300092,
+      "nusselt": 4.97112886945937
+    },
+    {
+      "x_m": 0.18020833333,
+      "bulk_temperature_c": 20.550604486361237,
+      "wall_temperature_c": 21.620104105300072,
+      "nusselt": 4.960417634364065
+    },
+    {
+      "x_m": 0.18229166667,
+      "bulk_temperature_c": 20.556934576237666,
+      "wall_temperature_c": 21.62869899830008,
+      "nusselt": 4.949935508701644
+    },
+    {
+      "x_m": 0.184375,
+      "bulk_temperature_c": 20.563264668749355,
+      "wall_temperature_c": 21.63725509930009,
+      "nusselt": 4.939676014626484
+    },
+    {
+      "x_m": 0.18645833333,
+      "bulk_temperature_c": 20.569594763748114,
+      "wall_temperature_c": 21.645773220300043,
+      "nusselt": 4.929632940922797
+    },
+    {
+      "x_m": 0.18854166667,
+      "bulk_temperature_c": 20.575924860910106,
+      "wall_temperature_c": 21.65425415130005,
+      "nusselt": 4.919800303125767
+    },
+    {
+      "x_m": 0.190625,
+      "bulk_temperature_c": 20.58225496045236,
+      "wall_temperature_c": 21.662698659300077,
+      "nusselt": 4.910172344369036
+    },
+    {
+      "x_m": 0.19270833333,
+      "bulk_temperature_c": 20.58858506199857,
+      "wall_temperature_c": 21.671107489300084,
+      "nusselt": 4.900743518962873
+    },
+    {
+      "x_m": 0.19479166667,
+      "bulk_temperature_c": 20.59491516558785,
+      "wall_temperature_c": 21.679481364300045,
+      "nusselt": 4.891508490702688
+    },
+    {
+      "x_m": 0.196875,
+      "bulk_temperature_c": 20.601245271408743,
+      "wall_temperature_c": 21.687820986300096,
+      "nusselt": 4.882462121160429
+    },
+    {
+      "x_m": 0.19895833333,
+      "bulk_temperature_c": 20.607575378769184,
+      "wall_temperature_c": 21.696127039300052,
+      "nusselt": 4.873599446022255
+    },
+    {
+      "x_m": 0.20104166667,
+      "bulk_temperature_c": 20.613905488034902,
+      "wall_temperature_c": 21.704400188300042,
+      "nusselt": 4.8649156831665135
+    },
+    {
+      "x_m": 0.203125,
+      "bulk_temperature_c": 20.62023559899967,
+      "wall_temperature_c": 21.712641079300056,
+      "nusselt": 4.856406220400002
+    },
+    {
+      "x_m": 0.20520833333,
+      "bulk_temperature_c": 20.62656571183055,
+      "wall_temperature_c": 21.72085034330007,
+      "nusselt": 4.848066597266849
+    },
+    {
+      "x_m": 0.20729166667,
+      "bulk_temperature_c": 20.632895826278457,
+      "wall_temperature_c": 21.72902859130005,
+      "nusselt": 4.839892519429737
+    },
+    {
+      "x_m": 0.209375,
+      "bulk_temperature_c": 20.639225942195992,
+      "wall_temperature_c": 21.737176420300045,
+      "nusselt": 4.831879830218601
+    },
+    {
+      "x_m": 0.21145833333,
+      "bulk_temperature_c": 20.64555605963119,
+      "wall_temperature_c": 21.745294413300087,
+      "nusselt": 4.824024507312121
+    },
+    {
+      "x_m": 0.21354166667,
+      "bulk_temperature_c": 20.65188617852033,
+      "wall_temperature_c": 21.753383135300055,
+      "nusselt": 4.816322675316072
+    },
+    {
+      "x_m": 0.215625,
+      "bulk_temperature_c": 20.65821629915746,
+      "wall_temperature_c": 21.76144313730009,
+      "nusselt": 4.808770586710437
+    },
+    {
+      "x_m": 0.21770833333,
+      "bulk_temperature_c": 20.664546420977842,
+      "wall_temperature_c": 21.769474959300055,
+      "nusselt": 4.801364600271356
+    },
+    {
+      "x_m": 0.21979166667,
+      "bulk_temperature_c": 20.67087654412103,
+      "wall_temperature_c": 21.77747912630008,
+      "nusselt": 4.794101202333413
+    },
+    {
+      "x_m": 0.221875,
+      "bulk_temperature_c": 20.677206668755446,
+      "wall_temperature_c": 21.78545615130008,
+      "nusselt": 4.786976987842783
+    },
+    {
+      "x_m": 0.22395833333,
+      "bulk_temperature_c": 20.683536794703684,
+      "wall_temperature_c": 21.793406531300093,
+      "nusselt": 4.779988673264461
+    },
+    {
+      "x_m": 0.22604166667,
+      "bulk_temperature_c": 20.689866921763326,
+      "wall_temperature_c": 21.801330756300047,
+      "nusselt": 4.773133056498537
+    },
+    {
+      "x_m": 0.228125,
+      "bulk_temperature_c": 20.69619705022376,
+      "wall_temperature_c": 21.809229301300093,
+      "nusselt": 4.766407051187961
+    },
+    {
+      "x_m": 0.23020833333,
+      "bulk_temperature_c": 20.702527179818276,
+      "wall_temperature_c": 21.817102632300077,
+      "nusselt": 4.759807654041676
+    },
+    {
+      "x_m": 0.23229166667,
+      "bulk_temperature_c": 20.708857310482074,
+      "wall_temperature_c": 21.824951202300042,
+      "nusselt": 4.753331963038019
+    },
+    {
+      "x_m": 0.234375,
+      "bulk_temperature_c": 20.7151874421711,
+      "wall_temperature_c": 21.832775457300045,
+      "nusselt": 4.746977148925265
+    },
+    {
+      "x_m": 0.23645833333,
+      "bulk_temperature_c": 20.721517574981874,
+      "wall_temperature_c": 21.840575828300075,
+      "nusselt": 4.740740487815639
+    },
+    {
+      "x_m": 0.23854166667,
+      "bulk_temperature_c": 20.72784770874216,
+      "wall_temperature_c": 21.848352740300072,
+      "nusselt": 4.734619319249042
+    },
+    {
+      "x_m": 0.240625,
+      "bulk_temperature_c": 20.734177843923476,
+      "wall_temperature_c": 21.85610660830008,
+      "nusselt": 4.728611065318069
+    },
+    {
+      "x_m": 0.24270833333,
+      "bulk_temperature_c": 20.740507979891845,
+      "wall_temperature_c": 21.863837836300092,
+      "nusselt": 4.72271322574178
+    },
+    {
+      "x_m": 0.24479166667,
+      "bulk_temperature_c": 20.74683811698202,
+      "wall_temperature_c": 21.871546822300047,
+      "nusselt": 4.716923363929801
+    },
+    {
+      "x_m": 0.246875,
+      "bulk_temperature_c": 20.75316825541813,
+      "wall_temperature_c": 21.87923395230007,
+      "nusselt": 4.711239126118292
+    },
+    {
+      "x_m": 0.24895833333,
+      "bulk_temperature_c": 20.759498394521017,
+      "wall_temperature_c": 21.886899605300073,
+      "nusselt": 4.705658215555646
+    },
+    {
+      "x_m": 0.25104166667,
+      "bulk_temperature_c": 20.765828534589446,
+      "wall_temperature_c": 21.894544155300082,
+      "nusselt": 4.700178390717873
+    },
+    {
+      "x_m": 0.253125,
+      "bulk_temperature_c": 20.772158675286278,
+      "wall_temperature_c": 21.90216796230004,
+      "nusselt": 4.694797494761854
+    },
+    {
+      "x_m": 0.25520833333,
+      "bulk_temperature_c": 20.778488816963034,
+      "wall_temperature_c": 21.909771383300097,
+      "nusselt": 4.689513413883178
+    },
+    {
+      "x_m": 0.25729166667,
+      "bulk_temperature_c": 20.784818959736583,
+      "wall_temperature_c": 21.917354767300083,
+      "nusselt": 4.68432409315446
+    },
+    {
+      "x_m": 0.259375,
+      "bulk_temperature_c": 20.791149103314865,
+      "wall_temperature_c": 21.92491845430004,
+      "nusselt": 4.679227538758198
+    },
+    {
+      "x_m": 0.26145833333,
+      "bulk_temperature_c": 20.797479247537296,
+      "wall_temperature_c": 21.932462778300078,
+      "nusselt": 4.674221806693914
+    },
+    {
+      "x_m": 0.26354166667,
+      "bulk_temperature_c": 20.80380939264495,
+      "wall_temperature_c": 21.939988068300067,
+      "nusselt": 4.669304998767825
+    },
+    {
+      "x_m": 0.265625,
+      "bulk_temperature_c": 20.81013953882274,
+      "wall_temperature_c": 21.947494643300047,
+      "nusselt": 4.664475280275749
+    },
+    {
+      "x_m": 0.26770833333,
+      "bulk_temperature_c": 20.816469685932304,
+      "wall_temperature_c": 21.95498281730005,
+      "nusselt": 4.659730857347707
+    },
+    {
+      "x_m": 0.26979166667,
+      "bulk_temperature_c": 20.82279983377424,
+      "wall_temperature_c": 21.962452898300057,
+      "nusselt": 4.655069981264168
+    },
+    {
+      "x_m": 0.271875,
+      "bulk_temperature_c": 20.82912998254386,
+      "wall_temperature_c": 21.969905190300096,
+      "nusselt": 4.650490941299867
+    },
+    {
+      "x_m": 0.27395833333,
+      "bulk_temperature_c": 20.835460132009416,
+      "wall_temperature_c": 21.97733998730007,
+      "nusselt": 4.645992085024978
+    },
+    {
+      "x_m": 0.27604166667,
+      "bulk_temperature_c": 20.84179028191943,
+      "wall_temperature_c": 21.98475757730006,
+      "nusselt": 4.641571802772473
+    },
+    {
+      "x_m": 0.278125,
+      "bulk_temperature_c": 20.84812043266379,
+      "wall_temperature_c": 21.992158248300086,
+      "nusselt": 4.637228505230133
+    },
+    {
+      "x_m": 0.28020833333,
+      "bulk_temperature_c": 20.8544505841125,
+      "wall_temperature_c": 21.999542278300055,
+      "nusselt": 4.632960658660497
+    },
+    {
+      "x_m": 0.28229166667,
+      "bulk_temperature_c": 20.86078073642159,
+      "wall_temperature_c": 22.00690994130008,
+      "nusselt": 4.628766763073872
+    },
+    {
+      "x_m": 0.284375,
+      "bulk_temperature_c": 20.867110889241815,
+      "wall_temperature_c": 22.014261503300077,
+      "nusselt": 4.62464536453659
+    },
+    {
+      "x_m": 0.28645833333,
+      "bulk_temperature_c": 20.87344104313729,
+      "wall_temperature_c": 22.021597231300063,
+      "nusselt": 4.620595023939146
+    },
+    {
+      "x_m": 0.28854166667,
+      "bulk_temperature_c": 20.879771197440505,
+      "wall_temperature_c": 22.02891738230005,
+      "nusselt": 4.616614352140293
+    },
+    {
+      "x_m": 0.290625,
+      "bulk_temperature_c": 20.88610135246688,
+      "wall_temperature_c": 22.03622221030008,
+      "nusselt": 4.6127019900540205
+    },
+    {
+      "x_m": 0.29270833333,
+      "bulk_temperature_c": 20.89243150793976,
+      "wall_temperature_c": 22.043511961300055,
+      "nusselt": 4.6088566218310225
+    },
+    {
+      "x_m": 0.29479166667,
+      "bulk_temperature_c": 20.898761664163032,
+      "wall_temperature_c": 22.050786883300077,
+      "nusselt": 4.605076938943942
+    },
+    {
+      "x_m": 0.296875,
+      "bulk_temperature_c": 20.905091821022552,
+      "wall_temperature_c": 22.058047215300064,
+      "nusselt": 4.601361679784907
+    },
+    {
+      "x_m": 0.29895833333,
+      "bulk_temperature_c": 20.911421978411965,
+      "wall_temperature_c": 22.06529319230009,
+      "nusselt": 4.597709610809495
+    },
+    {
+      "x_m": 0.30104166667,
+      "bulk_temperature_c": 20.917752136416482,
+      "wall_temperature_c": 22.07252504430005,
+      "nusselt": 4.59411953078548
+    },
+    {
+      "x_m": 0.303125,
+      "bulk_temperature_c": 20.92408229521419,
+      "wall_temperature_c": 22.079743000300084,
+      "nusselt": 4.5905902540274965
+    },
+    {
+      "x_m": 0.30520833333,
+      "bulk_temperature_c": 20.930412454483474,
+      "wall_temperature_c": 22.08694728230006,
+      "nusselt": 4.587120631503532
+    },
+    {
+      "x_m": 0.30729166667,
+      "bulk_temperature_c": 20.936742614450736,
+      "wall_temperature_c": 22.094138109300047,
+      "nusselt": 4.583709538648722
+    },
+    {
+      "x_m": 0.309375,
+      "bulk_temperature_c": 20.943072774729103,
+      "wall_temperature_c": 22.10131569630005,
+      "nusselt": 4.5803558743396895
+    },
+    {
+      "x_m": 0.31145833333,
+      "bulk_temperature_c": 20.9494029356577,
+      "wall_temperature_c": 22.108480254300048,
+      "nusselt": 4.577058565811559
+    },
+    {
+      "x_m": 0.31354166667,
+      "bulk_temperature_c": 20.955733097073335,
+      "wall_temperature_c": 22.115631992300052,
+      "nusselt": 4.573816555530798
+    },
+    {
+      "x_m": 0.315625,
+      "bulk_temperature_c": 20.962063259061665,
+      "wall_temperature_c": 22.122771112300086,
+      "nusselt": 4.570628823547825
+    },
+    {
+      "x_m": 0.31770833333,
+      "bulk_temperature_c": 20.968393421662427,
+      "wall_temperature_c": 22.12989781530007,
+      "nusselt": 4.567494362302783
+    },
+    {
+      "x_m": 0.31979166667,
+      "bulk_temperature_c": 20.974723584797516,
+      "wall_temperature_c": 22.13701229830008,
+      "nusselt": 4.564412187865704
+    },
+    {
+      "x_m": 0.321875,
+      "bulk_temperature_c": 20.981053748448005,
+      "wall_temperature_c": 22.144114754300062,
+      "nusselt": 4.561381340304918
+    },
+    {
+      "x_m": 0.32395833333,
+      "bulk_temperature_c": 20.987383912581492,
+      "wall_temperature_c": 22.151205374300048,
+      "nusselt": 4.558400875247635
+    },
+    {
+      "x_m": 0.32604166667,
+      "bulk_temperature_c": 20.99371407709947,
+      "wall_temperature_c": 22.158284343300068,
+      "nusselt": 4.555469879063547
+    },
+    {
+      "x_m": 0.328125,
+      "bulk_temperature_c": 21.000044242043884,
+      "wall_temperature_c": 22.165351847300087,
+      "nusselt": 4.552587441977141
+    },
+    {
+      "x_m": 0.33020833333,
+      "bulk_temperature_c": 21.00637440747971,
+      "wall_temperature_c": 22.172408064300043,
+      "nusselt": 4.549752692556532
+    },
+    {
+      "x_m": 0.33229166667,
+      "bulk_temperature_c": 21.012704573359485,
+      "wall_temperature_c": 22.17945317430008,
+      "nusselt": 4.54696475783472
+    },
+    {
+      "x_m": 0.334375,
+      "bulk_temperature_c": 21.01903473985567,
+      "wall_temperature_c": 22.18648734830009,
+      "nusselt": 4.544222807295572
+    },
+    {
+      "x_m": 0.33645833333,
+      "bulk_temperature_c": 21.025364906919833,
+      "wall_temperature_c": 22.193510760300057,
+      "nusselt": 4.541526004118808
+    },
+    {
+      "x_m": 0.33854166667,
+      "bulk_temperature_c": 21.031695074340405,
+      "wall_temperature_c": 22.200523579300068,
+      "nusselt": 4.538873536381566
+    },
+    {
+      "x_m": 0.340625,
+      "bulk_temperature_c": 21.03802524214956,
+      "wall_temperature_c": 22.207525969300093,
+      "nusselt": 4.5362646183690485
+    },
+    {
+      "x_m": 0.34270833333,
+      "bulk_temperature_c": 21.044355410306935,
+      "wall_temperature_c": 22.214518093300057,
+      "nusselt": 4.533698473583116
+    },
+    {
+      "x_m": 0.34479166667,
+      "bulk_temperature_c": 21.050685578954642,
+      "wall_temperature_c": 22.221500112300077,
+      "nusselt": 4.531174339432816
+    },
+    {
+      "x_m": 0.346875,
+      "bulk_temperature_c": 21.057015747911464,
+      "wall_temperature_c": 22.228472183300084,
+      "nusselt": 4.528691472824512
+    },
+    {
+      "x_m": 0.34895833333,
+      "bulk_temperature_c": 21.063345917197296,
+      "wall_temperature_c": 22.235434463300066,
+      "nusselt": 4.52624913652614
+    },
+    {
+      "x_m": 0.35104166667,
+      "bulk_temperature_c": 21.0696760871582,
+      "wall_temperature_c": 22.242387101300096,
+      "nusselt": 4.523846630375322
+    },
+    {
+      "x_m": 0.353125,
+      "bulk_temperature_c": 21.07600625762973,
+      "wall_temperature_c": 22.249330249300044,
+      "nusselt": 4.521483245371588
+    },
+    {
+      "x_m": 0.35520833333,
+      "bulk_temperature_c": 21.08233642825479,
+      "wall_temperature_c": 22.25626405430006,
+      "nusselt": 4.519158295645445
+    },
+    {
+      "x_m": 0.35729166667,
+      "bulk_temperature_c": 21.088666599252804,
+      "wall_temperature_c": 22.26318866130009,
+      "nusselt": 4.51687110966865
+    },
+    {
+      "x_m": 0.359375,
+      "bulk_temperature_c": 21.094996770671628,
+      "wall_temperature_c": 22.270104213300044,
+      "nusselt": 4.514621027217342
+    },
+    {
+      "x_m": 0.36145833333,
+      "bulk_temperature_c": 21.101326942617277,
+      "wall_temperature_c": 22.27701084930004,
+      "nusselt": 4.512407407785793
+    },
+    {
+      "x_m": 0.36354166667,
+      "bulk_temperature_c": 21.10765711448505,
+      "wall_temperature_c": 22.28390870930008,
+      "nusselt": 4.510229608287257
+    },
+    {
+      "x_m": 0.365625,
+      "bulk_temperature_c": 21.113987286955194,
+      "wall_temperature_c": 22.290797927300048,
+      "nusselt": 4.508087017445059
+    },
+    {
+      "x_m": 0.36770833333,
+      "bulk_temperature_c": 21.12031745993488,
+      "wall_temperature_c": 22.297678637300066,
+      "nusselt": 4.505979024722274
+    },
+    {
+      "x_m": 0.36979166667,
+      "bulk_temperature_c": 21.126647633135974,
+      "wall_temperature_c": 22.304550971300046,
+      "nusselt": 4.503905030100935
+    },
+    {
+      "x_m": 0.371875,
+      "bulk_temperature_c": 21.132977806848032,
+      "wall_temperature_c": 22.311415058300042,
+      "nusselt": 4.501864450731756
+    },
+    {
+      "x_m": 0.37395833333,
+      "bulk_temperature_c": 21.13930798076285,
+      "wall_temperature_c": 22.318271025300078,
+      "nusselt": 4.49985671248267
+    },
+    {
+      "x_m": 0.37604166667,
+      "bulk_temperature_c": 21.145638154970584,
+      "wall_temperature_c": 22.32511899730008,
+      "nusselt": 4.497881253630237
+    },
+    {
+      "x_m": 0.378125,
+      "bulk_temperature_c": 21.15196832948868,
+      "wall_temperature_c": 22.331959098300047,
+      "nusselt": 4.4959375191332
+    },
+    {
+      "x_m": 0.38020833333,
+      "bulk_temperature_c": 21.158298504264735,
+      "wall_temperature_c": 22.33879144830007,
+      "nusselt": 4.494024971970559
+    },
+    {
+      "x_m": 0.38229166667,
+      "bulk_temperature_c": 21.164628679280327,
+      "wall_temperature_c": 22.34561616830007,
+      "nusselt": 4.4921430743803255
+    },
+    {
+      "x_m": 0.384375,
+      "bulk_temperature_c": 21.1709588549831,
+      "wall_temperature_c": 22.352433372300084,
+      "nusselt": 4.490291319847813
+    },
+    {
+      "x_m": 0.38645833333,
+      "bulk_temperature_c": 21.177289030810357,
+      "wall_temperature_c": 22.35924317930005,
+      "nusselt": 4.488469181743475
+    },
+    {
+      "x_m": 0.38854166667,
+      "bulk_temperature_c": 21.18361920703086,
+      "wall_temperature_c": 22.366045701300095,
+      "nusselt": 4.486676165869019
+    },
+    {
+      "x_m": 0.390625,
+      "bulk_temperature_c": 21.189949383542228,
+      "wall_temperature_c": 22.372841051300043,
+      "nusselt": 4.484911775383325
+    },
+    {
+      "x_m": 0.39270833333,
+      "bulk_temperature_c": 21.196279560166033,
+      "wall_temperature_c": 22.37962933730006,
+      "nusselt": 4.483175534606943
+    },
+    {
+      "x_m": 0.39479166667,
+      "bulk_temperature_c": 21.202609737130274,
+      "wall_temperature_c": 22.386410669300062,
+      "nusselt": 4.481466964218392
+    },
+    {
+      "x_m": 0.396875,
+      "bulk_temperature_c": 21.20893991434906,
+      "wall_temperature_c": 22.393185154300056,
+      "nusselt": 4.479785597406639
+    },
+    {
+      "x_m": 0.39895833333,
+      "bulk_temperature_c": 21.21527009192056,
+      "wall_temperature_c": 22.39995289530009,
+      "nusselt": 4.478130985438351
+    },
+    {
+      "x_m": 0.40104166667,
+      "bulk_temperature_c": 21.221600269712496,
+      "wall_temperature_c": 22.406713996300084,
+      "nusselt": 4.476502677093714
+    },
+    {
+      "x_m": 0.403125,
+      "bulk_temperature_c": 21.227930447954293,
+      "wall_temperature_c": 22.413468559300043,
+      "nusselt": 4.474900232188865
+    },
+    {
+      "x_m": 0.40520833333,
+      "bulk_temperature_c": 21.234260626368496,
+      "wall_temperature_c": 22.420216684300044,
+      "nusselt": 4.473323218216614
+    },
+    {
+      "x_m": 0.40729166667,
+      "bulk_temperature_c": 21.240590805048896,
+      "wall_temperature_c": 22.426958470300065,
+      "nusselt": 4.471771209818566
+    },
+    {
+      "x_m": 0.409375,
+      "bulk_temperature_c": 21.246920983851737,
+      "wall_temperature_c": 22.433694013300055,
+      "nusselt": 4.4702437939594875
+    },
+    {
+      "x_m": 0.41145833333,
+      "bulk_temperature_c": 21.253251163099094,
+      "wall_temperature_c": 22.44042340930008,
+      "nusselt": 4.468740561200489
+    },
+    {
+      "x_m": 0.41354166667,
+      "bulk_temperature_c": 21.25958134237021,
+      "wall_temperature_c": 22.447146751300068,
+      "nusselt": 4.4672611123882895
+    },
+    {
+      "x_m": 0.415625,
+      "bulk_temperature_c": 21.265911521977273,
+      "wall_temperature_c": 22.453864133300044,
+      "nusselt": 4.465805049094177
+    },
+    {
+      "x_m": 0.41770833333,
+      "bulk_temperature_c": 21.27224170196581,
+      "wall_temperature_c": 22.460575644300093,
+      "nusselt": 4.4643719923616265
+    },
+    {
+      "x_m": 0.41979166667,
+      "bulk_temperature_c": 21.278571882150402,
+      "wall_temperature_c": 22.467281376300093,
+      "nusselt": 4.462961552708671
+    },
+    {
+      "x_m": 0.421875,
+      "bulk_temperature_c": 21.284902062565266,
+      "wall_temperature_c": 22.473981415300045,
+      "nusselt": 4.461573365586093
+    },
+    {
+      "x_m": 0.42395833333,
+      "bulk_temperature_c": 21.29123224320955,
+      "wall_temperature_c": 22.48067584930004,
+      "nusselt": 4.460207060313737
+    },
+    {
+      "x_m": 0.42604166667,
+      "bulk_temperature_c": 21.29756242397849,
+      "wall_temperature_c": 22.487364763300093,
+      "nusselt": 4.458862278548492
+    },
+    {
+      "x_m": 0.428125,
+      "bulk_temperature_c": 21.303892605082353,
+      "wall_temperature_c": 22.494048242300096,
+      "nusselt": 4.457538664549676
+    },
+    {
+      "x_m": 0.43020833333,
+      "bulk_temperature_c": 21.310222786320708,
+      "wall_temperature_c": 22.500726367300047,
+      "nusselt": 4.456235877397092
+    },
+    {
+      "x_m": 0.43229166667,
+      "bulk_temperature_c": 21.316552967805592,
+      "wall_temperature_c": 22.50739922230008,
+      "nusselt": 4.454953567437533
+    },
+    {
+      "x_m": 0.434375,
+      "bulk_temperature_c": 21.322883149519214,
+      "wall_temperature_c": 22.514066885300053,
+      "nusselt": 4.45369140827987
+    },
+    {
+      "x_m": 0.43645833333,
+      "bulk_temperature_c": 21.329213331437018,
+      "wall_temperature_c": 22.520729436300087,
+      "nusselt": 4.452449067265877
+    },
+    {
+      "x_m": 0.43854166667,
+      "bulk_temperature_c": 21.335543513637447,
+      "wall_temperature_c": 22.527386954300084,
+      "nusselt": 4.4512262170778865
+    },
+    {
+      "x_m": 0.440625,
+      "bulk_temperature_c": 21.341873696009714,
+      "wall_temperature_c": 22.53403951330006,
+      "nusselt": 4.450022549537505
+    },
+    {
+      "x_m": 0.44270833333,
+      "bulk_temperature_c": 21.34820387849868,
+      "wall_temperature_c": 22.540687191300094,
+      "nusselt": 4.448837742866863
+    },
+    {
+      "x_m": 0.44479166667,
+      "bulk_temperature_c": 21.35453406129602,
+      "wall_temperature_c": 22.547330061300045,
+      "nusselt": 4.447671495974125
+    },
+    {
+      "x_m": 0.446875,
+      "bulk_temperature_c": 21.360864244098764,
+      "wall_temperature_c": 22.553968196300048,
+      "nusselt": 4.446523506976726
+    },
+    {
+      "x_m": 0.44895833333,
+      "bulk_temperature_c": 21.367194427170432,
+      "wall_temperature_c": 22.56060166930007,
+      "nusselt": 4.445393477135908
+    },
+    {
+      "x_m": 0.45104166667,
+      "bulk_temperature_c": 21.373524610545132,
+      "wall_temperature_c": 22.567230549300064,
+      "nusselt": 4.444281122755643
+    },
+    {
+      "x_m": 0.453125,
+      "bulk_temperature_c": 21.379854794101504,
+      "wall_temperature_c": 22.573854908300063,
+      "nusselt": 4.443186149350409
+    },
+    {
+      "x_m": 0.45520833333,
+      "bulk_temperature_c": 21.386184977823575,
+      "wall_temperature_c": 22.580474813300043,
+      "nusselt": 4.442108282377973
+    },
+    {
+      "x_m": 0.45729166667,
+      "bulk_temperature_c": 21.39251516174687,
+      "wall_temperature_c": 22.58709033330007,
+      "nusselt": 4.441047240946774
+    },
+    {
+      "x_m": 0.459375,
+      "bulk_temperature_c": 21.398845345686937,
+      "wall_temperature_c": 22.593701533300077,
+      "nusselt": 4.440002759099826
+    },
+    {
+      "x_m": 0.46145833333,
+      "bulk_temperature_c": 21.40517552997045,
+      "wall_temperature_c": 22.60030848130009,
+      "nusselt": 4.43897456247659
+    },
+    {
+      "x_m": 0.46354166667,
+      "bulk_temperature_c": 21.41150571425169,
+      "wall_temperature_c": 22.606911239300075,
+      "nusselt": 4.437962397333832
+    },
+    {
+      "x_m": 0.465625,
+      "bulk_temperature_c": 21.417835898859266,
+      "wall_temperature_c": 22.613509873300075,
+      "nusselt": 4.436965998370048
+    },
+    {
+      "x_m": 0.46770833333,
+      "bulk_temperature_c": 21.42416608357553,
+      "wall_temperature_c": 22.62010444330008,
+      "nusselt": 4.435985121299843
+    },
+    {
+      "x_m": 0.46979166667,
+      "bulk_temperature_c": 21.430496268528486,
+      "wall_temperature_c": 22.626695013300093,
+      "nusselt": 4.4350195090221165
+    },
+    {
+      "x_m": 0.471875,
+      "bulk_temperature_c": 21.4368264536339,
+      "wall_temperature_c": 22.633281642300062,
+      "nusselt": 4.434068922919016
+    },
+    {
+      "x_m": 0.47395833333,
+      "bulk_temperature_c": 21.443156638812354,
+      "wall_temperature_c": 22.63986439230007,
+      "nusselt": 4.433133113969004
+    },
+    {
+      "x_m": 0.47604166667,
+      "bulk_temperature_c": 21.449486824190842,
+      "wall_temperature_c": 22.64644331930009,
+      "nusselt": 4.432211856827457
+    },
+    {
+      "x_m": 0.478125,
+      "bulk_temperature_c": 21.45581700966227,
+      "wall_temperature_c": 22.65301848430005,
+      "nusselt": 4.431304907417487
+    },
+    {
+      "x_m": 0.48020833333,
+      "bulk_temperature_c": 21.462147195216914,
+      "wall_temperature_c": 22.659589941300055,
+      "nusselt": 4.430412048578644
+    },
+    {
+      "x_m": 0.48229166667,
+      "bulk_temperature_c": 21.468477381091986,
+      "wall_temperature_c": 22.666157749300055,
+      "nusselt": 4.429533046172631
+    },
+    {
+      "x_m": 0.484375,
+      "bulk_temperature_c": 21.474807567106268,
+      "wall_temperature_c": 22.672721961300056,
+      "nusselt": 4.428667687310236
+    },
+    {
+      "x_m": 0.48645833333,
+      "bulk_temperature_c": 21.48113775326226,
+      "wall_temperature_c": 22.67928263430008,
+      "nusselt": 4.427815745567072
+    },
+    {
+      "x_m": 0.48854166667,
+      "bulk_temperature_c": 21.48746793967132,
+      "wall_temperature_c": 22.68583982030009,
+      "nusselt": 4.426977013968565
+    },
+    {
+      "x_m": 0.490625,
+      "bulk_temperature_c": 21.49379812608339,
+      "wall_temperature_c": 22.69239357230009,
+      "nusselt": 4.426151281047581
+    },
+    {
+      "x_m": 0.49270833333,
+      "bulk_temperature_c": 21.50012831260642,
+      "wall_temperature_c": 22.698943941300058,
+      "nusselt": 4.425338344571752
+    },
+    {
+      "x_m": 0.49479166667,
+      "bulk_temperature_c": 21.506458499273265,
+      "wall_temperature_c": 22.705490981300045,
+      "nusselt": 4.424537991466486
+    },
+    {
+      "x_m": 0.496875,
+      "bulk_temperature_c": 21.51278868601139,
+      "wall_temperature_c": 22.712034741300045,
+      "nusselt": 4.423750027222654
+    },
+    {
+      "x_m": 0.49895833333,
+      "bulk_temperature_c": 21.51911887299144,
+      "wall_temperature_c": 22.71857527030005,
+      "nusselt": 4.42297425870069
+    },
+    {
+      "x_m": 0.50104166667,
+      "bulk_temperature_c": 21.525449060021288,
+      "wall_temperature_c": 22.725112618300045,
+      "nusselt": 4.422210488198492
+    },
+    {
+      "x_m": 0.503125,
+      "bulk_temperature_c": 21.531779247361726,
+      "wall_temperature_c": 22.731646832300044,
+      "nusselt": 4.4214585311949826
+    },
+    {
+      "x_m": 0.50520833333,
+      "bulk_temperature_c": 21.53810943471524,
+      "wall_temperature_c": 22.738177962300085,
+      "nusselt": 4.420718190490802
+    },
+    {
+      "x_m": 0.50729166667,
+      "bulk_temperature_c": 21.544439622139976,
+      "wall_temperature_c": 22.744706052300046,
+      "nusselt": 4.419989292729229
+    },
+    {
+      "x_m": 0.509375,
+      "bulk_temperature_c": 21.550769809749738,
+      "wall_temperature_c": 22.751231149300054,
+      "nusselt": 4.4192716541101795
+    },
+    {
+      "x_m": 0.51145833333,
+      "bulk_temperature_c": 21.557099997393493,
+      "wall_temperature_c": 22.757753298300088,
+      "nusselt": 4.418565097621434
+    },
+    {
+      "x_m": 0.51354166667,
+      "bulk_temperature_c": 21.563430185158325,
+      "wall_temperature_c": 22.76427254530006,
+      "nusselt": 4.417869443832476
+    },
+    {
+      "x_m": 0.515625,
+      "bulk_temperature_c": 21.569760373245856,
+      "wall_temperature_c": 22.770788933300082,
+      "nusselt": 4.417184525145945
+    },
+    {
+      "x_m": 0.51770833333,
+      "bulk_temperature_c": 21.57609056123789,
+      "wall_temperature_c": 22.777302504300053,
+      "nusselt": 4.41651017571951
+    },
+    {
+      "x_m": 0.51979166667,
+      "bulk_temperature_c": 21.58242074955183,
+      "wall_temperature_c": 22.783813304300054,
+      "nusselt": 4.415846218425789
+    },
+    {
+      "x_m": 0.521875,
+      "bulk_temperature_c": 21.588750937903683,
+      "wall_temperature_c": 22.79032137230007,
+      "nusselt": 4.415192499634788
+    },
+    {
+      "x_m": 0.52395833333,
+      "bulk_temperature_c": 21.59508112632267,
+      "wall_temperature_c": 22.796826750300056,
+      "nusselt": 4.414548856164312
+    },
+    {
+      "x_m": 0.52604166667,
+      "bulk_temperature_c": 21.60141131471505,
+      "wall_temperature_c": 22.80332947930009,
+      "nusselt": 4.413915128374361
+    },
+    {
+      "x_m": 0.528125,
+      "bulk_temperature_c": 21.607741503335717,
+      "wall_temperature_c": 22.809829600300077,
+      "nusselt": 4.41329115821628
+    },
+    {
+      "x_m": 0.53020833333,
+      "bulk_temperature_c": 21.614071692142772,
+      "wall_temperature_c": 22.816327151300072,
+      "nusselt": 4.412676797864913
+    },
+    {
+      "x_m": 0.53229166667,
+      "bulk_temperature_c": 21.6204018809471,
+      "wall_temperature_c": 22.82282217130006,
+      "nusselt": 4.412071895570353
+    },
+    {
+      "x_m": 0.534375,
+      "bulk_temperature_c": 21.626732069974423,
+      "wall_temperature_c": 22.829314699300085,
+      "nusselt": 4.411476301387018
+    },
+    {
+      "x_m": 0.53645833333,
+      "bulk_temperature_c": 21.633062258950872,
+      "wall_temperature_c": 22.835804773300083,
+      "nusselt": 4.410889867479577
+    },
+    {
+      "x_m": 0.53854166667,
+      "bulk_temperature_c": 21.6393924480887,
+      "wall_temperature_c": 22.842292430300063,
+      "nusselt": 4.410312451727734
+    },
+    {
+      "x_m": 0.540625,
+      "bulk_temperature_c": 21.645722637362155,
+      "wall_temperature_c": 22.84877770630004,
+      "nusselt": 4.4097439150590985
+    },
+    {
+      "x_m": 0.54270833333,
+      "bulk_temperature_c": 21.6520528266866,
+      "wall_temperature_c": 22.85526063730009,
+      "nusselt": 4.409184118431583
+    },
+    {
+      "x_m": 0.54479166667,
+      "bulk_temperature_c": 21.658383016080165,
+      "wall_temperature_c": 22.86174125930006,
+      "nusselt": 4.408632923421464
+    },
+    {
+      "x_m": 0.546875,
+      "bulk_temperature_c": 21.664713205583098,
+      "wall_temperature_c": 22.868219606300045,
+      "nusselt": 4.408090199245703
+    },
+    {
+      "x_m": 0.54895833333,
+      "bulk_temperature_c": 21.67104339521643,
+      "wall_temperature_c": 22.87469571430006,
+      "nusselt": 4.407555807950251
+    },
+    {
+      "x_m": 0.55104166667,
+      "bulk_temperature_c": 21.67737358496464,
+      "wall_temperature_c": 22.881169616300042,
+      "nusselt": 4.407029622655172
+    },
+    {
+      "x_m": 0.553125,
+      "bulk_temperature_c": 21.68370377475111,
+      "wall_temperature_c": 22.887641345300096,
+      "nusselt": 4.406511516465696
+    },
+    {
+      "x_m": 0.55520833333,
+      "bulk_temperature_c": 21.690033964706345,
+      "wall_temperature_c": 22.89411093530009,
+      "nusselt": 4.40600135979164
+    },
+    {
+      "x_m": 0.55729166667,
+      "bulk_temperature_c": 21.696364154644186,
+      "wall_temperature_c": 22.900578417300096,
+      "nusselt": 4.405499033061805
+    },
+    {
+      "x_m": 0.559375,
+      "bulk_temperature_c": 21.70269434467872,
+      "wall_temperature_c": 22.907043823300057,
+      "nusselt": 4.405004414335657
+    },
+    {
+      "x_m": 0.56145833333,
+      "bulk_temperature_c": 21.70902453480545,
+      "wall_temperature_c": 22.91350718630008,
+      "nusselt": 4.404517377769388
+    },
+    {
+      "x_m": 0.56354166667,
+      "bulk_temperature_c": 21.715354724929057,
+      "wall_temperature_c": 22.919968536300075,
+      "nusselt": 4.404037808342764
+    },
+    {
+      "x_m": 0.565625,
+      "bulk_temperature_c": 21.721684915200115,
+      "wall_temperature_c": 22.926427903300066,
+      "nusselt": 4.403565592107602
+    },
+    {
+      "x_m": 0.56770833333,
+      "bulk_temperature_c": 21.728015105725547,
+      "wall_temperature_c": 22.932885316300087,
+      "nusselt": 4.403100618779582
+    },
+    {
+      "x_m": 0.56979166667,
+      "bulk_temperature_c": 21.734345296161905,
+      "wall_temperature_c": 22.939340807300084,
+      "nusselt": 4.402642765630594
+    },
+    {
+      "x_m": 0.571875,
+      "bulk_temperature_c": 21.74067548676078,
+      "wall_temperature_c": 22.945794404300045,
+      "nusselt": 4.402191926886739
+    },
+    {
+      "x_m": 0.57395833333,
+      "bulk_temperature_c": 21.747005677387108,
+      "wall_temperature_c": 22.952246135300072,
+      "nusselt": 4.401747995513236
+    },
+    {
+      "x_m": 0.57604166667,
+      "bulk_temperature_c": 21.753335868015824,
+      "wall_temperature_c": 22.958696029300086,
+      "nusselt": 4.401310861375584
+    },
+    {
+      "x_m": 0.578125,
+      "bulk_temperature_c": 21.759666058757148,
+      "wall_temperature_c": 22.965144114300074,
+      "nusselt": 4.400880418632334
+    },
+    {
+      "x_m": 0.58020833333,
+      "bulk_temperature_c": 21.765996249484317,
+      "wall_temperature_c": 22.971590417300092,
+      "nusselt": 4.400456564368946
+    },
+    {
+      "x_m": 0.58229166667,
+      "bulk_temperature_c": 21.772326440433176,
+      "wall_temperature_c": 22.978034965300083,
+      "nusselt": 4.400039197131379
+    },
+    {
+      "x_m": 0.584375,
+      "bulk_temperature_c": 21.778656631418016,
+      "wall_temperature_c": 22.984477783300065,
+      "nusselt": 4.399628221357314
+    },
+    {
+      "x_m": 0.58645833333,
+      "bulk_temperature_c": 21.78498682255008,
+      "wall_temperature_c": 22.990918900300073,
+      "nusselt": 4.399223528101294
+    },
+    {
+      "x_m": 0.58854166667,
+      "bulk_temperature_c": 21.791317013727678,
+      "wall_temperature_c": 22.99735834030008,
+      "nusselt": 4.39882502601071
+    },
+    {
+      "x_m": 0.590625,
+      "bulk_temperature_c": 21.79764720488737,
+      "wall_temperature_c": 23.003796128300053,
+      "nusselt": 4.398432620342922
+    },
+    {
+      "x_m": 0.59270833333,
+      "bulk_temperature_c": 21.803977396202697,
+      "wall_temperature_c": 23.010232290300053,
+      "nusselt": 4.398046213689948
+    },
+    {
+      "x_m": 0.59479166667,
+      "bulk_temperature_c": 21.8103075874983,
+      "wall_temperature_c": 23.016666851300045,
+      "nusselt": 4.397665711134049
+    },
+    {
+      "x_m": 0.596875,
+      "bulk_temperature_c": 21.816637778835855,
+      "wall_temperature_c": 23.02309983430007,
+      "nusselt": 4.397291026022826
+    },
+    {
+      "x_m": 0.59895833333,
+      "bulk_temperature_c": 21.822967970227523,
+      "wall_temperature_c": 23.029531263300044,
+      "nusselt": 4.396922067983863
+    },
+    {
+      "x_m": 0.60104166667,
+      "bulk_temperature_c": 21.82929816176471,
+      "wall_temperature_c": 23.035961162300055,
+      "nusselt": 4.396558747037223
+    },
+    {
+      "x_m": 0.603125,
+      "bulk_temperature_c": 21.835628353492837,
+      "wall_temperature_c": 23.042389554300087,
+      "nusselt": 4.396200976780667
+    },
+    {
+      "x_m": 0.60520833333,
+      "bulk_temperature_c": 21.841958545079024,
+      "wall_temperature_c": 23.048816462300067,
+      "nusselt": 4.3958486695316354
+    },
+    {
+      "x_m": 0.60729166667,
+      "bulk_temperature_c": 21.848288736876725,
+      "wall_temperature_c": 23.055241908300047,
+      "nusselt": 4.395501743844485
+    },
+    {
+      "x_m": 0.609375,
+      "bulk_temperature_c": 21.85461892856671,
+      "wall_temperature_c": 23.06166591430008,
+      "nusselt": 4.395160115914265
+    },
+    {
+      "x_m": 0.61145833333,
+      "bulk_temperature_c": 21.8609491203257,
+      "wall_temperature_c": 23.068088502300043,
+      "nusselt": 4.394823703831908
+    },
+    {
+      "x_m": 0.61354166667,
+      "bulk_temperature_c": 21.867279312184905,
+      "wall_temperature_c": 23.074509694300048,
+      "nusselt": 4.3944924252443585
+    },
+    {
+      "x_m": 0.615625,
+      "bulk_temperature_c": 21.87360950415507,
+      "wall_temperature_c": 23.08092951130004,
+      "nusselt": 4.394166201449202
+    },
+    {
+      "x_m": 0.61770833333,
+      "bulk_temperature_c": 21.879939696104657,
+      "wall_temperature_c": 23.08734797230005,
+      "nusselt": 4.393844960585073
+    },
+    {
+      "x_m": 0.61979166667,
+      "bulk_temperature_c": 21.88626988821943,
+      "wall_temperature_c": 23.09376509930007,
+      "nusselt": 4.393528621104856
+    },
+    {
+      "x_m": 0.621875,
+      "bulk_temperature_c": 21.89260008038366,
+      "wall_temperature_c": 23.10018091330005,
+      "nusselt": 4.39321710408197
+    },
+    {
+      "x_m": 0.62395833333,
+      "bulk_temperature_c": 21.898930272538166,
+      "wall_temperature_c": 23.106595433300072,
+      "nusselt": 4.392910338146098
+    },
+    {
+      "x_m": 0.62604166667,
+      "bulk_temperature_c": 21.90526046466158,
+      "wall_temperature_c": 23.113008678300048,
+      "nusselt": 4.3926082521351715
+    },
+    {
+      "x_m": 0.628125,
+      "bulk_temperature_c": 21.91159065695166,
+      "wall_temperature_c": 23.11942066830005,
+      "nusselt": 4.39231077211543
+    },
+    {
+      "x_m": 0.63020833333,
+      "bulk_temperature_c": 21.917920849242194,
+      "wall_temperature_c": 23.125831421300063,
+      "nusselt": 4.392017830170692
+    },
+    {
+      "x_m": 0.63229166667,
+      "bulk_temperature_c": 21.92425104159605,
+      "wall_temperature_c": 23.13224095730004,
+      "nusselt": 4.391729352010451
+    },
+    {
+      "x_m": 0.634375,
+      "bulk_temperature_c": 21.930581234022384,
+      "wall_temperature_c": 23.13864929430008,
+      "nusselt": 4.391445270484476
+    },
+    {
+      "x_m": 0.63645833333,
+      "bulk_temperature_c": 21.93691142644849,
+      "wall_temperature_c": 23.145056449300057,
+      "nusselt": 4.3911655218411925
+    },
+    {
+      "x_m": 0.63854166667,
+      "bulk_temperature_c": 21.943241618983905,
+      "wall_temperature_c": 23.151462442300044,
+      "nusselt": 4.390890032145813
+    },
+    {
+      "x_m": 0.640625,
+      "bulk_temperature_c": 21.949571811506473,
+      "wall_temperature_c": 23.157867289300043,
+      "nusselt": 4.390618741218364
+    },
+    {
+      "x_m": 0.64270833333,
+      "bulk_temperature_c": 21.955902004127893,
+      "wall_temperature_c": 23.164271007300044,
+      "nusselt": 4.390351586148753
+    },
+    {
+      "x_m": 0.64479166667,
+      "bulk_temperature_c": 21.962232196683658,
+      "wall_temperature_c": 23.170673615300075,
+      "nusselt": 4.390088495811322
+    },
+    {
+      "x_m": 0.646875,
+      "bulk_temperature_c": 21.96856238946765,
+      "wall_temperature_c": 23.177075127300043,
+      "nusselt": 4.3898294189643945
+    },
+    {
+      "x_m": 0.64895833333,
+      "bulk_temperature_c": 21.974892582134657,
+      "wall_temperature_c": 23.183475563300078,
+      "nusselt": 4.389574280298191
+    },
+    {
+      "x_m": 0.65104166667,
+      "bulk_temperature_c": 21.981222774974015,
+      "wall_temperature_c": 23.189874936300043,
+      "nusselt": 4.389323032285382
+    },
+    {
+      "x_m": 0.653125,
+      "bulk_temperature_c": 21.98755296776278,
+      "wall_temperature_c": 23.19627326430009,
+      "nusselt": 4.389075607423703
+    },
+    {
+      "x_m": 0.65520833333,
+      "bulk_temperature_c": 21.993883160685357,
+      "wall_temperature_c": 23.202670562300057,
+      "nusselt": 4.388831950633501
+    },
+    {
+      "x_m": 0.65729166667,
+      "bulk_temperature_c": 22.000213353632432,
+      "wall_temperature_c": 23.20906684630006,
+      "nusselt": 4.3885920021811
+    },
+    {
+      "x_m": 0.659375,
+      "bulk_temperature_c": 22.006543546472585,
+      "wall_temperature_c": 23.215462131300058,
+      "nusselt": 4.388355705927837
+    },
+    {
+      "x_m": 0.66145833333,
+      "bulk_temperature_c": 22.012873739410168,
+      "wall_temperature_c": 23.221856432300058,
+      "nusselt": 4.388123006995784
+    },
+    {
+      "x_m": 0.66354166667,
+      "bulk_temperature_c": 22.01920393249344,
+      "wall_temperature_c": 23.228249764300074,
+      "nusselt": 4.3878938499812925
+    },
+    {
+      "x_m": 0.665625,
+      "bulk_temperature_c": 22.02553412551333,
+      "wall_temperature_c": 23.23464214330005,
+      "nusselt": 4.387668174958421
+    },
+    {
+      "x_m": 0.66770833333,
+      "bulk_temperature_c": 22.03186431863753,
+      "wall_temperature_c": 23.241033581300087,
+      "nusselt": 4.387445937922722
+    },
+    {
+      "x_m": 0.66979166667,
+      "bulk_temperature_c": 22.038194511744678,
+      "wall_temperature_c": 23.247424094300072,
+      "nusselt": 4.387227079343153
+    },
+    {
+      "x_m": 0.671875,
+      "bulk_temperature_c": 22.044524704949254,
+      "wall_temperature_c": 23.253813695300096,
+      "nusselt": 4.387011551466037
+    },
+    {
+      "x_m": 0.67395833333,
+      "bulk_temperature_c": 22.050854898206808,
+      "wall_temperature_c": 23.260202398300066,
+      "nusselt": 4.3867993023682095
+    },
+    {
+      "x_m": 0.67604166667,
+      "bulk_temperature_c": 22.057185091392512,
+      "wall_temperature_c": 23.266590217300063,
+      "nusselt": 4.386590279869029
+    },
+    {
+      "x_m": 0.678125,
+      "bulk_temperature_c": 22.063515284669847,
+      "wall_temperature_c": 23.272977165300063,
+      "nusselt": 4.386384436494583
+    },
+    {
+      "x_m": 0.68020833333,
+      "bulk_temperature_c": 22.069845477877152,
+      "wall_temperature_c": 23.279363256300087,
+      "nusselt": 4.386181719996823
+    },
+    {
+      "x_m": 0.68229166667,
+      "bulk_temperature_c": 22.076175671333317,
+      "wall_temperature_c": 23.285748501300077,
+      "nusselt": 4.385982090781284
+    },
+    {
+      "x_m": 0.684375,
+      "bulk_temperature_c": 22.082505864620884,
+      "wall_temperature_c": 23.292132914300055,
+      "nusselt": 4.385785495733527
+    },
+    {
+      "x_m": 0.68645833333,
+      "bulk_temperature_c": 22.08883605821427,
+      "wall_temperature_c": 23.298516509300043,
+      "nusselt": 4.38559188500408
+    },
+    {
+      "x_m": 0.68854166667,
+      "bulk_temperature_c": 22.09516625163087,
+      "wall_temperature_c": 23.30489929630005,
+      "nusselt": 4.385401219804349
+    },
+    {
+      "x_m": 0.690625,
+      "bulk_temperature_c": 22.101496445119096,
+      "wall_temperature_c": 23.31128128830005,
+      "nusselt": 4.385213453146492
+    },
+    {
+      "x_m": 0.69270833333,
+      "bulk_temperature_c": 22.10782663866098,
+      "wall_temperature_c": 23.31766249830008,
+      "nusselt": 4.3850285371045326
+    },
+    {
+      "x_m": 0.69479166667,
+      "bulk_temperature_c": 22.114156832224865,
+      "wall_temperature_c": 23.32404293630009,
+      "nusselt": 4.384846434602904
+    },
+    {
+      "x_m": 0.696875,
+      "bulk_temperature_c": 22.120487025777493,
+      "wall_temperature_c": 23.33042261530005,
+      "nusselt": 4.384667097711595
+    },
+    {
+      "x_m": 0.69895833333,
+      "bulk_temperature_c": 22.12681721942579,
+      "wall_temperature_c": 23.33680154730007,
+      "nusselt": 4.384490482657771
+    },
+    {
+      "x_m": 0.70104166667,
+      "bulk_temperature_c": 22.133147413061806,
+      "wall_temperature_c": 23.343179741300048,
+      "nusselt": 4.384316555784877
+    },
+    {
+      "x_m": 0.703125,
+      "bulk_temperature_c": 22.139477606770186,
+      "wall_temperature_c": 23.349557210300077,
+      "nusselt": 4.384145269661837
+    },
+    {
+      "x_m": 0.70520833333,
+      "bulk_temperature_c": 22.145807800476348,
+      "wall_temperature_c": 23.355933965300096,
+      "nusselt": 4.383976583551127
+    },
+    {
+      "x_m": 0.70729166667,
+      "bulk_temperature_c": 22.152137994337068,
+      "wall_temperature_c": 23.362310016300057,
+      "nusselt": 4.383810461197466
+    },
+    {
+      "x_m": 0.709375,
+      "bulk_temperature_c": 22.158468187976325,
+      "wall_temperature_c": 23.36868537430007,
+      "nusselt": 4.3836468608128465
+    },
+    {
+      "x_m": 0.71145833333,
+      "bulk_temperature_c": 22.164798381771334,
+      "wall_temperature_c": 23.37506005030008,
+      "nusselt": 4.38348574335918
+    },
+    {
+      "x_m": 0.71354166667,
+      "bulk_temperature_c": 22.171128575496027,
+      "wall_temperature_c": 23.38143405330004,
+      "nusselt": 4.383327074876644
+    },
+    {
+      "x_m": 0.715625,
+      "bulk_temperature_c": 22.17745876938085,
+      "wall_temperature_c": 23.387807395300058,
+      "nusselt": 4.383170812211888
+    },
+    {
+      "x_m": 0.71770833333,
+      "bulk_temperature_c": 22.18378896326425,
+      "wall_temperature_c": 23.394180083300057,
+      "nusselt": 4.383016928918725
+    },
+    {
+      "x_m": 0.71979166667,
+      "bulk_temperature_c": 22.190119157168624,
+      "wall_temperature_c": 23.40055213030007,
+      "nusselt": 4.382865377506311
+    },
+    {
+      "x_m": 0.721875,
+      "bulk_temperature_c": 22.196449351124215,
+      "wall_temperature_c": 23.40692354530006,
+      "nusselt": 4.382716125015687
+    },
+    {
+      "x_m": 0.72395833333,
+      "bulk_temperature_c": 22.202779545142903,
+      "wall_temperature_c": 23.413294336300055,
+      "nusselt": 4.382569142057773
+    },
+    {
+      "x_m": 0.72604166667,
+      "bulk_temperature_c": 22.209109739032613,
+      "wall_temperature_c": 23.419664514300052,
+      "nusselt": 4.382424387659625
+    },
+    {
+      "x_m": 0.728125,
+      "bulk_temperature_c": 22.21543993308967,
+      "wall_temperature_c": 23.42603408830007,
+      "nusselt": 4.3822818298737
+    },
+    {
+      "x_m": 0.73020833333,
+      "bulk_temperature_c": 22.221770127027526,
+      "wall_temperature_c": 23.432403066300083,
+      "nusselt": 4.382141438277404
+    },
+    {
+      "x_m": 0.73229166667,
+      "bulk_temperature_c": 22.22810032113307,
+      "wall_temperature_c": 23.438771459300085,
+      "nusselt": 4.382003173679344
+    },
+    {
+      "x_m": 0.734375,
+      "bulk_temperature_c": 22.234430515202803,
+      "wall_temperature_c": 23.44513927430006,
+      "nusselt": 4.381867009606455
+    },
+    {
+      "x_m": 0.73645833333,
+      "bulk_temperature_c": 22.240760709263213,
+      "wall_temperature_c": 23.451506520300086,
+      "nusselt": 4.381732913192197
+    },
+    {
+      "x_m": 0.73854166667,
+      "bulk_temperature_c": 22.247090903358924,
+      "wall_temperature_c": 23.457873207300054,
+      "nusselt": 4.381600848031381
+    },
+    {
+      "x_m": 0.740625,
+      "bulk_temperature_c": 22.253421097594696,
+      "wall_temperature_c": 23.46423934230006,
+      "nusselt": 4.381470788805944
+    },
+    {
+      "x_m": 0.74270833333,
+      "bulk_temperature_c": 22.259751291754014,
+      "wall_temperature_c": 23.47060493430007,
+      "nusselt": 4.381342701810519
+    },
+    {
+      "x_m": 0.74479166667,
+      "bulk_temperature_c": 22.266081485964946,
+      "wall_temperature_c": 23.476969991300052,
+      "nusselt": 4.381216558217862
+    },
+    {
+      "x_m": 0.746875,
+      "bulk_temperature_c": 22.2724116800635,
+      "wall_temperature_c": 23.483334521300094,
+      "nusselt": 4.381092328155448
+    },
+    {
+      "x_m": 0.74895833333,
+      "bulk_temperature_c": 22.27874187428273,
+      "wall_temperature_c": 23.489698533300043,
+      "nusselt": 4.380969979582066
+    },
+    {
+      "x_m": 0.75104166667,
+      "bulk_temperature_c": 22.28507206853834,
+      "wall_temperature_c": 23.496062032300074,
+      "nusselt": 4.380849493789575
+    },
+    {
+      "x_m": 0.753125,
+      "bulk_temperature_c": 22.29140226282749,
+      "wall_temperature_c": 23.50242502930007,
+      "nusselt": 4.380730830670109
+    },
+    {
+      "x_m": 0.75520833333,
+      "bulk_temperature_c": 22.297732457101574,
+      "wall_temperature_c": 23.508787530300083,
+      "nusselt": 4.38061396804888
+    },
+    {
+      "x_m": 0.75729166667,
+      "bulk_temperature_c": 22.30406265144461,
+      "wall_temperature_c": 23.515149543300083,
+      "nusselt": 4.380498877006214
+    },
+    {
+      "x_m": 0.759375,
+      "bulk_temperature_c": 22.3103928457636,
+      "wall_temperature_c": 23.521511075300054,
+      "nusselt": 4.380385531609378
+    },
+    {
+      "x_m": 0.76145833333,
+      "bulk_temperature_c": 22.316723040125567,
+      "wall_temperature_c": 23.527872133300093,
+      "nusselt": 4.380273906513482
+    },
+    {
+      "x_m": 0.76354166667,
+      "bulk_temperature_c": 22.323053234444103,
+      "wall_temperature_c": 23.534232725300058,
+      "nusselt": 4.380163972212428
+    },
+    {
+      "x_m": 0.765625,
+      "bulk_temperature_c": 22.329383428732058,
+      "wall_temperature_c": 23.540592858300045,
+      "nusselt": 4.380055703184285
+    },
+    {
+      "x_m": 0.76770833333,
+      "bulk_temperature_c": 22.335713623171273,
+      "wall_temperature_c": 23.546952538300047,
+      "nusselt": 4.37994907814353
+    },
+    {
+      "x_m": 0.76979166667,
+      "bulk_temperature_c": 22.342043817833428,
+      "wall_temperature_c": 23.55331177230005,
+      "nusselt": 4.379844071798269
+    },
+    {
+      "x_m": 0.771875,
+      "bulk_temperature_c": 22.348374012211195,
+      "wall_temperature_c": 23.559670568300078,
+      "nusselt": 4.3797406531555945
+    },
+    {
+      "x_m": 0.77395833333,
+      "bulk_temperature_c": 22.354704206640804,
+      "wall_temperature_c": 23.56602893230007,
+      "nusselt": 4.379638801513353
+    },
+    {
+      "x_m": 0.77604166667,
+      "bulk_temperature_c": 22.361034401148345,
+      "wall_temperature_c": 23.57238686930009,
+      "nusselt": 4.379538498670292
+    },
+    {
+      "x_m": 0.778125,
+      "bulk_temperature_c": 22.367364595578806,
+      "wall_temperature_c": 23.578744388300095,
+      "nusselt": 4.379439711316403
+    },
+    {
+      "x_m": 0.78020833333,
+      "bulk_temperature_c": 22.37369479003246,
+      "wall_temperature_c": 23.585101493300044,
+      "nusselt": 4.3793424251491855
+    },
+    {
+      "x_m": 0.78229166667,
+      "bulk_temperature_c": 22.38002498455438,
+      "wall_temperature_c": 23.59145819230008,
+      "nusselt": 4.379246611211841
+    },
+    {
+      "x_m": 0.784375,
+      "bulk_temperature_c": 22.3863551790148,
+      "wall_temperature_c": 23.597814490300095,
+      "nusselt": 4.379152250768818
+    },
+    {
+      "x_m": 0.78645833333,
+      "bulk_temperature_c": 22.392685373809456,
+      "wall_temperature_c": 23.60417039430007,
+      "nusselt": 4.3790593197606515
+    },
+    {
+      "x_m": 0.78854166667,
+      "bulk_temperature_c": 22.399015568397658,
+      "wall_temperature_c": 23.610525909300065,
+      "nusselt": 4.378967797978705
+    },
+    {
+      "x_m": 0.790625,
+      "bulk_temperature_c": 22.40534576294459,
+      "wall_temperature_c": 23.616881042300065,
+      "nusselt": 4.378877660543362
+    },
+    {
+      "x_m": 0.79270833333,
+      "bulk_temperature_c": 22.41167595760055,
+      "wall_temperature_c": 23.623235798300072,
+      "nusselt": 4.378788889756189
+    },
+    {
+      "x_m": 0.79479166667,
+      "bulk_temperature_c": 22.418006152231783,
+      "wall_temperature_c": 23.629590182300092,
+      "nusselt": 4.378701466897628
+    },
+    {
+      "x_m": 0.796875,
+      "bulk_temperature_c": 22.424336346775647,
+      "wall_temperature_c": 23.63594420130005,
+      "nusselt": 4.378615366283098
+    },
+    {
+      "x_m": 0.79895833333,
+      "bulk_temperature_c": 22.430666541473727,
+      "wall_temperature_c": 23.64229786130005,
+      "nusselt": 4.3785305669469565
+    },
+    {
+      "x_m": 0.80104166667,
+      "bulk_temperature_c": 22.436996736146682,
+      "wall_temperature_c": 23.648651164300077,
+      "nusselt": 4.378447060862978
+    },
+    {
+      "x_m": 0.803125,
+      "bulk_temperature_c": 22.443326930866704,
+      "wall_temperature_c": 23.655004120300077,
+      "nusselt": 4.378364812009658
+    },
+    {
+      "x_m": 0.80520833333,
+      "bulk_temperature_c": 22.44965712553352,
+      "wall_temperature_c": 23.66135673130009,
+      "nusselt": 4.378283812656346
+    },
+    {
+      "x_m": 0.80729166667,
+      "bulk_temperature_c": 22.455987320307656,
+      "wall_temperature_c": 23.667709003300047,
+      "nusselt": 4.378204041565509
+    },
+    {
+      "x_m": 0.809375,
+      "bulk_temperature_c": 22.462317515070822,
+      "wall_temperature_c": 23.67406094230006,
+      "nusselt": 4.37812547649678
+    },
+    {
+      "x_m": 0.81145833333,
+      "bulk_temperature_c": 22.468647709778622,
+      "wall_temperature_c": 23.680412552300083,
+      "nusselt": 4.378048102708415
+    },
+    {
+      "x_m": 0.81354166667,
+      "bulk_temperature_c": 22.474977904487105,
+      "wall_temperature_c": 23.686763838300067,
+      "nusselt": 4.377971902212797
+    },
+    {
+      "x_m": 0.815625,
+      "bulk_temperature_c": 22.481308099237992,
+      "wall_temperature_c": 23.69311480630006,
+      "nusselt": 4.3778968533618805
+    },
+    {
+      "x_m": 0.81770833333,
+      "bulk_temperature_c": 22.487638293981092,
+      "wall_temperature_c": 23.699465460300075,
+      "nusselt": 4.37782294140565
+    },
+    {
+      "x_m": 0.81979166667,
+      "bulk_temperature_c": 22.49396848884885,
+      "wall_temperature_c": 23.705815804300073,
+      "nusselt": 4.377750152257838
+    },
+    {
+      "x_m": 0.821875,
+      "bulk_temperature_c": 22.5002986836339,
+      "wall_temperature_c": 23.712165845300092,
+      "nusselt": 4.377678459770949
+    },
+    {
+      "x_m": 0.82395833333,
+      "bulk_temperature_c": 22.506628878493075,
+      "wall_temperature_c": 23.718515585300054,
+      "nusselt": 4.377607857179686
+    },
+    {
+      "x_m": 0.82604166667,
+      "bulk_temperature_c": 22.51295907331678,
+      "wall_temperature_c": 23.724865030300066,
+      "nusselt": 4.377538322309778
+    },
+    {
+      "x_m": 0.828125,
+      "bulk_temperature_c": 22.51928926811405,
+      "wall_temperature_c": 23.731214183300096,
+      "nusselt": 4.377469844256345
+    },
+    {
+      "x_m": 0.83020833333,
+      "bulk_temperature_c": 22.525619462927295,
+      "wall_temperature_c": 23.73756305130007,
+      "nusselt": 4.377402397790526
+    },
+    {
+      "x_m": 0.83229166667,
+      "bulk_temperature_c": 22.531949657828932,
+      "wall_temperature_c": 23.743911636300084,
+      "nusselt": 4.377335975854727
+    },
+    {
+      "x_m": 0.834375,
+      "bulk_temperature_c": 22.538279852713913,
+      "wall_temperature_c": 23.75025994330008,
+      "nusselt": 4.37727055991822
+    },
+    {
+      "x_m": 0.83645833333,
+      "bulk_temperature_c": 22.54461004759895,
+      "wall_temperature_c": 23.756607977300064,
+      "nusselt": 4.377206131893423
+    },
+    {
+      "x_m": 0.83854166667,
+      "bulk_temperature_c": 22.550940242514855,
+      "wall_temperature_c": 23.76295574130006,
+      "nusselt": 4.37714268096998
+    },
+    {
+      "x_m": 0.840625,
+      "bulk_temperature_c": 22.557270437421437,
+      "wall_temperature_c": 23.769303239300086,
+      "nusselt": 4.377080192472386
+    },
+    {
+      "x_m": 0.84270833333,
+      "bulk_temperature_c": 22.563600632413795,
+      "wall_temperature_c": 23.775650476300086,
+      "nusselt": 4.3770186486056355
+    },
+    {
+      "x_m": 0.84479166667,
+      "bulk_temperature_c": 22.569930827249152,
+      "wall_temperature_c": 23.781997456300076,
+      "nusselt": 4.376958033968737
+    },
+    {
+      "x_m": 0.846875,
+      "bulk_temperature_c": 22.576261022181825,
+      "wall_temperature_c": 23.78834418130009,
+      "nusselt": 4.376898342180671
+    },
+    {
+      "x_m": 0.84895833333,
+      "bulk_temperature_c": 22.582591217104493,
+      "wall_temperature_c": 23.794690658300055,
+      "nusselt": 4.376839547502027
+    },
+    {
+      "x_m": 0.85104166667,
+      "bulk_temperature_c": 22.588921411993226,
+      "wall_temperature_c": 23.801036887300086,
+      "nusselt": 4.376781649773745
+    },
+    {
+      "x_m": 0.853125,
+      "bulk_temperature_c": 22.59525160716288,
+      "wall_temperature_c": 23.80738287530005,
+      "nusselt": 4.376724624786667
+    },
+    {
+      "x_m": 0.85520833333,
+      "bulk_temperature_c": 22.601581802061332,
+      "wall_temperature_c": 23.81372862430004,
+      "nusselt": 4.376668463257414
+    },
+    {
+      "x_m": 0.85729166667,
+      "bulk_temperature_c": 22.607911997134522,
+      "wall_temperature_c": 23.820074137300082,
+      "nusselt": 4.376613155897817
+    },
+    {
+      "x_m": 0.859375,
+      "bulk_temperature_c": 22.614242192130405,
+      "wall_temperature_c": 23.826419420300056,
+      "nusselt": 4.376558680070632
+    },
+    {
+      "x_m": 0.86145833333,
+      "bulk_temperature_c": 22.62057238713254,
+      "wall_temperature_c": 23.832764474300063,
+      "nusselt": 4.37650503240472
+    },
+    {
+      "x_m": 0.86354166667,
+      "bulk_temperature_c": 22.62690258208079,
+      "wall_temperature_c": 23.839109304300052,
+      "nusselt": 4.376452194570693
+    },
+    {
+      "x_m": 0.865625,
+      "bulk_temperature_c": 22.63323277714693,
+      "wall_temperature_c": 23.845453913300048,
+      "nusselt": 4.376400156299318
+    },
+    {
+      "x_m": 0.86770833333,
+      "bulk_temperature_c": 22.63956297219562,
+      "wall_temperature_c": 23.851798303300086,
+      "nusselt": 4.376348909824559
+    },
+    {
+      "x_m": 0.86979166667,
+      "bulk_temperature_c": 22.64589316724897,
+      "wall_temperature_c": 23.858142479300056,
+      "nusselt": 4.37629843712073
+    },
+    {
+      "x_m": 0.871875,
+      "bulk_temperature_c": 22.652223362339043,
+      "wall_temperature_c": 23.86448644430004,
+      "nusselt": 4.376248727419818
+    },
+    {
+      "x_m": 0.87395833333,
+      "bulk_temperature_c": 22.658553557401206,
+      "wall_temperature_c": 23.870830201300066,
+      "nusselt": 4.376199769606755
+    },
+    {
+      "x_m": 0.87604166667,
+      "bulk_temperature_c": 22.664883752405558,
+      "wall_temperature_c": 23.877173753300042,
+      "nusselt": 4.376151552694031
+    },
+    {
+      "x_m": 0.878125,
+      "bulk_temperature_c": 22.671213947463684,
+      "wall_temperature_c": 23.88351710330005,
+      "nusselt": 4.376104066205963
+    },
+    {
+      "x_m": 0.88020833333,
+      "bulk_temperature_c": 22.677544142520617,
+      "wall_temperature_c": 23.88986025530005,
+      "nusselt": 4.3760572954581
+    },
+    {
+      "x_m": 0.88229166667,
+      "bulk_temperature_c": 22.683874337565214,
+      "wall_temperature_c": 23.896203210300087,
+      "nusselt": 4.3760112367546045
+    },
+    {
+      "x_m": 0.884375,
+      "bulk_temperature_c": 22.690204532671828,
+      "wall_temperature_c": 23.90254597230006,
+      "nusselt": 4.3759658758812074
+    },
+    {
+      "x_m": 0.88645833333,
+      "bulk_temperature_c": 22.69653472786848,
+      "wall_temperature_c": 23.908888545300044,
+      "nusselt": 4.375921198457661
+    },
+    {
+      "x_m": 0.88854166667,
+      "bulk_temperature_c": 22.70286492301733,
+      "wall_temperature_c": 23.915230931300073,
+      "nusselt": 4.375877196725724
+    },
+    {
+      "x_m": 0.890625,
+      "bulk_temperature_c": 22.709195118201876,
+      "wall_temperature_c": 23.921573132300068,
+      "nusselt": 4.37583386372773
+    },
+    {
+      "x_m": 0.89270833333,
+      "bulk_temperature_c": 22.715525313324804,
+      "wall_temperature_c": 23.927915152300045,
+      "nusselt": 4.375791184635773
+    },
+    {
+      "x_m": 0.89479166667,
+      "bulk_temperature_c": 22.721855508407486,
+      "wall_temperature_c": 23.934256994300085,
+      "nusselt": 4.375749148660978
+    },
+    {
+      "x_m": 0.896875,
+      "bulk_temperature_c": 22.728185703533086,
+      "wall_temperature_c": 23.940598659300065,
+      "nusselt": 4.375707752457799
+    },
+    {
+      "x_m": 0.89895833333,
+      "bulk_temperature_c": 22.734515898676023,
+      "wall_temperature_c": 23.946940151300055,
+      "nusselt": 4.3756669814612765
+    },
+    {
+      "x_m": 0.90104166667,
+      "bulk_temperature_c": 22.740846093880634,
+      "wall_temperature_c": 23.95328147230009,
+      "nusselt": 4.375626828578453
+    },
+    {
+      "x_m": 0.903125,
+      "bulk_temperature_c": 22.747176289095364,
+      "wall_temperature_c": 23.959622625300085,
+      "nusselt": 4.375587282762897
+    },
+    {
+      "x_m": 0.90520833333,
+      "bulk_temperature_c": 22.753506484299294,
+      "wall_temperature_c": 23.96596361330006,
+      "nusselt": 4.375548333079647
+    },
+    {
+      "x_m": 0.90729166667,
+      "bulk_temperature_c": 22.759836679490093,
+      "wall_temperature_c": 23.972304437300068,
+      "nusselt": 4.375509975879541
+    },
+    {
+      "x_m": 0.909375,
+      "bulk_temperature_c": 22.766166874628027,
+      "wall_temperature_c": 23.97864510130006,
+      "nusselt": 4.375472196553394
+    },
+    {
+      "x_m": 0.91145833333,
+      "bulk_temperature_c": 22.772497069815472,
+      "wall_temperature_c": 23.984985606300086,
+      "nusselt": 4.375434991831914
+    },
+    {
+      "x_m": 0.91354166667,
+      "bulk_temperature_c": 22.778827264915265,
+      "wall_temperature_c": 23.991325956300045,
+      "nusselt": 4.375398346756876
+    },
+    {
+      "x_m": 0.915625,
+      "bulk_temperature_c": 22.785157460179562,
+      "wall_temperature_c": 23.99766615230004,
+      "nusselt": 4.3753622586011955
+    },
+    {
+      "x_m": 0.91770833333,
+      "bulk_temperature_c": 22.791487655385197,
+      "wall_temperature_c": 24.004006197300043,
+      "nusselt": 4.375326715706768
+    },
+    {
+      "x_m": 0.91979166667,
+      "bulk_temperature_c": 22.79781785071549,
+      "wall_temperature_c": 24.010346093300086,
+      "nusselt": 4.3752917114915855
+    },
+    {
+      "x_m": 0.921875,
+      "bulk_temperature_c": 22.80414804593505,
+      "wall_temperature_c": 24.01668584330008,
+      "nusselt": 4.37525723425572
+    },
+    {
+      "x_m": 0.92395833333,
+      "bulk_temperature_c": 22.81047824121532,
+      "wall_temperature_c": 24.023025448300075,
+      "nusselt": 4.375223280984415
+    },
+    {
+      "x_m": 0.92604166667,
+      "bulk_temperature_c": 22.816808436387248,
+      "wall_temperature_c": 24.029364911300092,
+      "nusselt": 4.375189840218508
+    },
+    {
+      "x_m": 0.928125,
+      "bulk_temperature_c": 22.82313863165882,
+      "wall_temperature_c": 24.035704234300056,
+      "nusselt": 4.3751569054688915
+    },
+    {
+      "x_m": 0.93020833333,
+      "bulk_temperature_c": 22.82946882684547,
+      "wall_temperature_c": 24.042043420300047,
+      "nusselt": 4.375124465222089
+    },
+    {
+      "x_m": 0.93229166667,
+      "bulk_temperature_c": 22.835799022047865,
+      "wall_temperature_c": 24.048382469300066,
+      "nusselt": 4.375092519819336
+    },
+    {
+      "x_m": 0.934375,
+      "bulk_temperature_c": 22.84212921740425,
+      "wall_temperature_c": 24.05472138430008,
+      "nusselt": 4.375061058913792
+    },
+    {
+      "x_m": 0.93645833333,
+      "bulk_temperature_c": 22.848459412776265,
+      "wall_temperature_c": 24.06106016830006,
+      "nusselt": 4.375030071161572
+    },
+    {
+      "x_m": 0.93854166667,
+      "bulk_temperature_c": 22.854789608030046,
+      "wall_temperature_c": 24.06739882230005,
+      "nusselt": 4.374999552451513
+    },
+    {
+      "x_m": 0.940625,
+      "bulk_temperature_c": 22.86111980334806,
+      "wall_temperature_c": 24.073737348300085,
+      "nusselt": 4.374969496206435
+    },
+    {
+      "x_m": 0.94270833333,
+      "bulk_temperature_c": 22.86744999848065,
+      "wall_temperature_c": 24.08007574830009,
+      "nusselt": 4.374939894291206
+    },
+    {
+      "x_m": 0.94479166667,
+      "bulk_temperature_c": 22.873780193879213,
+      "wall_temperature_c": 24.08641402430004,
+      "nusselt": 4.374910741100437
+    },
+    {
+      "x_m": 0.946875,
+      "bulk_temperature_c": 22.880110388991852,
+      "wall_temperature_c": 24.09275217830009,
+      "nusselt": 4.374882027409124
+    },
+    {
+      "x_m": 0.94895833333,
+      "bulk_temperature_c": 22.88644058434079,
+      "wall_temperature_c": 24.09909021230004,
+      "nusselt": 4.374853747869301
+    },
+    {
+      "x_m": 0.95104166667,
+      "bulk_temperature_c": 22.892770779641978,
+      "wall_temperature_c": 24.10542812730006,
+      "nusselt": 4.374825897831185
+    },
+    {
+      "x_m": 0.953125,
+      "bulk_temperature_c": 22.899100974972498,
+      "wall_temperature_c": 24.111765925300062,
+      "nusselt": 4.3747984703415534
+    },
+    {
+      "x_m": 0.95520833333,
+      "bulk_temperature_c": 22.90543117031524,
+      "wall_temperature_c": 24.11810360930008,
+      "nusselt": 4.374771454500064
+    },
+    {
+      "x_m": 0.95729166667,
+      "bulk_temperature_c": 22.91176136572193,
+      "wall_temperature_c": 24.124441180300096,
+      "nusselt": 4.374744846870614
+    },
+    {
+      "x_m": 0.959375,
+      "bulk_temperature_c": 22.918091561003052,
+      "wall_temperature_c": 24.130778638300058,
+      "nusselt": 4.374718646754847
+    },
+    {
+      "x_m": 0.96145833333,
+      "bulk_temperature_c": 22.92442175638365,
+      "wall_temperature_c": 24.13711598830008,
+      "nusselt": 4.374692836912444
+    },
+    {
+      "x_m": 0.96354166667,
+      "bulk_temperature_c": 22.93075195156416,
+      "wall_temperature_c": 24.143453229300064,
+      "nusselt": 4.374667419856699
+    },
+    {
+      "x_m": 0.965625,
+      "bulk_temperature_c": 22.937082146965793,
+      "wall_temperature_c": 24.149790364300088,
+      "nusselt": 4.374642386271075
+    },
+    {
+      "x_m": 0.96770833333,
+      "bulk_temperature_c": 22.9434123421903,
+      "wall_temperature_c": 24.156127393300096,
+      "nusselt": 4.374617734706029
+    },
+    {
+      "x_m": 0.96979166667,
+      "bulk_temperature_c": 22.949742537683562,
+      "wall_temperature_c": 24.162464320300046,
+      "nusselt": 4.3745934523281935
+    },
+    {
+      "x_m": 0.971875,
+      "bulk_temperature_c": 22.956072732977646,
+      "wall_temperature_c": 24.16880114530005,
+      "nusselt": 4.374569537436926
+    },
+    {
+      "x_m": 0.97395833333,
+      "bulk_temperature_c": 22.962402928480287,
+      "wall_temperature_c": 24.17513787030009,
+      "nusselt": 4.374545984276688
+    },
+    {
+      "x_m": 0.97604166667,
+      "bulk_temperature_c": 22.96873312370036,
+      "wall_temperature_c": 24.18147449530005,
+      "nusselt": 4.374522791064645
+    },
+    {
+      "x_m": 0.978125,
+      "bulk_temperature_c": 22.975063319077492,
+      "wall_temperature_c": 24.18781102430006,
+      "nusselt": 4.3744999449462725
+    },
+    {
+      "x_m": 0.98020833333,
+      "bulk_temperature_c": 22.981393514410456,
+      "wall_temperature_c": 24.194147457300062,
+      "nusselt": 4.374477445185072
+    },
+    {
+      "x_m": 0.98229166667,
+      "bulk_temperature_c": 22.987723709730346,
+      "wall_temperature_c": 24.20048379630009,
+      "nusselt": 4.3744552846683336
+    },
+    {
+      "x_m": 0.984375,
+      "bulk_temperature_c": 22.994053905100657,
+      "wall_temperature_c": 24.20682004230008,
+      "nusselt": 4.374433460008027
+    },
+    {
+      "x_m": 0.98645833333,
+      "bulk_temperature_c": 23.00038410058727,
+      "wall_temperature_c": 24.213156196300076,
+      "nusselt": 4.3744119678246145
+    },
+    {
+      "x_m": 0.98854166667,
+      "bulk_temperature_c": 23.006714295988786,
+      "wall_temperature_c": 24.219492261300047,
+      "nusselt": 4.374390796561237
+    },
+    {
+      "x_m": 0.990625,
+      "bulk_temperature_c": 23.013044491344658,
+      "wall_temperature_c": 24.22582823730005,
+      "nusselt": 4.374369946350664
+    },
+    {
+      "x_m": 0.99270833333,
+      "bulk_temperature_c": 23.019374686441097,
+      "wall_temperature_c": 24.23216412130006,
+      "nusselt": 4.3743494272332555
+    },
+    {
+      "x_m": 0.99479166667,
+      "bulk_temperature_c": 23.025704872671554,
+      "wall_temperature_c": 24.238499768300073,
+      "nusselt": 4.374329731145918
+    },
+    {
+      "x_m": 0.996875,
+      "bulk_temperature_c": 23.03203457485546,
+      "wall_temperature_c": 24.24482961730007,
+      "nusselt": 4.374329201607149
+    },
+    {
+      "x_m": 0.99895833333,
+      "bulk_temperature_c": 23.038321751278204,
+      "wall_temperature_c": 24.250955086300053,
+      "nusselt": 4.374912528389514
+    }
+  ],
+  "turbulent_smoke_test": {
+    "applied_heat_w": 100.0,
+    "advected_heat_w": 99.99906667341381,
+    "inlet_conduction_loss_w": 0.0009333196258559897,
+    "energy_balance_error_percent": 6.9603345309587886e-09,
+    "outlet_bulk_temperature_c": 28.247020976796364,
+    "developed_nusselt": 89.58047628879588,
+    "prandtl": 0.7078482509505705,
+    "limitations": "One-way, constant-property fluid heating. Wall material/thickness do not affect this solve. No solid conduction, buoyancy, radiation or phase change. Turbulent Prandtl closure is unvalidated against thermal experiments.",
+    "flow_case_id": "e5af2669-3309-4ed9-a902-161b4b34932d",
+    "thermal_case_id": "17229dcf-5222-40d6-a93d-bd3d397bef59",
+    "reference_status": "not_qualified",
+    "turbulent_prandtl": 0.85
+  }
+}

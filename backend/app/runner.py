@@ -15,9 +15,10 @@ from uuid import uuid4, UUID
 
 from .cases import generate_pipe
 from .results import analyse, convergence
+from .thermal import prepare_thermal, analyse_thermal
 
 ROOT = Path(__file__).resolve().parents[2]
-ACTIVE = {"queued", "generating", "meshing", "checking", "solving", "processing"}
+ACTIVE = {"queued", "generating", "meshing", "checking", "solving", "heating", "processing"}
 
 
 @lru_cache(maxsize=1)
@@ -150,9 +151,22 @@ class JobManager:
             self._command(job_id, "foamRun", ["foamRun"], env)
             self.update(job_id, status="processing")
             result = analyse(case, spec)
+            if spec.applied_heat_w > 0:
+                thermal_case = prepare_thermal(case, spec, result["solution_iteration"])
+                self.update(job_id, status="heating")
+                self._command(job_id, "thermal", ["foamRun", "-case", str(thermal_case)], env)
+                self.update(job_id, status="processing")
+                result["thermal"] = analyse_thermal(case, spec, result)
+                result["thermal_solved"] = True
+                # Put the final temperature beside its frozen U/p fields so
+                # ParaView can inspect all three in the main pipe.foam case.
+                shutil.copy2(thermal_case / str(result["thermal"]["solution_iteration"]) / "T",
+                             case / f"{result['solution_iteration']:g}" / "T")
+                (case / "results.json").write_text(json.dumps(result, indent=2, allow_nan=False))
             if self.cancel_events[job_id].is_set():
                 raise Cancelled()
-            self.update(job_id, status="completed" if result["convergence"]["converged"] else "not_converged")
+            converged = result["convergence"]["converged"] and result.get("thermal", {}).get("convergence", {}).get("converged", True)
+            self.update(job_id, status="completed" if converged else "not_converged")
         except Cancelled:
             self.update(job_id, status="cancelled")
         except Exception as exc:
@@ -166,7 +180,7 @@ class JobManager:
         if details:
             case = self.root / job_id
             logs = []
-            for name in ("blockMesh", "checkMesh", "centres", "volumes", "foamRun"):
+            for name in ("blockMesh", "checkMesh", "centres", "volumes", "foamRun", "thermal"):
                 file = case / f"log.{name}"
                 if file.exists():
                     with file.open("rb") as stream:
@@ -176,6 +190,8 @@ class JobManager:
             job["log"] = "\n".join(logs)[-24000:]
             if (case / "log.foamRun").exists():
                 job["progress"] = convergence((case / "log.foamRun").read_text(errors="replace"))
+            if (case / "log.thermal").exists():
+                job["thermal_progress"] = convergence((case / "log.thermal").read_text(errors="replace"))
             results = case / "results.json"
             if results.exists() and job["status"] in ("completed", "not_converged"):
                 job["results"] = json.loads(results.read_text())

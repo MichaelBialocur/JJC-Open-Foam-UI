@@ -23,7 +23,8 @@ def test_regimes_and_thermal_scope():
     p = PipeDefinition(**PRESETS['laminar']['inputs'])
     assert p.reynolds == pytest.approx(100)
     assert p.selected_model == 'laminar'
-    assert p.model_copy(update={'applied_heat_w':500}).run_errors()
+    assert not p.model_copy(update={'applied_heat_w':500}).run_errors()
+    assert p.prandtl == pytest.approx(6.98394)
     assert PipeDefinition(inlet_velocity_m_s=3000*p.nu/p.diameter_m).run_errors()
     assert PipeDefinition(flow_model='laminar').run_errors()
 
@@ -52,8 +53,9 @@ def test_generated_case_uses_correct_model_and_scope(tmp_path):
     assert (tmp_path/'0/omega').exists()
     assert 'noSlip' in (tmp_path/'0/U').read_text()
     assert not (tmp_path/'0/T').exists()
-    with pytest.raises(ValueError):
-        generate_pipe(tmp_path/'invalid', spec.model_copy(update={'applied_heat_w':1}))
+    generate_pipe(tmp_path/'heated', spec.model_copy(update={'applied_heat_w':1}))
+    # Temperature is solved in a separate frozen-flow case after flow completes.
+    assert not (tmp_path/'heated/0/T').exists()
 
 
 def write_field(path, values):

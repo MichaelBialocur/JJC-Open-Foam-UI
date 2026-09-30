@@ -12,6 +12,7 @@ from fastapi.responses import Response
 from .models import PipeDefinition, PRESETS
 from .references import reference_for
 from .runner import ACTIVE, JobManager, health as foam_health
+from .fields import fields_json, meridional_vtk
 
 
 @asynccontextmanager
@@ -21,7 +22,7 @@ async def lifespan(app):
     app.state.jobs.close()
 
 
-app = FastAPI(title="Pipe CFD", version="0.2.0", lifespan=lifespan)
+app = FastAPI(title="Pipe CFD", version="0.3.0", lifespan=lifespan)
 
 
 @app.get("/")
@@ -133,3 +134,39 @@ def case_zip(job_id: UUID):
                 archive.write(path, str(job_id) + "/" + str(path.relative_to(case)))
     return Response(buf.getvalue(), media_type="application/zip",
                     headers={"Content-Disposition": f'attachment; filename="case-{job_id}.zip"'})
+
+
+def get_fields(job_id):
+    data = get_job(job_id)
+    if not data.get("results"):
+        raise HTTPException(409, "No computed fields available until the run finishes")
+    case = app.state.jobs.root / str(job_id)
+    try:
+        return fields_json(str(case), (case / "results.json").stat().st_mtime_ns)
+    except (OSError, ValueError) as exc:
+        raise HTTPException(409, f"Cannot load the saved mesh/fields: {exc}") from exc
+
+
+@app.get("/api/jobs/{job_id}/fields.json")
+def field_data(job_id: UUID):
+    return Response(get_fields(job_id), media_type="application/json")
+
+
+@app.get("/api/jobs/{job_id}/section.vtk")
+def field_vtk(job_id: UUID):
+    return Response(meridional_vtk(json.loads(get_fields(job_id))), media_type="application/octet-stream",
+                    headers={"Content-Disposition": f'attachment; filename="section-{job_id}.vtk"'})
+
+
+@app.get("/api/jobs/{job_id}/thermal.csv")
+def thermal_csv(job_id: UUID):
+    data = get_job(job_id)
+    thermal = data.get("results", {}).get("thermal")
+    if not thermal:
+        raise HTTPException(409, "This run has no computed temperature field")
+    output = io.StringIO()
+    writer = csv.DictWriter(output, fieldnames=["x_m", "bulk_temperature_c", "wall_temperature_c", "nusselt"])
+    writer.writeheader()
+    writer.writerows(thermal["profile"])
+    return Response(output.getvalue(), media_type="text/csv",
+                    headers={"Content-Disposition": f'attachment; filename="thermal-{job_id}.csv"'})

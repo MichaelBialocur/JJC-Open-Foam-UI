@@ -56,25 +56,29 @@ def convergence(log: str):
 
 def patch_flux(path: Path, name, count):
     """Sum finite-volume face fluxes, not interpolated cell-centre velocities."""
+    return float(read_patch(path, name, count).sum())
+
+
+def read_patch(path: Path, name, count):
+    """Read a scalar boundary value array in its OpenFOAM face order."""
     text = path.read_text()
     match = re.search(r"\b" + re.escape(name) + r"\s*\{([^{}]*)\}", text, re.S)
     if not match:
-        raise ValueError(f"Missing {name} flux patch")
+        raise ValueError(f"Missing {name} scalar patch")
     block = match[1]
     values = re.search(r"value\s+nonuniform\s+List<scalar>\s+(\d+)\s*\((.*?)\)\s*;", block, re.S)
     if values:
         data = np.fromstring(values[2], sep=" ")
         if int(values[1]) != count or data.size != count:
-            raise ValueError(f"Unexpected {name} flux size")
-        total = float(data.sum())
+            raise ValueError(f"Unexpected {name} scalar patch size")
     else:
         value = re.search(rf"value\s+uniform\s+({NUMBER})\s*;", block)
         if not value:
-            raise ValueError(f"No flux values on {name}")
-        total = float(value[1]) * count
-    if not np.isfinite(total):
-        raise ValueError("Non-finite boundary flux")
-    return total
+            raise ValueError(f"No scalar values written on {name}")
+        data = np.full(count, float(value[1]))
+    if not np.all(np.isfinite(data)):
+        raise ValueError("Non-finite boundary scalar")
+    return data
 
 
 def analyse(case: Path, spec):

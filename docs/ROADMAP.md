@@ -2,13 +2,17 @@
 
 ## Delivered in v0.2
 
-A straight-pipe flow workflow: typed inputs → axisymmetric mesh → mesh check → steady OpenFOAM solve → field extraction → reference comparison. Run history, cancellation, residuals, CSV/JSON/case export and three-level mesh studies are included. The thermal UI metadata is preserved, with nonzero heat rejected until an energy model exists.
+A straight-pipe flow workflow: typed inputs → axisymmetric mesh → mesh check → steady OpenFOAM solve → field extraction → reference comparison. Run history, cancellation, residuals, CSV/JSON/case export and three-level mesh studies are included.
 
-## Next: heat transfer in the pipe
+## Delivered in v0.3
+
+Round plot ticks and explicit zero baselines; interactive 3D pipe geometry; computed field slices, cell probes, temperature/speed/pressure colour maps and VTK export. A one-way fluid energy solve adds uniform inner-wall heating with explicit constant properties. Three laminar thermal meshes were checked against Nu = 48/11 and energy conservation; see the measured thermal benchmark report. The 3D view revolves the axisymmetric solution. Solid conduction and a full 3D flow solve remain future work.
+
+## Next: conjugate heat transfer and stronger reference evidence
 
 First strengthen the flow baseline: the initial turbulent study still changes Darcy f by 3.74% from medium to fine. Extend mesh/angular sensitivity and compare corrected experimental data before claiming mesh independence or general model accuracy.
 
-Add coupled fluid/solid regions, conduction through aluminium/copper walls, explicit heated surface selection, coolant heating and energy conservation. Validate temperature and Nusselt-number outputs against appropriate research data and analytical limiting cases. Review field visualization while this is developed.
+Add coupled fluid/solid regions, conduction through aluminium/copper walls and explicit heated surface selection. Extend fluid heating to temperature-dependent properties where needed. Compare thermal predictions with a traceable heated-pipe experiment, including boundary conditions and measurement uncertainty; current analytical agreement is not experimental validation. Review field visualization while this is developed.
 
 ## Geometry builder
 
