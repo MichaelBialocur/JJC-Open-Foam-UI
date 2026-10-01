@@ -144,30 +144,32 @@ def run_assembly(manager,job_id,spec,env):
     put(meshcase,'system/controlDict',header('controlDict')+'application gmshToFoam; startFrom startTime; startTime 0; stopAt endTime; endTime 1; deltaT 1; writeControl timeStep; writeInterval 1; writeFormat ascii;\n')
     args=[sys.executable,'-m','backend.app.assembly_geometry',str(case/'geometry-input.json'),str(meshcase),'--mesh','--size',str(spec.mesh_size_mm)]
     cad_env={**env,'PYTHONPATH':str(Path(__file__).resolve().parents[2])}
-    manager._command(job_id,'cadMesh',args,cad_env,180)
+    # Large meshes must not inherit the prototype's short wall-clock cutoffs.
+    # Every stage remains cancellable, and both regions still pass checkMesh.
+    manager._command(job_id,'cadMesh',args,cad_env,timeout=None)
     shutil.copy2(meshcase/'geometry.json',case/'geometry.json')
     manager.update(job_id,status='meshing')
-    manager._command(job_id,'gmshToFoam',['gmshToFoam','-case',str(meshcase),str(meshcase/'assembly.msh')],env,180)
-    manager._command(job_id,'splitRegions',['splitMeshRegions','-case',str(meshcase),'-cellZones','all','-noFields'],env,180)
+    manager._command(job_id,'gmshToFoam',['gmshToFoam','-case',str(meshcase),str(meshcase/'assembly.msh')],env,timeout=None)
+    manager._command(job_id,'splitRegions',['splitMeshRegions','-case',str(meshcase),'-cellZones','all','-noFields'],env,timeout=None)
     for region in ('fluid','solid'):
         args=['-case',str(meshcase),'-region',region]
-        manager._command(job_id,region+'Check',['checkMesh',*args],env,180)
+        manager._command(job_id,region+'Check',['checkMesh',*args],env,timeout=None)
         if 'Mesh OK.' not in (case/f'log.{region}Check').read_text():
             raise ValueError(f'{region} mesh quality checks did not pass. Increase bend radius or adjust target cell size.')
     shutil.copytree(meshcase/'constant/fluid/polyMesh',case/'constant/polyMesh')
     wall_boundary(case/'constant/polyMesh/boundary')
     mesh=read_mesh(case/'constant/polyMesh');flow_dictionaries(case,spec,mesh)
-    manager._command(job_id,'centres',['foamPostProcess','-func','writeCellCentres','-time','0'],env,120)
-    manager._command(job_id,'volumes',['foamPostProcess','-func','writeCellVolumes','-time','0'],env,120)
+    manager._command(job_id,'centres',['foamPostProcess','-func','writeCellCentres','-time','0'],env,timeout=None)
+    manager._command(job_id,'volumes',['foamPostProcess','-func','writeCellVolumes','-time','0'],env,timeout=None)
     manager.update(job_id,status='solving')
-    manager._command(job_id,'foamRun',['foamRun'],env)
+    manager._command(job_id,'foamRun',['foamRun'],env,timeout=None)
     times=sorted(int(p.name) for p in case.iterdir() if p.is_dir() and p.name.isdigit() and int(p.name)>0)
     if not times: raise ValueError('Flow solver did not write a solution.')
     if spec.boundaries:
         thermal=thermal_dictionaries(case,spec,times[-1])
         manager.update(job_id,status='heating')
-        manager._command(job_id,'solidCentres',['foamPostProcess','-case',str(thermal),'-region','solid','-func','writeCellCentres','-time','0'],env,120)
-        manager._command(job_id,'thermal',['foamMultiRun','-case',str(thermal)],env)
+        manager._command(job_id,'solidCentres',['foamPostProcess','-case',str(thermal),'-region','solid','-func','writeCellCentres','-time','0'],env,timeout=None)
+        manager._command(job_id,'thermal',['foamMultiRun','-case',str(thermal)],env,timeout=None)
     manager.update(job_id,status='processing')
     result=analyse_assembly(case,spec)
     put(case,'results.json',json.dumps(result,indent=2,allow_nan=False))

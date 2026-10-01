@@ -104,6 +104,7 @@ class JobManager:
             return dict(job)
 
     def _command(self, job_id, name, args, env, timeout=3600):
+        """Run a cancellable process; None disables only the elapsed-time cutoff."""
         case = self.root / job_id
         event = self.cancel_events[job_id]
         if event.is_set():
@@ -115,7 +116,7 @@ class JobManager:
                 while proc.poll() is None:
                     if event.is_set():
                         raise Cancelled()
-                    if time.monotonic() - started > timeout:
+                    if timeout is not None and time.monotonic() - started > timeout:
                         raise RuntimeError(f"{name} exceeded the {timeout}s time limit.")
                     event.wait(.2)
                 if proc.returncode:

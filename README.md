@@ -1,8 +1,8 @@
-# Pipe CFD · v0.6.1
+# Pipe CFD · v0.6.2
 
 A local React/FastAPI interface to **Foundation OpenFOAM 14**. Build connected piping, bends, manifolds and multi-port cold plates; select exterior faces for heating or convection; mesh and solve full 3D flow with coupled solid-wall conduction. The separate straight-pipe workspace retains its axisymmetric reference benchmarks. Both viewers use actual computed fields.
 
-**New in 0.6.1:** delete individual or selected saved runs in either workspace, and scroll the controls and results independently on desktop. [Geometry builder guide](docs/GEOMETRY_BUILDER.md) · [3D benchmark results and remaining errors](docs/ASSEMBLY_BENCHMARKS.md). The assembly solver is an early workflow, not an experimentally validated cold-plate predictor.
+**New in 0.6.2:** assembly runs have no fixed cell-count ceiling or elapsed-time cutoff. Larger meshes are limited by available RAM, disk space and practical runtime; cancellation, iteration settings and mesh-quality checks remain active. Saved-run deletion and independent desktop panel scrolling are also included. [Geometry builder guide](docs/GEOMETRY_BUILDER.md) · [3D benchmark results and remaining errors](docs/ASSEMBLY_BENCHMARKS.md). The assembly solver is an early workflow, not an experimentally validated cold-plate predictor.
 
 ## Start on your Windows PC
 

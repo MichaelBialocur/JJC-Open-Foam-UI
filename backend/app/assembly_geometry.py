@@ -166,11 +166,9 @@ def build(geometry, folder, mesh_size_mm=2, volume_mesh=False):
         gmsh.option.setNumber('Mesh.ScalingFactor',.001)
         gmsh.model.mesh.generate(3 if volume_mesh else 2)
         if volume_mesh:
-            count=sum(len(a) for a in gmsh.model.mesh.getElements(3)[1])
-            if count>600000: raise ValueError(f'The mesh has {count:,} cells; increase target cell size to stay below 600,000.')
             gmsh.model.mesh.optimize('Netgen')
             count=sum(len(a) for a in gmsh.model.mesh.getElements(3)[1])
-            if count>600000: raise ValueError(f'The optimized mesh has {count:,} cells; increase target cell size.')
+            print(f'Assembly mesh: {count:,} fluid and solid cells. No application cell-count cap.', flush=True)
             gmsh.write(str(folder/'assembly.msh'))
         nodes,coords,_=gmsh.model.mesh.getNodes()
         node_map={int(tag):xyz for tag,xyz in zip(nodes,np.asarray(coords).reshape(-1,3))}

@@ -1,4 +1,4 @@
-# Geometry builder · v0.6.1
+# Geometry builder · v0.6.2
 
 Open **Geometry builder** in the workspace tabs. **Straight-pipe benchmark** keeps the existing axisymmetric reference workflow.
 
@@ -31,7 +31,11 @@ Any geometry edit clears existing face assignments and requires rebuilding. Save
 
 ## Mesh, run and inspect
 
-Set the target cell size in mm, then click **Mesh & run simulation**. Gmsh/OpenCASCADE creates a conforming fluid/solid tetrahedral mesh, converted to metres for Foundation OpenFOAM 14. Both regions must pass `checkMesh`. The cap is 600,000 total cells. The preview tessellation is not the volume mesh; narrow features and curvature affect the actual cell count. Repeat a run with a smaller target to assess mesh sensitivity.
+Set the target cell size in mm, then click **Mesh & run simulation**. Gmsh/OpenCASCADE creates a conforming fluid/solid tetrahedral mesh, converted to metres for Foundation OpenFOAM 14. Both regions must pass `checkMesh`. There is no application cell-count ceiling. The preview tessellation is not the volume mesh; narrow features and curvature affect the actual cell count. Repeat a run with a smaller target to assess mesh sensitivity.
+
+Assembly meshing, conversion, quality checks and solver commands have no fixed elapsed-time cutoff. Flow and thermal iteration settings still apply, and **Cancel run** stops the active process. The geometry preview retains its separate 90-second timeout. Meshing and solving run serially; large cases need sufficient available RAM and disk space and can take substantially longer. Removing the old 600,000-cell gate allows larger cases to proceed; it does not establish mesh quality, convergence or prediction accuracy.
+
+Removal check: the straight-pipe template at a 0.3 mm target generated and exported **881,321 fluid + solid cells** with Gmsh 4.15.2. This checks acceptance above the former ceiling, not CFD accuracy. The local large-case OpenFOAM conversion check was blocked by a missing `libmpi.so.40` runtime library; a full simulation of that mesh has not been verified. All 98 backend tests, including native CAD and cancellation without a deadline, and 16 frontend tests passed.
 
 Volume/mass inlets enforce the requested flow on the polygonal inlet mesh. Velocity inlets impose the specified mean vector, so their actual flow differs slightly from ideal CAD area × velocity on a coarse curved mesh. The results report both inlet areas and actual face-integrated flow.
 

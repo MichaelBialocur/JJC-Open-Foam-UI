@@ -24,7 +24,7 @@ async def lifespan(app):
     app.state.jobs.close()
 
 
-app = FastAPI(title="Pipe CFD", version="0.6.1", lifespan=lifespan)
+app = FastAPI(title="Pipe CFD", version="0.6.2", lifespan=lifespan)
 app.include_router(assembly_router)
 
 
