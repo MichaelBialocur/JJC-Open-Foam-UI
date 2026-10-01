@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Chart from './Chart'
 import Viewport from './Viewport'
 import FieldViewer from './FieldViewer'
 import PropertyEditor from './PropertyEditor'
 import InletControls from './InletControls'
+import RunHistory from './RunHistory'
 import { fluidProperties, solidProperties, chooseFluid, chooseMaterial, isEdited, inputsDiffer } from './setupInputs'
 import './App.css'
 
@@ -20,7 +21,7 @@ const statusText = s => ({ not_converged: 'Iteration limit reached', completed: 
 async function api(path, body, signal) {
   const response = await fetch(path, body === undefined ? { signal } : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal })
   const data = await response.json()
-  if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : data.detail?.map(d => `${d.loc?.slice(1).join('.')}: ${d.msg}`).join('; ') || `Server error ${response.status}`)
+  if (!response.ok) throw Object.assign(new Error(typeof data.detail === 'string' ? data.detail : data.detail?.map(d => `${d.loc?.slice(1).join('.')}: ${d.msg}`).join('; ') || `Server error ${response.status}`), {status: response.status})
   return data
 }
 function Metric({ label, value, unit, detail }) {
@@ -33,6 +34,8 @@ function App() {
   const [jobs, setJobs] = useState([]), [selected, setSelected] = useState(null), [job, setJob] = useState(null)
   const [error, setError] = useState(''), [previewError, setPreviewError] = useState(''), [busy, setBusy] = useState(false)
   const [study, setStudy] = useState([])
+  const [deletingRuns, setDeletingRuns] = useState(false)
+  const deletedIds = useRef(new Set())
   useEffect(() => {
     const controller = new AbortController()
     Promise.all([api('/api/health', undefined, controller.signal), api('/api/presets', undefined, controller.signal),api('/api/materials',undefined,controller.signal)])
@@ -46,28 +49,36 @@ function App() {
     return () => { clearTimeout(timer); controller.abort() }
   }, [form])
   useEffect(() => {
+    if (deletingRuns) return
     let stopped = false, timer
     const controller = new AbortController()
     async function refresh() {
       try {
-        const recent = await api('/api/jobs', undefined, controller.signal)
+        const recent = (await api('/api/jobs', undefined, controller.signal)).filter(j => !deletedIds.current.has(j.id))
         if (stopped) return
         setJobs(recent)
-        if (selected) {
+        if (selected && !recent.some(j => j.id === selected)) {
+          setSelected(null); setJob(null); setStudy([])
+        } else if (selected && !deletedIds.current.has(selected)) {
           const current = await api(`/api/jobs/${selected}`, undefined, controller.signal)
-          if (stopped) return
+          if (stopped || deletedIds.current.has(selected)) return
           setJob(current)
           if (current.study_id) {
-            const members = await Promise.all(recent.filter(j => j.study_id === current.study_id).map(j => api(`/api/jobs/${j.id}`, undefined, controller.signal)))
-            if (!stopped) setStudy(members)
+            const members = await Promise.allSettled(recent.filter(j => j.study_id === current.study_id).map(j => api(`/api/jobs/${j.id}`, undefined, controller.signal)))
+            if (!stopped && !deletedIds.current.has(selected)) setStudy(members.filter(m => m.status === 'fulfilled' && !deletedIds.current.has(m.value.id)).map(m => m.value))
           } else setStudy([])
         }
-      } catch (e) { if (!stopped && e.name !== 'AbortError') setError(e.message) }
+      } catch (e) {
+        if (!stopped && !deletedIds.current.has(selected) && e.name !== 'AbortError') {
+          if (e.status === 404 && selected) { setSelected(null); setJob(null); setStudy([]) }
+          else setError(e.message)
+        }
+      }
       if (!stopped) timer = setTimeout(refresh, 1500)
     }
     refresh()
     return () => { stopped = true; clearTimeout(timer); controller.abort() }
-  }, [selected])
+  }, [selected, deletingRuns])
   function update(event) {
     const { name, value, type } = event.target
     setForm(old => ({ ...old, [name]: type === 'number' ? (value === '' ? '' : Number(value)) : value,
@@ -84,6 +95,12 @@ function App() {
   async function cancel() {
     try { setJob(await api(`/api/jobs/${selected}/cancel`, {})) } catch (e) { setError(e.message) }
   }
+  function runsDeleted(ids) {
+    ids.forEach(id => deletedIds.current.add(id))
+    setJobs(old => old.filter(j => !deletedIds.current.has(j.id)))
+    setStudy(old => old.filter(j => !deletedIds.current.has(j.id)))
+    if (ids.includes(selected)) { setSelected(null); setJob(null); setStudy([]) }
+  }
   const number = (name, label, unit, step = 'any') => <label key={name}>{label}<div><input name={name} type="number" step={step} value={form[name] ?? ''} onChange={update} /><span>{unit}</span></div></label>
   const results = job?.results, validation = results?.validation, thermal = results?.thermal
   const active = activeStates.includes(job?.status)
@@ -96,10 +113,10 @@ function App() {
   const solidStudy = studyRows.some(s=>s.inputs.thermal_mode==='conjugate'&&s.inputs.applied_heat_w>0)
 
   return <div className="app">
-    <header><div><h1>Pipe CFD <span className="version">0.6</span></h1><p>OpenFOAM · flow, solid wall conduction & computed field views</p></div>
+    <header><div><h1>Pipe CFD <span className="version">0.6.1</span></h1><p>OpenFOAM · flow, solid wall conduction & computed field views</p></div>
       <div className="header-actions"><span className={`badge ${health?.openfoam?.available ? 'good' : 'warn'}`}>{health?.openfoam?.available ? 'OpenFOAM 14 ready' : 'OpenFOAM unavailable'}</span>
         <button disabled={disabled} onClick={() => submit()}>Run simulation</button></div></header>
-    <main><aside className="controls">
+    <main><aside className="controls" tabIndex={0} aria-label="Pipe controls">
       <section><h2>Reference cases</h2><div className="preset-buttons">{Object.entries(presets).map(([key, p]) => <button className="secondary" key={key} title={p.description} onClick={() => { setForm(p.inputs); setError('') }}>{p.name}</button>)}</div></section>
       <section><h2>Pipe geometry</h2>{number('length_mm','Length','mm')}{number('inner_diameter_mm','Inner diameter','mm')}
         <details><summary>Wall geometry</summary>{number('wall_thickness_mm','Wall thickness','mm')}
@@ -121,7 +138,7 @@ function App() {
         {number('max_iterations','Maximum iterations','steps',100)}<details><summary>Advanced solver settings</summary>{number('residual_tolerance','Residual tolerance','')}{number('turbulence_intensity','Inlet turbulence intensity','fraction')}</details>
         <button className="secondary full" disabled={disabled} onClick={() => submit(true)}>Run three-mesh study</button><p className="muted">Cell counts above are fluid cells. Coupled mode adds 8 / 16 / 32 radial solid layers. One solver runs at a time.</p></section>
     </aside>
-    <div className="workspace">
+    <div className="workspace" tabIndex={0} role="region" aria-label="Pipe results">
       {(error || previewError) && <div className="error" role="alert">{error || previewError}</div>}
       {health && !health.openfoam.available && <div className="notice warn">{health.openfoam.error}</div>}
       {preview?.run_errors.map(message => <div className="notice warn" key={message}>{message}</div>)}
@@ -131,10 +148,10 @@ function App() {
       <section className="panel"><div className="panel-heading"><h2>{job ? 'Saved run · 3D geometry' : '3D geometry preview'}</h2><span className="muted">L {fmt(shownSpec.length_mm)} mm · ID {fmt(shownSpec.inner_diameter_mm)} mm · wall {fmt(shownSpec.wall_thickness_mm)} mm</span></div><Viewport spec={shownSpec} />
         {changed && <p className="notice">Results and geometry below belong to the selected saved run. Inputs on the left have changed; run again to compare.</p>}</section>
       <section className="panel"><div className="panel-heading"><h2>Simulation runs</h2><span className="muted">Stored locally across restarts</span></div>
-        {!jobs.length ? <p className="muted">Choose a reference preset or enter your pipe dimensions, then run a simulation.</p> : <div className="run-list">{jobs.slice(0,12).map(j => <button key={j.id} className={`run-item ${selected===j.id?'selected':''}`} onClick={() => { setSelected(j.id); setJob(null); setError('') }}>
-          <span>{new Date(j.created_at*1000).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'})} · {j.inputs.mesh_level}</span>
+        <RunHistory jobs={jobs} selectedId={selected} onSelect={id => { setSelected(id); setJob(null); setStudy([]); setError('') }} onDeleted={runsDeleted} onDeletingChange={setDeletingRuns}>{j => <>
+          <span>{j.inputs.mesh_level} mesh</span>
           <span>Re {fmt(j.inputs.density_kg_m3*j.inputs.inlet_velocity_m_s*j.inputs.inner_diameter_mm/1000/j.inputs.dynamic_viscosity_pa_s,5)}</span>
-          <span className={`badge ${j.status==='completed'?'good':j.status==='failed'?'bad':''}`}>{statusText(j.status)}</span></button>)}</div>}
+          <span className={`badge ${j.status==='completed'?'good':j.status==='failed'?'bad':''}`}>{statusText(j.status)}</span></>}</RunHistory>
         {job && <div className="run-status"><strong>{statusText(job.status)}</strong><span>{job.status==='heating'?`Temperature iteration ${job.thermal_progress?.iteration || 0} / ${job.inputs.thermal_iterations || 200}`:`Flow iteration ${job.progress?.iteration || 0} / ${job.inputs.max_iterations}`}</span>
           {active && <button className="danger" onClick={cancel}>Cancel this run</button>}{!active && <a className="button secondary" href={`/api/jobs/${selected}/case.zip`}>Download OpenFOAM case</a>}</div>}
         {job?.error && <p className="error">{job.error}</p>}
@@ -190,7 +207,7 @@ function App() {
         const tv=s.results?.thermal?.validation
         return <tr key={s.id}><td>{s.inputs.mesh_level}</td><td>{statusText(s.status)}</td><td>{fmt(f,6)}</td><td>{fmt(s.results?.validation.friction_error_percent)}%</td><td>{prev && f ? `${fmt(100*Math.abs(f-prev)/Math.abs(f))}%`:'—'}</td>{heatedStudy&&<><td>{fmt(nu,6)}</td><td>{fmt(solidStudy?tv?.wall_resistance_error_percent:tv?.nusselt_error_percent)}%</td><td>{previousNu&&nu?`${fmt(100*Math.abs(nu-previousNu)/Math.abs(nu))}%`:'—'}</td></>}{solidStudy&&<><td>{fmt(s.results?.thermal?.solid.maximum_temperature_c,6)}</td><td>{fmt(s.results?.thermal?.solid.mean_wall_drop_k,5)}</td></>}</tr>
       })}</tbody></table></div><p className="muted">{solidStudy?'Thermal reference error compares the mean solid-wall drop with cylindrical conduction. ':''}Inspect convergence and reference checks for every mesh. A small mesh-to-mesh change alone is not proof of model accuracy.</p></section>}
-      <footer>Pipe CFD 0.6 · Actual OpenFOAM flow and coupled fluid/solid temperatures · Axisymmetric pipe model · Use Geometry builder for full 3D assemblies.</footer>
+      <footer>Pipe CFD 0.6.1 · Actual OpenFOAM flow and coupled fluid/solid temperatures · Axisymmetric pipe model · Use Geometry builder for full 3D assemblies.</footer>
     </div></main>
     {editor&&catalog&&<PropertyEditor title={editor==='solid'?'Edit wall material':'Edit fluid properties'} properties={editor==='solid'?solidProperties:fluidProperties} form={form}
       preset={editor==='solid'?catalog.materials[form.material]:catalog.fluids[form.fluid]} solid={editor==='solid'}

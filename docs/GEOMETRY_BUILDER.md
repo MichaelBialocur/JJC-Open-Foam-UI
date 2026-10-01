@@ -1,6 +1,8 @@
-# Geometry builder · v0.6
+# Geometry builder · v0.6.1
 
 Open **Geometry builder** in the workspace tabs. **Straight-pipe benchmark** keeps the existing axisymmetric reference workflow.
+
+The left controls and right geometry/results panel scroll independently on desktop. In **Saved assembly runs**, use a card's **Delete** button or select multiple stopped runs and choose **Delete selected**. A confirmation lists the runs and explains that their saved results and case files are permanently removed. Cancel active runs and wait for them to stop before deleting. The current geometry draft is kept.
 
 ![Actual builder CAD view: orange heated faces and cyan convection faces](assembly-preview.png)
 

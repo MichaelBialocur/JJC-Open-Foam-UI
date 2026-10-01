@@ -24,7 +24,7 @@ async def lifespan(app):
     app.state.jobs.close()
 
 
-app = FastAPI(title="Pipe CFD", version="0.6.0", lifespan=lifespan)
+app = FastAPI(title="Pipe CFD", version="0.6.1", lifespan=lifespan)
 app.include_router(assembly_router)
 
 
@@ -100,10 +100,26 @@ def job(job_id: UUID):
     return get_job(job_id)
 
 
+@app.delete("/api/jobs/{job_id}", status_code=204)
+def delete_job(job_id: UUID):
+    try:
+        app.state.jobs.delete(str(job_id))
+    except KeyError as exc:
+        raise HTTPException(404, "Run not found") from exc
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
+    except OSError as exc:
+        raise HTTPException(500, "Could not remove all run files. Check file permissions and try again.") from exc
+    fields_json.cache_clear()
+    return Response(status_code=204)
+
+
 @app.post("/api/jobs/{job_id}/cancel")
 def cancel(job_id: UUID):
-    get_job(job_id)
-    return app.state.jobs.cancel(str(job_id))
+    try:
+        return app.state.jobs.cancel(str(job_id))
+    except KeyError as exc:
+        raise HTTPException(404, "Run not found") from exc
 
 
 @app.get("/api/jobs/{job_id}/results.json")
@@ -131,28 +147,30 @@ def profile_csv(job_id: UUID):
 
 @app.get("/api/jobs/{job_id}/case.zip")
 def case_zip(job_id: UUID):
-    data = get_job(job_id)
-    if data["status"] in ACTIVE:
-        raise HTTPException(409, "Wait for the run to stop before exporting its case")
-    case = app.state.jobs.root / str(job_id)
-    buf = io.BytesIO()
-    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as archive:
-        for path in case.rglob("*"):
-            if path.is_file() and not path.is_symlink():
-                archive.write(path, str(job_id) + "/" + str(path.relative_to(case)))
-    return Response(buf.getvalue(), media_type="application/zip",
-                    headers={"Content-Disposition": f'attachment; filename="case-{job_id}.zip"'})
+    with app.state.jobs.lock:
+        data = get_job(job_id)
+        if data["status"] in ACTIVE:
+            raise HTTPException(409, "Wait for the run to stop before exporting its case")
+        case = app.state.jobs.root / str(job_id)
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as archive:
+            for path in case.rglob("*"):
+                if path.is_file() and not path.is_symlink():
+                    archive.write(path, str(job_id) + "/" + str(path.relative_to(case)))
+        return Response(buf.getvalue(), media_type="application/zip",
+                        headers={"Content-Disposition": f'attachment; filename="case-{job_id}.zip"'})
 
 
 def get_fields(job_id):
-    data = get_job(job_id)
-    if not data.get("results"):
-        raise HTTPException(409, "No computed fields available until the run finishes")
-    case = app.state.jobs.root / str(job_id)
-    try:
-        return fields_json(str(case), (case / "results.json").stat().st_mtime_ns)
-    except (OSError, ValueError) as exc:
-        raise HTTPException(409, f"Cannot load the saved mesh/fields: {exc}") from exc
+    with app.state.jobs.lock:
+        data = get_job(job_id)
+        if not data.get("results"):
+            raise HTTPException(409, "No computed fields available until the run finishes")
+        case = app.state.jobs.root / str(job_id)
+        try:
+            return fields_json(str(case), (case / "results.json").stat().st_mtime_ns)
+        except (OSError, ValueError) as exc:
+            raise HTTPException(409, f"Cannot load the saved mesh/fields: {exc}") from exc
 
 
 @app.get("/api/jobs/{job_id}/fields.json")

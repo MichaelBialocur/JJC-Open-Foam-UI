@@ -98,17 +98,19 @@ def saved(request,job_id):
 
 @router.get('/jobs/{job_id}/geometry')
 def saved_geometry(job_id: UUID,request: Request):
-    _,folder=saved(request,job_id)
-    path=folder/'geometry.json'
-    if not path.exists(): raise HTTPException(409,'The run has not finished generating its geometry.')
-    return json.loads(path.read_text())
+    with request.app.state.jobs.lock:
+        _,folder=saved(request,job_id)
+        path=folder/'geometry.json'
+        if not path.exists(): raise HTTPException(409,'The run has not finished generating its geometry.')
+        return json.loads(path.read_text())
 
 
 @router.get('/jobs/{job_id}/fields')
 def fields(job_id: UUID,request: Request,region: Literal['fluid','solid']='fluid',
            field: Literal['pressure','speed','temperature']='speed',axis: Literal['x','y','z']|None=None,
            fraction: float=Query(default=.5,ge=.001,le=.999)):
-    job,folder=saved(request,job_id)
-    if not job.get('results'): raise HTTPException(409,'Computed fields are available after the run finishes.')
-    try: return field_surface(folder,region,field,axis,fraction)
-    except (OSError,ValueError) as exc: raise HTTPException(422,str(exc)) from exc
+    with request.app.state.jobs.lock:
+        job,folder=saved(request,job_id)
+        if not job.get('results'): raise HTTPException(409,'Computed fields are available after the run finishes.')
+        try: return field_surface(folder,region,field,axis,fraction)
+        except (OSError,ValueError) as exc: raise HTTPException(422,str(exc)) from exc

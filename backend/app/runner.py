@@ -19,6 +19,7 @@ from .thermal import prepare_thermal, analyse_thermal
 
 ROOT = Path(__file__).resolve().parents[2]
 ACTIVE = {"queued", "generating", "meshing", "checking", "solving", "heating", "processing"}
+DELETABLE = {"completed", "not_converged", "cancelled", "failed", "interrupted"}
 
 
 @lru_cache(maxsize=1)
@@ -192,29 +193,46 @@ class JobManager:
             if job_id not in self.jobs:
                 raise KeyError(job_id)
             job = dict(self.jobs[job_id])
-        if details:
-            case = self.root / job_id
-            logs = []
-            for name in ("cadMesh", "gmshToFoam", "splitRegions", "fluidCheck", "blockMesh", "checkMesh", "centres", "volumes", "foamRun", "solidMesh", "solidCheck", "solidCentres", "thermal"):
-                file = case / f"log.{name}"
-                if file.exists():
-                    with file.open("rb") as stream:
-                        stream.seek(max(0, file.stat().st_size - 12000))
-                        tail = stream.read().decode(errors="replace")
-                    logs.append(f"--- {name} ---\n{tail}")
-            job["log"] = "\n".join(logs)[-24000:]
-            if (case / "log.foamRun").exists():
-                job["progress"] = convergence((case / "log.foamRun").read_text(errors="replace"))
-            if (case / "log.thermal").exists():
-                job["thermal_progress"] = convergence((case / "log.thermal").read_text(errors="replace"))
-            results = case / "results.json"
-            if results.exists() and job["status"] in ("completed", "not_converged"):
-                job["results"] = json.loads(results.read_text())
-        return job
+            # Keep deletion from removing files halfway through a poll/read.
+            if details:
+                case = self.root / job_id
+                logs = []
+                for name in ("cadMesh", "gmshToFoam", "splitRegions", "fluidCheck", "blockMesh", "checkMesh", "centres", "volumes", "foamRun", "solidMesh", "solidCheck", "solidCentres", "thermal"):
+                    file = case / f"log.{name}"
+                    if file.exists():
+                        with file.open("rb") as stream:
+                            stream.seek(max(0, file.stat().st_size - 12000))
+                            tail = stream.read().decode(errors="replace")
+                        logs.append(f"--- {name} ---\n{tail}")
+                job["log"] = "\n".join(logs)[-24000:]
+                if (case / "log.foamRun").exists():
+                    job["progress"] = convergence((case / "log.foamRun").read_text(errors="replace"))
+                if (case / "log.thermal").exists():
+                    job["thermal_progress"] = convergence((case / "log.thermal").read_text(errors="replace"))
+                results = case / "results.json"
+                if results.exists() and job["status"] in ("completed", "not_converged"):
+                    job["results"] = json.loads(results.read_text())
+            return job
 
     def recent(self):
         with self.lock:
-            return [dict(j) for j in sorted(self.jobs.values(), key=lambda j: j["created_at"], reverse=True)[:50]]
+            return [dict(j) for j in sorted(self.jobs.values(), key=lambda j: j["created_at"], reverse=True)]
+
+    def delete(self, job_id):
+        """Remove a stopped run and its case, never a queued or running solver."""
+        job_id = str(UUID(job_id))
+        with self.lock:
+            if job_id not in self.jobs:
+                raise KeyError(job_id)
+            if self.jobs[job_id]["status"] not in DELETABLE:
+                raise ValueError("Cancel this run and wait for it to stop before deleting it.")
+            case = self.root / job_id
+            if case.is_symlink():
+                raise ValueError("Refusing to delete a run directory that is a symbolic link.")
+            if case.exists():
+                shutil.rmtree(case)
+            del self.jobs[job_id]
+            self.cancel_events.pop(job_id, None)
 
     def cancel(self, job_id):
         with self.lock:

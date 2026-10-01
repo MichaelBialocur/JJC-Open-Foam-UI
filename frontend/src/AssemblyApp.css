@@ -2,7 +2,6 @@
 .workspace-tabs button { background:transparent; border-color:transparent; color:#9bb0c3; }
 .workspace-tabs button[aria-selected="true"] { color:#e2f2ff; border-color:#4679a4; background:#1c3146; }
 .assembly-layout { grid-template-columns:330px minmax(0,1fr); }
-.assembly-app .workspace { align-self:start; }
 .builder-actions,.boundary-actions,.view-buttons { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
 .builder-actions { margin:12px 0; }.builder-actions button { padding:8px 10px; font-size:11px; }
 .boundary-actions { margin-bottom:18px; }.boundary-actions label { flex:1; min-width:210px; margin:0; }

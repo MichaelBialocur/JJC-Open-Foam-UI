@@ -2,6 +2,7 @@ import {useEffect,useRef,useState} from 'react'
 import AssemblyViewport from './AssemblyViewport'
 import InletControls from './InletControls'
 import PropertyEditor from './PropertyEditor'
+import RunHistory from './RunHistory'
 import {appendPart,editPart,movePart,newId,inletGeometry,physicsDefaults,thermalTotals} from './assemblyInputs'
 import {chooseFluid,chooseMaterial,fluidProperties,solidProperties,isEdited} from './setupInputs'
 import './AssemblyApp.css'
@@ -11,7 +12,7 @@ const fmt=(v,n=4)=>Number.isFinite(v)?Number(v.toPrecision(n)).toLocaleString('e
 async function api(path,body,signal){
   const response=await fetch(path,body===undefined?{signal}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal})
   const data=await response.json()
-  if(!response.ok)throw new Error(typeof data.detail==='string'?data.detail:data.detail?.map(d=>`${d.loc?.slice(1).join('.')}: ${d.msg}`).join('; ')||`Server error ${response.status}`)
+  if(!response.ok)throw Object.assign(new Error(typeof data.detail==='string'?data.detail:data.detail?.map(d=>`${d.loc?.slice(1).join('.')}: ${d.msg}`).join('; ')||`Server error ${response.status}`),{status:response.status})
   return data
 }
 function NumberInput({label,value,onChange,unit='',min,max,step='any'}){
@@ -63,7 +64,8 @@ export default function AssemblyApp(){
   const [draft,setDraft]=useState(null),[built,setBuilt]=useState(null),[busy,setBusy]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState('')
   const [partIndex,setPartIndex]=useState(0),[selection,setSelection]=useState([]),[groupKind,setGroupKind]=useState('heat'),[editor,setEditor]=useState(null)
   const [operating,setOperating]=useState(null),[operatingError,setOperatingError]=useState(''),[jobs,setJobs]=useState([]),[selectedJob,setSelectedJob]=useState(null),[job,setJob]=useState(null)
-  const revision=useRef(0),fileInput=useRef(null)
+  const [deletingRuns,setDeletingRuns]=useState(false)
+  const revision=useRef(0),fileInput=useRef(null),deletedIds=useRef(new Set())
   useEffect(()=>{
     const controller=new AbortController()
     Promise.all([api('/api/materials',undefined,controller.signal),api('/api/assembly/presets',undefined,controller.signal),api('/api/assembly/health',undefined,controller.signal)]).then(([c,p,h])=>{
@@ -81,10 +83,30 @@ export default function AssemblyApp(){
     return()=>{controller.abort();clearTimeout(timer)}
   },[draft])
   useEffect(()=>{
-    let live=true
-    async function poll(){try{const list=await api('/api/assembly/jobs');if(live)setJobs(list);if(selectedJob){const j=await api(`/api/jobs/${selectedJob}`);if(live)setJob(j)}}catch(e){if(live)setError(e.message)}}
-    poll();const timer=setInterval(poll,2500);return()=>{live=false;clearInterval(timer)}
-  },[selectedJob])
+    if(deletingRuns)return
+    let live=true,timer
+    const controller=new AbortController()
+    async function poll(){
+      try{
+        const list=(await api('/api/assembly/jobs',undefined,controller.signal)).filter(j=>!deletedIds.current.has(j.id))
+        if(!live)return
+        setJobs(list)
+        if(selectedJob&&!list.some(j=>j.id===selectedJob)){setSelectedJob(null);setJob(null)}
+        else if(selectedJob&&!deletedIds.current.has(selectedJob)){
+          const j=await api(`/api/jobs/${selectedJob}`,undefined,controller.signal)
+          if(live&&!deletedIds.current.has(selectedJob))setJob(j)
+        }
+      }catch(e){if(live&&!deletedIds.current.has(selectedJob)&&e.name!=='AbortError'){
+        if(e.status===404&&selectedJob){setSelectedJob(null);setJob(null)}else setError(e.message)
+      }}
+      if(live)timer=setTimeout(poll,2500)
+    }
+    poll();return()=>{live=false;clearTimeout(timer);controller.abort()}
+  },[selectedJob,deletingRuns])
+  function runsDeleted(ids){
+    ids.forEach(id=>deletedIds.current.add(id));setJobs(old=>old.filter(j=>!deletedIds.current.has(j.id)))
+    if(ids.includes(selectedJob)){setSelectedJob(null);setJob(null)}
+  }
   const updatePhysics=change=>setDraft(old=>({...old,physics:typeof change==='function'?change({...old.physics,...inletGeometry(old.geometry)}):{...old.physics,...change}}))
   function changeGeometry(geometry){revision.current++;setDraft(old=>({...old,geometry,boundaries:[],boundary_geometry_key:null}));setBuilt(null);setSelection([]);setNotice('Geometry edited. Build it again, then assign heating and cooling faces. Previous face assignments were cleared.')}
   function loadPreset(key){changeGeometry(structuredClone(presets[key].geometry));setPartIndex(0)}
@@ -111,8 +133,8 @@ export default function AssemblyApp(){
   const changePart=(key,value)=>changeGeometry({...draft.geometry,parts:editPart(draft.geometry.parts,index,key,value)})
   const totals=thermalTotals(draft.boundaries),faces=built?.faces.filter(f=>f.selectable)??[],assigned=Object.fromEntries(draft.boundaries.flatMap(g=>g.faces.map(f=>[f,g.name])))
   const disabled=busy||!built||!operating||operating.run_errors.length>0||!health?.mesher.available||!health?.openfoam.available
-  return <div className="assembly-app"><header><div><h1>Geometry builder <span className="version">0.6</span></h1><p>Connected piping, manifolds and multi-port cold plates</p></div><div className="header-actions"><button className="secondary" onClick={build} disabled={busy}>{busy?'Building…':'Build geometry'}</button><button onClick={run} disabled={disabled}>Mesh & run simulation</button></div></header>
-    <main className="assembly-layout"><aside className="controls">
+  return <div className="assembly-app"><header><div><h1>Geometry builder <span className="version">0.6.1</span></h1><p>Connected piping, manifolds and multi-port cold plates</p></div><div className="header-actions"><button className="secondary" onClick={build} disabled={busy}>{busy?'Building…':'Build geometry'}</button><button onClick={run} disabled={disabled}>Mesh & run simulation</button></div></header>
+    <main className="assembly-layout"><aside className="controls" tabIndex={0} aria-label="Geometry controls">
       <section><h2>Design</h2><label>Design name<input value={draft.name} maxLength={80} onChange={e=>setDraft(old=>({...old,name:e.target.value}))}/></label>
         <label>Start from<select value="" onChange={e=>loadPreset(e.target.value)}><option value="" disabled>Choose a template…</option>{Object.entries(presets).map(([id,p])=><option value={id} key={id}>{p.name}</option>)}</select></label>
         <div className="builder-actions"><button className="secondary" onClick={download}>Save design</button><button className="secondary" onClick={()=>fileInput.current.click()}>Load design</button><input ref={fileInput} className="hidden" type="file" accept=".json" onChange={e=>{loadFile(e.target.files[0]);e.target.value=''}}/></div>
@@ -138,7 +160,7 @@ export default function AssemblyApp(){
       </section>
       <section><h2>Solid wall material</h2>{catalog&&<><div className="preset-picker"><select aria-label="Builder wall material" value={draft.physics.material} onChange={e=>updatePhysics(old=>chooseMaterial(old,catalog,e.target.value))}>{Object.entries(catalog.materials).map(([id,p])=><option key={id} value={id}>{p.label}</option>)}</select><button className="secondary" onClick={()=>setEditor('solid')}>Edit</button></div><p className="muted">One material for the whole connected solid, including internal webs.</p></>}</section>
       <section><h2>Mesh & convergence</h2><NumberInput label="Target cell size" value={draft.mesh_size_mm} onChange={v=>setDraft(old=>({...old,mesh_size_mm:v}))} unit="mm" min={.05}/><NumberInput label="Flow iterations" value={draft.physics.max_iterations} onChange={v=>updatePhysics({max_iterations:v})} step={100}/><NumberInput label="Thermal iterations" value={draft.physics.thermal_iterations} onChange={v=>updatePhysics({thermal_iterations:v})} step={100}/><p className="muted">Conforming tetrahedra in fluid and solid. Repeat with smaller cells to check pressure and temperature sensitivity. Runs queue one at a time; limit 600,000 cells.</p></section>
-    </aside><div className="workspace">
+    </aside><div className="workspace" tabIndex={0} role="region" aria-label="Geometry and results">
       {error&&<p className="error" role="alert">{error}</p>}{operatingError&&<p className="notice warn">{operatingError}</p>}{notice&&<p className="notice">{notice}</p>}
       {health&&Object.values(health).filter(h=>!h.available).map(h=><p className="error" key={h.error}>{h.error}</p>)}{operating?.run_errors.map(e=><p className="notice warn" key={e}>{e}</p>)}
       <div className="overview"><Metric label="Inlet Reynolds number" value={operating?.flow.reynolds_number}/><Metric label="Specified heat input" value={totals.heat_w} unit="W"/><Metric label="Thermal faces assigned" value={totals.faces}/></div>
@@ -154,7 +176,7 @@ export default function AssemblyApp(){
           <div className="builder-actions"><button className="secondary" disabled={!built} onClick={()=>setSelection(g.faces)}>Highlight faces</button><button className="danger" onClick={()=>setDraft(old=>({...old,boundaries:old.boundaries.filter((_,n)=>n!==i)}))}>Remove boundary</button></div></div>)}</div>
         {!draft.boundaries.length&&<p className="muted">No thermal boundaries: the next run solves flow only.</p>}
       </section>
-      <section className="panel"><h2>Saved assembly runs</h2><div className="run-list">{jobs.map(j=><button className={`run-item ${selectedJob===j.id?'selected':''}`} key={j.id} onClick={()=>{setSelectedJob(j.id);setJob(null)}}><span>{j.inputs.name} · {j.inputs.mesh_size_mm} mm</span><span className="badge">{j.status.replaceAll('_',' ')}</span></button>)}</div>
+      <section className="panel"><h2>Saved assembly runs</h2><RunHistory jobs={jobs} selectedId={selectedJob} onSelect={id=>{setSelectedJob(id);setJob(null);setError('')}} onDeleted={runsDeleted} onDeletingChange={setDeletingRuns}>{j=><><span>{j.inputs.name} · {j.inputs.mesh_size_mm} mm</span><span className="badge">{j.status.replaceAll('_',' ')}</span></>}</RunHistory>
         {job&&<><div className="run-status"><b>{job.status.replaceAll('_',' ')}</b><span>Flow {job.progress?.iteration??0} · thermal {job.thermal_progress?.iteration??0}</span>{activeStates.includes(job.status)?<button className="danger" onClick={()=>api(`/api/jobs/${job.id}/cancel`,{}).then(setJob).catch(e=>setError(e.message))}>Cancel run</button>:<button className="secondary" onClick={()=>{revision.current++;setDraft(structuredClone(job.inputs));setBuilt(null);setSelection([]);setPartIndex(0);setNotice('Saved design loaded. Build geometry to inspect its assigned faces.')}}>Load this design</button>}</div><p className="muted">Results below belong to “{job.inputs.name}”, saved with {job.inputs.geometry.parts.length} parts and a {job.inputs.mesh_size_mm} mm mesh target. The editable design above is independent.</p>{job.error&&<p className="error">{job.error}</p>}<details><summary>Run log</summary><pre>{job.log||'Queued…'}</pre></details></>}
       </section>{job?.results&&<Results job={job}/>}
       <footer>Full 3D incompressible flow and frozen-flow, coupled fluid/solid heating. Constant properties; no buoyancy, radiation, phase change or contact resistance. Inline manifolds feed parallel channels. CAD import and general branched networks remain future work.</footer>

@@ -1,8 +1,8 @@
-# Pipe CFD · v0.6
+# Pipe CFD · v0.6.1
 
 A local React/FastAPI interface to **Foundation OpenFOAM 14**. Build connected piping, bends, manifolds and multi-port cold plates; select exterior faces for heating or convection; mesh and solve full 3D flow with coupled solid-wall conduction. The separate straight-pipe workspace retains its axisymmetric reference benchmarks. Both viewers use actual computed fields.
 
-**New:** [Geometry builder guide](docs/GEOMETRY_BUILDER.md) · [3D benchmark results and remaining errors](docs/ASSEMBLY_BENCHMARKS.md). The new assembly solver is an early workflow, not an experimentally validated cold-plate predictor.
+**New in 0.6.1:** delete individual or selected saved runs in either workspace, and scroll the controls and results independently on desktop. [Geometry builder guide](docs/GEOMETRY_BUILDER.md) · [3D benchmark results and remaining errors](docs/ASSEMBLY_BENCHMARKS.md). The assembly solver is an early workflow, not an experimentally validated cold-plate predictor.
 
 ## Start on your Windows PC
 
@@ -30,6 +30,14 @@ The server binds to localhost. It is a local engineering tool, not an authentica
 ## First builder run
 
 Choose **Geometry builder**, use the cold-plate template, and click **Build geometry**. Select exterior faces and assign heating in watts or convection with a coefficient and ambient temperature. Set fluid, inlet flow and mesh size, then **Mesh & run simulation**. See the [step-by-step builder guide](docs/GEOMETRY_BUILDER.md). The first setup may ask for your Ubuntu password to install Gmsh native libraries.
+
+## Panels and saved runs
+
+On desktop, the controls on the left and the geometry/results on the right have independent vertical scrollbars. The workspace tabs and header stay visible. Hover either panel to scroll it, or focus the panel to scroll with the keyboard. Narrow screens retain the stacked page layout.
+
+Each workspace shows all its saved runs. Use **Delete** on a run card, or tick several cards and choose **Delete selected**. **Select all stopped runs** selects the deletable runs in that workspace only. Confirming deletion permanently removes the selected results, logs, meshes and OpenFOAM case files. Download any wanted exports first. Current inputs, the geometry draft and other runs remain available.
+
+Queued/running jobs cannot be deleted. Select the job, cancel it, and wait for its status to become cancelled. Completed, unconverged, failed, interrupted and cancelled runs can be deleted. Deleting the displayed run clears its results; deleting a mesh-study member also removes that row from the comparison. Deleted runs stay removed after restarting the app.
 
 ## First straight-pipe benchmark run
 
