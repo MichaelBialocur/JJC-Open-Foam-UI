@@ -1,0 +1,1244 @@
+{
+  "schema": 1,
+  "release": "0.7.0",
+  "measured_on": "2026-10-01",
+  "environment": {
+    "openfoam": "Foundation 14, build 14-7b05503f98a8",
+    "gmsh": "4.15.2",
+    "execution": "native serial Linux; dummy Pstream library used in the validation environment only"
+  },
+  "reproduce": "scripts/validate_cad.py",
+  "interpretation": "Actual solver output, no synthetic fields. Convergence and conservation do not establish accuracy. No experimental CAD validation. SST smoke run did not converge.",
+  "analytical_source": {
+    "url": "https://archive.nptel.ac.in/content/storage2/courses/112104118/lecture-26/26-3_hag_poiseuille.htm",
+    "kind": "analytical teaching reference, not experimental measurements",
+    "relation": "fully developed laminar pressure gradient = 32 mu U / D^2; fit over x=60–85 mm using cell-volume weights"
+  },
+  "studies": [
+    {
+      "description": "Three-mesh STEP pipe with full aluminium wall",
+      "source_sha256": "7f9922227351c681d51eb9c063c31f141d2d883a235f41ac36c04f907a1d4c2f",
+      "flow_only": false,
+      "reverse_flow": false,
+      "partial_wall": false,
+      "runs": [
+        {
+          "mesh_size_mm": 2,
+          "run_id": "fe367d11-3bbd-46a4-96e1-0f74f8f434e4",
+          "status": "completed",
+          "error": null,
+          "runtime_seconds": 36.42,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe CHT 2 mm",
+            "geometry": {
+              "source_id": "7f9922227351c681d51eb9c063c31f141d2d883a235f41ac36c04f907a1d4c2f",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": [
+                "v_2"
+              ]
+            },
+            "inlet_faces": [
+              "f_cad_6"
+            ],
+            "outlet_faces": [
+              "f_cad_5"
+            ],
+            "boundaries": [
+              {
+                "id": "heater",
+                "name": "Thermal boundary",
+                "kind": "heat",
+                "faces": [
+                  "f_cad_1"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0
+              },
+              {
+                "id": "cooler",
+                "name": "Thermal boundary",
+                "kind": "convection",
+                "faces": [
+                  "f_cad_2",
+                  "f_cad_3"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 1000.0,
+                "ambient_c": 15.0
+              }
+            ],
+            "boundary_geometry_key": "b2d10b81092569f127d71f3c88b0d55eff1de2731e5bb529451487995415873c",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 101.42977890935188,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 0.01,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 0.01,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 10.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 2.0,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 101.42977890935188,
+              "inlet_direction": [
+                1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": {
+            "geometry_type": "cad",
+            "solution_iteration": 168,
+            "fluid_cells": 15985,
+            "volumetric_flow_l_min": 0.047123889803849406,
+            "mass_flow_kg_s": 0.0007839900626929419,
+            "inlet_mesh_area_m2": 7.764571353075624e-05,
+            "inlet_cad_area_m2": 7.853981633974483e-05,
+            "inlet_mean_velocity_m_s": 0.010115151599275162,
+            "pressure_drop_pa": 0.4777440768808504,
+            "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+            "mass_balance_error_percent": 1.5916766631394424e-08,
+            "minimum_pressure_pa": -0.00715490338667181,
+            "maximum_speed_m_s": 0.020225943325858274,
+            "convergence": {
+              "iteration": 168,
+              "solver_converged": true,
+              "residuals": {
+                "iteration": 168,
+                "Ux": 2.55194024956e-07,
+                "Uy": 9.03230871138e-07,
+                "Uz": 5.98050396436e-07,
+                "p": 9.9253868447e-07
+              },
+              "converged": true,
+              "relative_saved_field_change": 0.003943265136766315
+            },
+            "checks": {
+              "flow_converged": true,
+              "mass_balance_below_0_5_percent": true,
+              "thermal_converged": true,
+              "energy_balance_below_0_5_percent": true,
+              "boundary_power_agreement_below_0_5_percent": true,
+              "interface_flux_mismatch_below_0_5_percent": true,
+              "interface_temperature_continuity": true
+            },
+            "reference": {
+              "applicable": false,
+              "kind": "none",
+              "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+            },
+            "thermal": {
+              "solution_iteration": 2000,
+              "solid_cells": 12307,
+              "outlet_temperature_c": 22.868945960629787,
+              "maximum_solid_temperature_c": 25.271274885000025,
+              "minimum_solid_temperature_c": 22.242240671000047,
+              "advective_heat_gain_w": 9.410872457169662,
+              "inlet_conductive_loss_w": 0.000625255090761798,
+              "kinetic_energy_transport_w": 3.7683258756467784e-08,
+              "external_heat_leaving_w": -9.411497741616422,
+              "fluid_interface_heat_leaving_w": -9.41149775278161,
+              "energy_balance_error_percent": 7.864436786813217e-08,
+              "maximum_interface_temperature_jump_k": 0.0,
+              "maximum_interface_flux_mismatch_percent": 6.693244494114266e-05,
+              "faces": [
+                {
+                  "face": "f_cad_1",
+                  "group_id": "heater",
+                  "kind": "heat",
+                  "mesh_area_m2": 0.003762005325204294,
+                  "power_w": 10.0,
+                  "h_w_m2_k": 100.0,
+                  "ambient_c": 20.0,
+                  "mean_temperature_c": 24.247835827525876,
+                  "computed_heat_leaving_w": -9.99999999427413,
+                  "specified_boundary_heat_leaving_w": -10.0
+                },
+                {
+                  "face": "f_cad_2",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.4164113953532733e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 24.97307910130968,
+                  "computed_heat_leaving_w": 0.340721416265342,
+                  "specified_boundary_heat_leaving_w": 0.34072141088473984
+                },
+                {
+                  "face": "f_cad_3",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.4164113953532733e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 22.25266390923764,
+                  "computed_heat_leaving_w": 0.24778083639236548,
+                  "specified_boundary_heat_leaving_w": 0.24778083626187125
+                }
+              ],
+              "convergence": {
+                "iteration": 2000,
+                "solver_converged": false,
+                "residuals": {
+                  "iteration": 2000,
+                  "h": 9.06709843449e-12,
+                  "e": 9.99957146278e-12
+                },
+                "converged": true,
+                "relative_saved_field_change": 0.0
+              }
+            }
+          },
+          "analytical_screen": {
+            "kind": "analytical, not experimental",
+            "reference": "Hagen–Poiseuille developed gradient, 32 mu U / D²",
+            "fit_interval_m": [
+              0.06,
+              0.085
+            ],
+            "computed_gradient_pa_m": 4.034842471075137,
+            "reference_gradient_pa_m": 3.205107657600171,
+            "gradient_error_percent": 25.887892143262082,
+            "note": "Entrance length and mesh dependence must be assessed; no automatic CAD accuracy qualification."
+          }
+        },
+        {
+          "mesh_size_mm": 1.4,
+          "run_id": "7c226287-e352-4aa9-8813-9a7cd5ba08f6",
+          "status": "completed",
+          "error": null,
+          "runtime_seconds": 36.77,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe CHT 1.4 mm",
+            "geometry": {
+              "source_id": "7f9922227351c681d51eb9c063c31f141d2d883a235f41ac36c04f907a1d4c2f",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": [
+                "v_2"
+              ]
+            },
+            "inlet_faces": [
+              "f_cad_6"
+            ],
+            "outlet_faces": [
+              "f_cad_5"
+            ],
+            "boundaries": [
+              {
+                "id": "heater",
+                "name": "Thermal boundary",
+                "kind": "heat",
+                "faces": [
+                  "f_cad_1"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0
+              },
+              {
+                "id": "cooler",
+                "name": "Thermal boundary",
+                "kind": "convection",
+                "faces": [
+                  "f_cad_2",
+                  "f_cad_3"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 1000.0,
+                "ambient_c": 15.0
+              }
+            ],
+            "boundary_geometry_key": "b2d10b81092569f127d71f3c88b0d55eff1de2731e5bb529451487995415873c",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 101.42977890935188,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 0.01,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 0.01,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 10.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 1.4,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 101.42977890935188,
+              "inlet_direction": [
+                1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": {
+            "geometry_type": "cad",
+            "solution_iteration": 178,
+            "fluid_cells": 16046,
+            "volumetric_flow_l_min": 0.047123889803849406,
+            "mass_flow_kg_s": 0.0007839900626929419,
+            "inlet_mesh_area_m2": 7.764571353075624e-05,
+            "inlet_cad_area_m2": 7.853981633974483e-05,
+            "inlet_mean_velocity_m_s": 0.010115151599275162,
+            "pressure_drop_pa": 0.47836992118101884,
+            "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+            "mass_balance_error_percent": 1.622235276183084e-08,
+            "minimum_pressure_pa": -0.0069423789915933395,
+            "maximum_speed_m_s": 0.01988513532232615,
+            "convergence": {
+              "iteration": 178,
+              "solver_converged": true,
+              "residuals": {
+                "iteration": 178,
+                "Ux": 2.60810918908e-07,
+                "Uy": 3.70269891608e-07,
+                "Uz": 7.66671727356e-07,
+                "p": 9.83437587561e-07
+              },
+              "converged": true,
+              "relative_saved_field_change": 0.002336567395957635
+            },
+            "checks": {
+              "flow_converged": true,
+              "mass_balance_below_0_5_percent": true,
+              "thermal_converged": true,
+              "energy_balance_below_0_5_percent": true,
+              "boundary_power_agreement_below_0_5_percent": true,
+              "interface_flux_mismatch_below_0_5_percent": true,
+              "interface_temperature_continuity": true
+            },
+            "reference": {
+              "applicable": false,
+              "kind": "none",
+              "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+            },
+            "thermal": {
+              "solution_iteration": 2000,
+              "solid_cells": 13829,
+              "outlet_temperature_c": 22.867634170834776,
+              "maximum_solid_temperature_c": 25.257743121000033,
+              "minimum_solid_temperature_c": 22.266942352,
+              "advective_heat_gain_w": 9.406569452963916,
+              "inlet_conductive_loss_w": 0.0006780985497247179,
+              "kinetic_energy_transport_w": 3.715711219710561e-08,
+              "external_heat_leaving_w": -9.40724757974571,
+              "fluid_interface_heat_leaving_w": -9.407247591663898,
+              "energy_balance_error_percent": 8.425615230252981e-08,
+              "maximum_interface_temperature_jump_k": 0.0,
+              "maximum_interface_flux_mismatch_percent": 4.412475351903268e-05,
+              "faces": [
+                {
+                  "face": "f_cad_1",
+                  "group_id": "heater",
+                  "kind": "heat",
+                  "mesh_area_m2": 0.003763699131658701,
+                  "power_w": 10.0,
+                  "h_w_m2_k": 100.0,
+                  "ambient_c": 20.0,
+                  "mean_temperature_c": 24.26321698273773,
+                  "computed_heat_leaving_w": -9.999999987673682,
+                  "specified_boundary_heat_leaving_w": -10.0
+                },
+                {
+                  "face": "f_cad_2",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.443359965006968e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 24.93325394695745,
+                  "computed_heat_leaving_w": 0.34203768846149113,
+                  "specified_boundary_heat_leaving_w": 0.34203768963200687
+                },
+                {
+                  "face": "f_cad_3",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.443359965006969e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 22.281106858369697,
+                  "computed_heat_leaving_w": 0.25071471946648133,
+                  "specified_boundary_heat_leaving_w": 0.2507147185704769
+                }
+              ],
+              "convergence": {
+                "iteration": 2000,
+                "solver_converged": false,
+                "residuals": {
+                  "iteration": 2000,
+                  "h": 9.10803379387e-12,
+                  "e": 9.97582550423e-12
+                },
+                "converged": true,
+                "relative_saved_field_change": 0.0
+              }
+            }
+          },
+          "analytical_screen": {
+            "kind": "analytical, not experimental",
+            "reference": "Hagen–Poiseuille developed gradient, 32 mu U / D²",
+            "fit_interval_m": [
+              0.06,
+              0.085
+            ],
+            "computed_gradient_pa_m": 4.192589019618848,
+            "reference_gradient_pa_m": 3.205107657600171,
+            "gradient_error_percent": 30.809616010154706,
+            "note": "Entrance length and mesh dependence must be assessed; no automatic CAD accuracy qualification."
+          }
+        },
+        {
+          "mesh_size_mm": 1,
+          "run_id": "590adc6c-584e-45e7-ba57-b4ee95312c5d",
+          "status": "completed",
+          "error": null,
+          "runtime_seconds": 84.97,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe CHT 1 mm",
+            "geometry": {
+              "source_id": "7f9922227351c681d51eb9c063c31f141d2d883a235f41ac36c04f907a1d4c2f",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": [
+                "v_2"
+              ]
+            },
+            "inlet_faces": [
+              "f_cad_6"
+            ],
+            "outlet_faces": [
+              "f_cad_5"
+            ],
+            "boundaries": [
+              {
+                "id": "heater",
+                "name": "Thermal boundary",
+                "kind": "heat",
+                "faces": [
+                  "f_cad_1"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0
+              },
+              {
+                "id": "cooler",
+                "name": "Thermal boundary",
+                "kind": "convection",
+                "faces": [
+                  "f_cad_2",
+                  "f_cad_3"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 1000.0,
+                "ambient_c": 15.0
+              }
+            ],
+            "boundary_geometry_key": "b2d10b81092569f127d71f3c88b0d55eff1de2731e5bb529451487995415873c",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 101.42977890935188,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 0.01,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 0.01,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 10.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 1.0,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 101.42977890935188,
+              "inlet_direction": [
+                1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": {
+            "geometry_type": "cad",
+            "solution_iteration": 237,
+            "fluid_cells": 34528,
+            "volumetric_flow_l_min": 0.04712388980384881,
+            "mass_flow_kg_s": 0.000783990062692932,
+            "inlet_mesh_area_m2": 7.803612880645129e-05,
+            "inlet_cad_area_m2": 7.853981633974483e-05,
+            "inlet_mean_velocity_m_s": 0.01006454542799605,
+            "pressure_drop_pa": 0.46941873258227534,
+            "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+            "mass_balance_error_percent": 8.185281152355835e-09,
+            "minimum_pressure_pa": -0.0064784386935108,
+            "maximum_speed_m_s": 0.019985902024344714,
+            "convergence": {
+              "iteration": 237,
+              "solver_converged": true,
+              "residuals": {
+                "iteration": 237,
+                "Ux": 1.24202238992e-07,
+                "Uy": 9.70061236321e-07,
+                "Uz": 2.90024253161e-07,
+                "p": 4.95276280362e-07
+              },
+              "converged": true,
+              "relative_saved_field_change": 0.0004518642654515578
+            },
+            "checks": {
+              "flow_converged": true,
+              "mass_balance_below_0_5_percent": true,
+              "thermal_converged": true,
+              "energy_balance_below_0_5_percent": true,
+              "boundary_power_agreement_below_0_5_percent": true,
+              "interface_flux_mismatch_below_0_5_percent": true,
+              "interface_temperature_continuity": true
+            },
+            "reference": {
+              "applicable": false,
+              "kind": "none",
+              "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+            },
+            "thermal": {
+              "solution_iteration": 2000,
+              "solid_cells": 24920,
+              "outlet_temperature_c": 22.86588982523716,
+              "maximum_solid_temperature_c": 25.41979609400005,
+              "minimum_solid_temperature_c": 22.18887640600002,
+              "advective_heat_gain_w": 9.400847558030229,
+              "inlet_conductive_loss_w": 0.0011501482387069352,
+              "kinetic_energy_transport_w": 3.8467253623840686e-08,
+              "external_heat_leaving_w": -9.401997714579922,
+              "fluid_interface_heat_leaving_w": -9.401997743790552,
+              "energy_balance_error_percent": 2.845467286575664e-07,
+              "maximum_interface_temperature_jump_k": 0.0,
+              "maximum_interface_flux_mismatch_percent": 4.58038213074304e-05,
+              "faces": [
+                {
+                  "face": "f_cad_1",
+                  "group_id": "heater",
+                  "kind": "heat",
+                  "mesh_area_m2": 0.003766713199821829,
+                  "power_w": 10.000000000000002,
+                  "h_w_m2_k": 100.0,
+                  "ambient_c": 20.0,
+                  "mean_temperature_c": 24.383916881454013,
+                  "computed_heat_leaving_w": -9.999999962599503,
+                  "specified_boundary_heat_leaving_w": -10.000000000000002
+                },
+                {
+                  "face": "f_cad_2",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.454657094557068e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 25.11288406884023,
+                  "computed_heat_leaving_w": 0.3493654635212893,
+                  "specified_boundary_heat_leaving_w": 0.34936546694852
+                },
+                {
+                  "face": "f_cad_3",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.454657094557068e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 22.19714815262455,
+                  "computed_heat_leaving_w": 0.24863678449829227,
+                  "specified_boundary_heat_leaving_w": 0.24863678926042676
+                }
+              ],
+              "convergence": {
+                "iteration": 2000,
+                "solver_converged": false,
+                "residuals": {
+                  "iteration": 2000,
+                  "h": 9.83467398406e-12,
+                  "e": 1.05134213586e-11
+                },
+                "converged": true,
+                "relative_saved_field_change": 1.8451732328551815e-10
+              }
+            }
+          },
+          "analytical_screen": {
+            "kind": "analytical, not experimental",
+            "reference": "Hagen–Poiseuille developed gradient, 32 mu U / D²",
+            "fit_interval_m": [
+              0.06,
+              0.085
+            ],
+            "computed_gradient_pa_m": 3.968180318679353,
+            "reference_gradient_pa_m": 3.2051076576001303,
+            "gradient_error_percent": 23.808019654808852,
+            "note": "Entrance length and mesh dependence must be assessed; no automatic CAD accuracy qualification."
+          }
+        }
+      ]
+    },
+    {
+      "description": "Initial reverse-flow single-region attempt, before conversion fix",
+      "source_sha256": "9427d1ed7ddbb6de3f16efc96cf299b482a37b39e540343f4ad7db30ef34f5cf",
+      "flow_only": true,
+      "reverse_flow": true,
+      "partial_wall": false,
+      "runs": [
+        {
+          "mesh_size_mm": 2.0,
+          "run_id": "8e0a2863-36d6-4e88-b8b6-566100fd1ff6",
+          "status": "failed",
+          "error": "fluidCheck failed (exit 1). See the run log.",
+          "runtime_seconds": 2.68,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe CHT 2.0 mm",
+            "geometry": {
+              "source_id": "9427d1ed7ddbb6de3f16efc96cf299b482a37b39e540343f4ad7db30ef34f5cf",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": []
+            },
+            "inlet_faces": [
+              "f_cad_2"
+            ],
+            "outlet_faces": [
+              "f_cad_3"
+            ],
+            "boundaries": [],
+            "boundary_geometry_key": "4b0f6a6a1a7d6ca7271ef9f4b65afd044191195cac93e49c15edb49a7825f2a3",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 100.99504962125617,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 0.01,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 0.01,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 0.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 2.0,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 100.99504962125617,
+              "inlet_direction": [
+                -1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": null
+        }
+      ]
+    },
+    {
+      "description": "Reverse-flow fluid-only pipe after conversion fix",
+      "source_sha256": "0aaa8adac381fc5e0248e2db5a388680065e4d997ab43790ad153a46cd21bdb4",
+      "flow_only": true,
+      "reverse_flow": true,
+      "partial_wall": false,
+      "runs": [
+        {
+          "mesh_size_mm": 2.0,
+          "run_id": "0440fe17-58e7-4c29-84c5-2105d3b088eb",
+          "status": "completed",
+          "error": null,
+          "runtime_seconds": 10.32,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe CHT 2.0 mm",
+            "geometry": {
+              "source_id": "0aaa8adac381fc5e0248e2db5a388680065e4d997ab43790ad153a46cd21bdb4",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": []
+            },
+            "inlet_faces": [
+              "f_cad_2"
+            ],
+            "outlet_faces": [
+              "f_cad_3"
+            ],
+            "boundaries": [],
+            "boundary_geometry_key": "ab3c1972863f533ce6fde828c81b9664b3377825183d0846dce15824ad838705",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 100.99504962125617,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 0.01,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 0.01,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 0.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 2.0,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 100.99504962125617,
+              "inlet_direction": [
+                -1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": {
+            "geometry_type": "cad",
+            "solution_iteration": 169,
+            "fluid_cells": 15963,
+            "volumetric_flow_l_min": 0.0471238898038494,
+            "mass_flow_kg_s": 0.0007839900626929418,
+            "inlet_mesh_area_m2": 7.764571353075626e-05,
+            "inlet_cad_area_m2": 7.853981633974483e-05,
+            "inlet_mean_velocity_m_s": 0.010115151599275158,
+            "pressure_drop_pa": 0.4803721577101328,
+            "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+            "mass_balance_error_percent": 1.7523601272523226e-08,
+            "minimum_pressure_pa": -0.0068665546563754344,
+            "maximum_speed_m_s": 0.020155213116610567,
+            "convergence": {
+              "iteration": 169,
+              "solver_converged": true,
+              "residuals": {
+                "iteration": 169,
+                "Ux": 2.51790071378e-07,
+                "Uy": 8.79026472498e-07,
+                "Uz": 5.31729261012e-07,
+                "p": 9.71400941873e-07
+              },
+              "converged": true,
+              "relative_saved_field_change": 0.0020585501675394816
+            },
+            "checks": {
+              "flow_converged": true,
+              "mass_balance_below_0_5_percent": true
+            },
+            "reference": {
+              "applicable": false,
+              "kind": "none",
+              "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+            }
+          },
+          "analytical_screen": {
+            "kind": "analytical, not experimental",
+            "reference": "Hagen–Poiseuille developed gradient, 32 mu U / D²",
+            "fit_interval_m": [
+              0.06,
+              0.085
+            ],
+            "computed_gradient_pa_m": 4.101394546487289,
+            "reference_gradient_pa_m": 3.2051076576001702,
+            "gradient_error_percent": 27.964330207810086,
+            "note": "Entrance length and mesh dependence must be assessed; no automatic CAD accuracy qualification."
+          }
+        }
+      ]
+    },
+    {
+      "description": "Partial aluminium sleeve, x=25–75 mm; exposed fluid walls adiabatic",
+      "source_sha256": "97ee155351c888fd0c3122dd40041a24034ebaefba6f463f6687ef73168b0dc3",
+      "flow_only": false,
+      "reverse_flow": false,
+      "partial_wall": true,
+      "runs": [
+        {
+          "mesh_size_mm": 2.0,
+          "run_id": "923c7606-8d69-4a80-864c-4ad5f7358ca7",
+          "status": "completed",
+          "error": null,
+          "runtime_seconds": 27.98,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe CHT 2.0 mm",
+            "geometry": {
+              "source_id": "97ee155351c888fd0c3122dd40041a24034ebaefba6f463f6687ef73168b0dc3",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": [
+                "v_2"
+              ]
+            },
+            "inlet_faces": [
+              "f_cad_11"
+            ],
+            "outlet_faces": [
+              "f_cad_10"
+            ],
+            "boundaries": [
+              {
+                "id": "heater",
+                "name": "Thermal boundary",
+                "kind": "heat",
+                "faces": [
+                  "f_cad_4"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0
+              },
+              {
+                "id": "cooler",
+                "name": "Thermal boundary",
+                "kind": "convection",
+                "faces": [
+                  "f_cad_5",
+                  "f_cad_6"
+                ],
+                "power_w": 10.0,
+                "h_w_m2_k": 1000.0,
+                "ambient_c": 15.0
+              }
+            ],
+            "boundary_geometry_key": "deb60e2daa56e12acafc57a0d16c8e25002f7b63bbca0a7599d73bb00cae1e0b",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 101.42977890935185,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 0.01,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 0.01,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 10.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 2.0,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 101.42977890935185,
+              "inlet_direction": [
+                1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": {
+            "geometry_type": "cad",
+            "solution_iteration": 171,
+            "fluid_cells": 15976,
+            "volumetric_flow_l_min": 0.0471238898038494,
+            "mass_flow_kg_s": 0.0007839900626929418,
+            "inlet_mesh_area_m2": 7.764571353075624e-05,
+            "inlet_cad_area_m2": 7.853981633974483e-05,
+            "inlet_mean_velocity_m_s": 0.01011515159927516,
+            "pressure_drop_pa": 0.4830899823046745,
+            "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+            "mass_balance_error_percent": 6.692783824032802e-08,
+            "minimum_pressure_pa": -0.006941701977627531,
+            "maximum_speed_m_s": 0.019971321915532247,
+            "convergence": {
+              "iteration": 171,
+              "solver_converged": true,
+              "residuals": {
+                "iteration": 171,
+                "Ux": 2.46497538507e-07,
+                "Uy": 6.87391719226e-07,
+                "Uz": 5.8556706909e-07,
+                "p": 9.71518866515e-07
+              },
+              "converged": true,
+              "relative_saved_field_change": 0.0021749031247769927
+            },
+            "checks": {
+              "flow_converged": true,
+              "mass_balance_below_0_5_percent": true,
+              "thermal_converged": true,
+              "energy_balance_below_0_5_percent": true,
+              "boundary_power_agreement_below_0_5_percent": true,
+              "interface_flux_mismatch_below_0_5_percent": true,
+              "interface_temperature_continuity": true
+            },
+            "reference": {
+              "applicable": false,
+              "kind": "none",
+              "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+            },
+            "thermal": {
+              "solution_iteration": 2000,
+              "solid_cells": 6464,
+              "outlet_temperature_c": 22.812815005501704,
+              "maximum_solid_temperature_c": 27.58207316100004,
+              "minimum_solid_temperature_c": 25.295750892,
+              "advective_heat_gain_w": 9.226748642931701,
+              "inlet_conductive_loss_w": -1.98094653409835e-11,
+              "kinetic_energy_transport_w": 3.668923175536207e-08,
+              "external_heat_leaving_w": -9.226748699442902,
+              "fluid_interface_heat_leaving_w": -9.226748690454608,
+              "energy_balance_error_percent": 1.841763379950238e-07,
+              "maximum_interface_temperature_jump_k": 0.0,
+              "maximum_interface_flux_mismatch_percent": 2.3398872935103673e-05,
+              "faces": [
+                {
+                  "face": "f_cad_4",
+                  "group_id": "heater",
+                  "kind": "heat",
+                  "mesh_area_m2": 0.00188099833044863,
+                  "power_w": 10.0,
+                  "h_w_m2_k": 100.0,
+                  "ambient_c": 20.0,
+                  "mean_temperature_c": 26.84331171066674,
+                  "computed_heat_leaving_w": -10.000000012596043,
+                  "specified_boundary_heat_leaving_w": -10.0
+                },
+                {
+                  "face": "f_cad_5",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.416411395353273e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 27.320774938476404,
+                  "computed_heat_leaving_w": 0.420928361099951,
+                  "specified_boundary_heat_leaving_w": 0.42092835899393627
+                },
+                {
+                  "face": "f_cad_6",
+                  "group_id": "cooler",
+                  "kind": "convection",
+                  "mesh_area_m2": 3.4164113953532733e-05,
+                  "power_w": null,
+                  "h_w_m2_k": 1000.0,
+                  "ambient_c": 15.0,
+                  "mean_temperature_c": 25.31266172869698,
+                  "computed_heat_leaving_w": 0.35232295205319,
+                  "specified_boundary_heat_leaving_w": 0.35232295046343987
+                }
+              ],
+              "convergence": {
+                "iteration": 2000,
+                "solver_converged": false,
+                "residuals": {
+                  "iteration": 2000,
+                  "h": 9.0212503758e-12,
+                  "e": 8.95712923701e-12
+                },
+                "converged": true,
+                "relative_saved_field_change": 0.0
+              }
+            }
+          },
+          "analytical_screen": {
+            "kind": "analytical, not experimental",
+            "reference": "Hagen–Poiseuille developed gradient, 32 mu U / D²",
+            "fit_interval_m": [
+              0.06,
+              0.085
+            ],
+            "computed_gradient_pa_m": 4.281205544225136,
+            "reference_gradient_pa_m": 3.2051076576001702,
+            "gradient_error_percent": 33.57446930287189,
+            "note": "Entrance length and mesh dependence must be assessed; no automatic CAD accuracy qualification."
+          }
+        }
+      ]
+    },
+    {
+      "description": "Fluid-only k–omega SST execution smoke test at 1 m/s, not converged",
+      "source_sha256": "e70d149e132e00d75e7f0d5dbb1394da235f7339579351ea0ed94e20daaf332c",
+      "flow_only": true,
+      "reverse_flow": false,
+      "partial_wall": false,
+      "runs": [
+        {
+          "mesh_size_mm": 2.0,
+          "run_id": "c560ea42-e5af-4725-8ec9-59011cb927bc",
+          "status": "not_converged",
+          "error": null,
+          "runtime_seconds": 103.09,
+          "inputs": {
+            "geometry_type": "cad",
+            "name": "STEP pipe flow 2.0 mm",
+            "geometry": {
+              "source_id": "e70d149e132e00d75e7f0d5dbb1394da235f7339579351ea0ed94e20daaf332c",
+              "scale": 1.0,
+              "fluid_bodies": [
+                "v_1"
+              ],
+              "solid_bodies": []
+            },
+            "inlet_faces": [
+              "f_cad_3"
+            ],
+            "outlet_faces": [
+              "f_cad_2"
+            ],
+            "boundaries": [],
+            "boundary_geometry_key": "d0fecfd0388adb1c0e0e6394cb536695ba51707e58f081639088489a23d98e52",
+            "physics": {
+              "geometry_type": "assembly",
+              "length_mm": 100.99504962125617,
+              "inner_diameter_mm": 10.0,
+              "wall_thickness_mm": 2,
+              "material": "aluminium",
+              "thermal_mode": "conjugate",
+              "solid_conductivity_w_m_k": null,
+              "solid_density_kg_m3": null,
+              "solid_specific_heat_j_kg_k": null,
+              "fluid": "water",
+              "inlet": {
+                "kind": "velocity",
+                "value": 1.0,
+                "unit": "m/s"
+              },
+              "inlet_velocity_m_s": 1.0,
+              "inlet_temperature_c": 20,
+              "applied_heat_w": 0.0,
+              "specific_heat_j_kg_k": 4184.050925,
+              "thermal_conductivity_w_m_k": 0.5980123555,
+              "turbulent_prandtl": 0.85,
+              "thermal_iterations": 2000,
+              "density_kg_m3": 998.2071505,
+              "dynamic_viscosity_pa_s": 0.001001596143,
+              "flow_model": "auto",
+              "mesh_level": "medium",
+              "max_iterations": 3000,
+              "residual_tolerance": 1e-06,
+              "turbulence_intensity": 0.05,
+              "reference": "auto",
+              "inlet_area_m2": 7.853981633974483e-05
+            },
+            "mesh_size_mm": 2.0,
+            "metrics": {
+              "inlet_area_m2": 7.853981633974483e-05,
+              "hydraulic_diameter_mm": 10.0,
+              "length_mm": 100.99504962125617,
+              "inlet_direction": [
+                1.0,
+                -0.0,
+                -0.0
+              ]
+            }
+          },
+          "results": {
+            "geometry_type": "cad",
+            "solution_iteration": 3000,
+            "fluid_cells": 15963,
+            "volumetric_flow_l_min": 4.71238898038494,
+            "mass_flow_kg_s": 0.07839900626929419,
+            "inlet_mesh_area_m2": 7.764571353075626e-05,
+            "inlet_cad_area_m2": 7.853981633974483e-05,
+            "inlet_mean_velocity_m_s": 1.0115151599275158,
+            "pressure_drop_pa": 442.57584795514333,
+            "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+            "mass_balance_error_percent": 3.331500024215118e-06,
+            "minimum_pressure_pa": -242.32289326527427,
+            "maximum_speed_m_s": 1.9890686209193726,
+            "convergence": {
+              "iteration": 3000,
+              "solver_converged": false,
+              "residuals": {
+                "iteration": 3000,
+                "Ux": 3.51886832824e-05,
+                "Uy": 0.000124549445607,
+                "Uz": 0.000125561962348,
+                "p": 0.000113337786769,
+                "omega": 0.00934270564243,
+                "k": 0.00226194937642
+              },
+              "converged": false,
+              "relative_saved_field_change": 0.003863887718713184
+            },
+            "checks": {
+              "flow_converged": false,
+              "mass_balance_below_0_5_percent": true
+            },
+            "reference": {
+              "applicable": false,
+              "kind": "none",
+              "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "development_failures": [
+    {
+      "problem": "OCC dilation changed analytic surface types and failed volume scaling checks",
+      "resolution": "Apply Geometry.OCCScaling at import; retain analytic planar ports and exact area/volume scaling."
+    },
+    {
+      "problem": "IGES export of touching fluid/solid shells lost separate closed-body topology",
+      "resolution": "Reject the ambiguous import explicitly; STEP/BREP pipe and closed-box IGES imports pass."
+    },
+    {
+      "problem": "Single-region splitMeshRegions did not create constant/fluid/polyMesh; initial fluid-only mesh check failed",
+      "resolution": "Copy the single mesh into the explicit fluid region and skip splitting; reverse-flow rerun completed."
+    },
+    {
+      "problem": "Native browser launch blocked by socket permissions",
+      "resolution": "Use compiled React/Three SVG DOM integration and native controls tests; do not claim browser FPS or WebGL performance measurements."
+    }
+  ]
+}

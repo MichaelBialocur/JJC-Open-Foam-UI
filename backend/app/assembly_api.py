@@ -92,7 +92,7 @@ def submit(spec: AssemblyDefinition,request: Request):
 def saved(request,job_id):
     try: job=request.app.state.jobs.snapshot(str(job_id))
     except KeyError as exc: raise HTTPException(404,'Run not found') from exc
-    if job['inputs'].get('geometry_type')!='assembly': raise HTTPException(422,'This is a straight-pipe benchmark run, not a builder run.')
+    if job['inputs'].get('geometry_type') not in ('assembly', 'cad'): raise HTTPException(422,'This is a straight-pipe benchmark run, not a 3D run.')
     return job,request.app.state.jobs.root/str(job_id)
 
 

@@ -1,6 +1,11 @@
 .workspace-tabs { display:flex; gap:8px; padding:10px 28px; background:#0b131d; border-bottom:1px solid #2c3b4a; }
 .workspace-tabs button { background:transparent; border-color:transparent; color:#9bb0c3; }
 .workspace-tabs button[aria-selected="true"] { color:#e2f2ff; border-color:#4679a4; background:#1c3146; }
+.workspace-tabs { overflow-x:auto; flex-shrink:0; }.workspace-tabs button { white-space:nowrap; }
+.cad-filename { overflow-wrap:anywhere; color:#b6dbf5; }.cad-bodies { display:grid; gap:10px; }
+.cad-body { padding:10px; border:1px solid #304658; border-radius:6px; }.cad-body label { margin-top:0; }
+.cad-body small { display:inline-block; color:#a8c2d7; margin-right:10px; }.cad-body button { padding:5px 8px; }
+.cad-ports { display:flex; flex-wrap:wrap; gap:15px; margin-top:16px; }.cad-ports>div { display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
 .assembly-layout { grid-template-columns:330px minmax(0,1fr); }
 .builder-actions,.boundary-actions,.view-buttons { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
 .builder-actions { margin:12px 0; }.builder-actions button { padding:8px 10px; font-size:11px; }

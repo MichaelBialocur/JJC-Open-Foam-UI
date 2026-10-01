@@ -49,7 +49,7 @@ def analyse_assembly(case,spec):
     residual_ok=all(conv['residuals'].get(k,1)>-1 and conv['residuals'].get(k,1)<=p.residual_tolerance for k in required)
     converged=int(latest.name)==conv['iteration'] and (conv['solver_converged'] or (residual_ok and stationarity is not None and stationarity<=p.residual_tolerance))
     pin=float(np.average(pressure[mesh['owner'][inlet]],weights=mesh['area'][inlet]))
-    result={'geometry_type':'assembly','solution_iteration':int(latest.name),'fluid_cells':n,
+    result={'geometry_type':spec.geometry_type,'solution_iteration':int(latest.name),'fluid_cells':n,
         'volumetric_flow_l_min':qin*60000,'mass_flow_kg_s':qin*p.density_kg_m3,
         'inlet_mesh_area_m2':float(mesh['area'][inlet].sum()),'inlet_cad_area_m2':p.inlet_area_m2,
         'inlet_mean_velocity_m_s':qin/float(mesh['area'][inlet].sum()),
@@ -58,7 +58,7 @@ def analyse_assembly(case,spec):
         'convergence':{**conv,'converged':converged,'relative_saved_field_change':stationarity},
         'checks':{'flow_converged':converged,'mass_balance_below_0_5_percent':mass_error<.5},
         'reference':{'applicable':False,'kind':'none','note':'No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data.'}}
-    parts=spec.geometry.parts
+    parts=getattr(spec.geometry,'parts',[])
     if len(parts)==1 and parts[0].kind=='straight' and parts[0].start.shape=='round' and parts[0].start==parts[0].end and p.selected_model=='laminar':
         row=spec.geometry.layout()[0];direction=np.array(row['tangent']);x=(centres-np.array(row['start_mm'])/1000)@direction
         length=row['length_mm']/1000;mask=(x>.60*length)&(x<.85*length)
@@ -121,7 +121,10 @@ def analyse_assembly(case,spec):
     temp_jumps=[];flux_jumps=[];interface_area=0;fluid_interface_out=0
     for name,patch in mesh['patches'].items():
         if name in ('inlet','outlet') or not patch['count']: continue
-        ids=patch_indices(mesh,name);tb=read_patch(tlast/'fluid/T',name,len(ids));flux=conduction(mesh,centres,ft,name,tb,p.thermal_conductivity_w_m_k)
+        ids=patch_indices(mesh,name)
+        if not any(tuple(np.round(mesh['cf'][i],11)) in solid_interface for i in ids):
+            continue  # Imported fluid walls without a solid neighbour are adiabatic.
+        tb=read_patch(tlast/'fluid/T',name,len(ids));flux=conduction(mesh,centres,ft,name,tb,p.thermal_conductivity_w_m_k)
         interface_area+=float(mesh['area'][ids].sum());fluid_interface_out+=float(np.dot(flux,mesh['area'][ids]))
         for i,temp,q in zip(ids,tb,flux):
             other=solid_interface[tuple(np.round(mesh['cf'][i],11))]

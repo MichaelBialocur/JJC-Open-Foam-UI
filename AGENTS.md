@@ -3,7 +3,7 @@
 - The user requires comparisons with reference research data as the model develops. Preserve source provenance, applicable conditions, measured deviations and limitations in the code and validation report.
 - Distinguish analytical verification, experimental validation and empirical correlations. Never use reference values or synthetic outputs in place of actual CFD fields.
 - Target Foundation OpenFOAM 14 on Ubuntu/WSL2. Check solver syntax against that distribution.
-- v0.6 delivers the inline pipe/bend/manifold/multi-port builder and full 3D fluid/solid face boundaries. Future scope: improved 3D discretization and wall layers, general branched networks, CAD import and complex geometry. See docs/ROADMAP.md.
+- v0.6 delivers the inline pipe/bend/manifold/multi-port builder and full 3D fluid/solid face boundaries. v0.7 adds STEP/IGES/BREP closed-body import, explicit fluid/solid roles and port selection. Future scope: improved 3D discretization and wall layers, cavity extraction and broader geometry validation. See docs/ROADMAP.md.
 - For physics changes, run the relevant benchmark and a meaningful mesh study. Record failed or unqualified comparisons as well as successful ones. Do not tune physical coefficients to conceal discrepancies.
 - Keep generated cases, dependencies and simulation output out of Git. Commit small reproducible benchmark summaries, tests, source and reference provenance.
 - Preserve local user work and existing repository history. Bind this local tool to localhost and use one backend worker.

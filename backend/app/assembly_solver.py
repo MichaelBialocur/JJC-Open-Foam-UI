@@ -9,7 +9,7 @@ import numpy as np
 
 from .cases import header
 from .conjugate import mass_flux
-from .assembly_mesh import patches, read_mesh, patch_indices, wall_boundary
+from .assembly_mesh import patches, read_mesh, patch_indices, wall_boundary, cad_wall_patches
 
 
 def put(root,name,text):
@@ -22,10 +22,10 @@ def field(name,dimensions,initial,conditions,vector=False):
 
 def flow_dictionaries(case,spec,mesh):
     p=spec.operating;patch_names=mesh['patches'];u=p.inlet_velocity_m_s
-    direction=np.array(spec.geometry.layout()[0]['tangent'])
+    direction=np.array(spec.metrics.inlet_direction if spec.geometry_type=='cad' else spec.geometry.layout()[0]['tangent'])
     uv='('+' '.join(f'{v*u:.14g}' for v in direction)+')'
     inlet=f'type fixedValue; value uniform {uv};'
-    if p.inlet and p.inlet.kind!='velocity':
+    if spec.geometry_type=='cad' or (p.inlet and p.inlet.kind!='velocity'):
         inlet=f'type flowRateInletVelocity; volumetricFlowRate constant {u*p.inlet_area_m2:.14g}; value uniform {uv};'
     def conditions(a,b,c): return {n:a if n=='inlet' else b if n=='outlet' else c for n in patch_names}
     put(case,'0/U',field('U','[0 1 -1 0 0 0 0]',uv,conditions(inlet,'type zeroGradient;','type noSlip;'),True))
@@ -139,10 +139,20 @@ def run_assembly(manager,job_id,spec,env):
     case=manager.root/job_id;meshcase=case/'meshing'
     manager.update(job_id,status='generating',openfoam_version=env['WM_PROJECT_VERSION'])
     put(case,'geometry-input.json',spec.geometry.model_dump_json())
-    put(case,'manifest.json',json.dumps({'schema_version':1,'generator':'assembly-occ-v1','inputs':spec.model_dump(),
+    imported=spec.geometry_type=='cad'
+    put(case,'manifest.json',json.dumps({'schema_version':1,'generator':'cad-occ-v1' if imported else 'assembly-occ-v1','inputs':spec.model_dump(),
         'resolved_physics':spec.operating.model_dump()},indent=2))
     put(meshcase,'system/controlDict',header('controlDict')+'application gmshToFoam; startFrom startTime; startTime 0; stopAt endTime; endTime 1; deltaT 1; writeControl timeStep; writeInterval 1; writeFormat ascii;\n')
     args=[sys.executable,'-m','backend.app.assembly_geometry',str(case/'geometry-input.json'),str(meshcase),'--mesh','--size',str(spec.mesh_size_mm)]
+    if imported:
+        from .cad_api import source_file
+        source,metadata=source_file(manager.root,spec.geometry.source_id)
+        target=case/('source'+metadata['suffix'])
+        shutil.copy2(source,target)
+        put(case,'cad-source.json',json.dumps(metadata))
+        put(case,'cad-input.json',spec.model_dump_json())
+        args=[sys.executable,'-m','backend.app.cad_geometry',str(target),str(meshcase),
+              '--spec',str(case/'cad-input.json'),'--size',str(spec.mesh_size_mm)]
     cad_env={**env,'PYTHONPATH':str(Path(__file__).resolve().parents[2])}
     # Large meshes must not inherit the prototype's short wall-clock cutoffs.
     # Every stage remains cancellable, and both regions still pass checkMesh.
@@ -150,8 +160,15 @@ def run_assembly(manager,job_id,spec,env):
     shutil.copy2(meshcase/'geometry.json',case/'geometry.json')
     manager.update(job_id,status='meshing')
     manager._command(job_id,'gmshToFoam',['gmshToFoam','-case',str(meshcase),str(meshcase/'assembly.msh')],env,timeout=None)
-    manager._command(job_id,'splitRegions',['splitMeshRegions','-case',str(meshcase),'-cellZones','all','-noFields'],env,timeout=None)
-    for region in ('fluid','solid'):
+    if imported and not spec.geometry.solid_bodies:
+        # Foundation 14's splitMeshRegions does nothing for a single region.
+        # Keep the same explicit fluid directory used by checks and exports.
+        shutil.copytree(meshcase/'constant/polyMesh',meshcase/'constant/fluid/polyMesh')
+    else:
+        manager._command(job_id,'splitRegions',['splitMeshRegions','-case',str(meshcase),'-cellZones','all','-noFields'],env,timeout=None)
+    if imported:
+        cad_wall_patches(meshcase/'constant/fluid/polyMesh/boundary')
+    for region in (('fluid',) if imported and not spec.geometry.solid_bodies else ('fluid','solid')):
         args=['-case',str(meshcase),'-region',region]
         manager._command(job_id,region+'Check',['checkMesh',*args],env,timeout=None)
         if 'Mesh OK.' not in (case/f'log.{region}Check').read_text():

@@ -6,18 +6,14 @@ import RunHistory from './RunHistory'
 import {appendPart,editPart,movePart,newId,inletGeometry,physicsDefaults,thermalTotals} from './assemblyInputs'
 import {chooseFluid,chooseMaterial,fluidProperties,solidProperties,isEdited} from './setupInputs'
 import './AssemblyApp.css'
+import Results from './AssemblyResults'
+import {api,fmt} from './uiApi'
 
 const activeStates=['queued','generating','meshing','checking','solving','heating','processing']
-const fmt=(v,n=4)=>Number.isFinite(v)?Number(v.toPrecision(n)).toLocaleString('en',{maximumSignificantDigits:n}):'—'
-async function api(path,body,signal){
-  const response=await fetch(path,body===undefined?{signal}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),signal})
-  const data=await response.json()
-  if(!response.ok)throw Object.assign(new Error(typeof data.detail==='string'?data.detail:data.detail?.map(d=>`${d.loc?.slice(1).join('.')}: ${d.msg}`).join('; ')||`Server error ${response.status}`),{status:response.status})
-  return data
-}
 function NumberInput({label,value,onChange,unit='',min,max,step='any'}){
   return <label>{label}<div><input type="number" value={value} onChange={e=>onChange(e.target.value===''?'':Number(e.target.value))} min={min} max={max} step={step}/><span>{unit}</span></div></label>
 }
+function Metric({label,value,unit}){return <div className="metric"><span>{label}</span><strong>{fmt(value)}<small>{unit}</small></strong></div>}
 function SectionEditor({label,section,onChange,allowShape}){
   const update=(key,value)=>onChange({...section,[key]:value})
   return <fieldset><legend>{label}</legend>
@@ -26,37 +22,6 @@ function SectionEditor({label,section,onChange,allowShape}){
       <><NumberInput label="Outside width" value={section.width_mm} onChange={v=>update('width_mm',v)} unit="mm" min={.2}/><NumberInput label="Outside height" value={section.height_mm} onChange={v=>update('height_mm',v)} unit="mm" min={.2}/></>}
     <NumberInput label="Wall thickness" value={section.wall_mm} onChange={v=>update('wall_mm',v)} unit="mm" min={.05}/>
   </fieldset>
-}
-function Metric({label,value,unit}){return <div className="metric"><span>{label}</span><strong>{fmt(value)}<small>{unit}</small></strong></div>}
-function AssemblyFields({job}){
-  const [region,setRegion]=useState('fluid'),[field,setField]=useState('speed'),[axis,setAxis]=useState(''),[fraction,setFraction]=useState(.5),[data,setData]=useState(null),[error,setError]=useState('')
-  useEffect(()=>{
-    const controller=new AbortController()
-    const timer=setTimeout(()=>api(`/api/assembly/jobs/${job.id}/fields?region=${region}&field=${field}${axis?`&axis=${axis}&fraction=${fraction}`:''}`,undefined,controller.signal)
-      .then(d=>{setData(d);setError('')}).catch(e=>{if(e.name!=='AbortError')setError(e.message)}),200)
-    return()=>{clearTimeout(timer);controller.abort()}
-  },[job.id,region,field,axis,fraction])
-  return <section className="panel"><h2>Computed 3D results</h2><div className="field-toolbar">
-    <label>Region<select value={region} onChange={e=>{setRegion(e.target.value);if(e.target.value==='solid')setField('temperature');setData(null)}}><option value="fluid">Fluid</option>{job.results.thermal&&<option value="solid">Solid wall</option>}</select></label>
-    <label>Field<select value={field} onChange={e=>{setField(e.target.value);setData(null)}}>{region==='fluid'&&<><option value="speed">Speed</option><option value="pressure">Gauge pressure</option></>}{job.results.thermal&&<option value="temperature">Temperature</option>}</select></label>
-    <label>Display<select value={axis} onChange={e=>{setAxis(e.target.value);setData(null)}}><option value="">Surface · adjacent cells</option>{['x','y','z'].map(a=><option key={a} value={a}>{a.toUpperCase()} slice</option>)}</select></label>
-  </div>{axis&&<label>Slice position · {Math.round(fraction*100)}% of {axis.toUpperCase()} extent<input type="range" min="0.001" max="0.999" step="0.01" value={fraction} onChange={e=>{setFraction(Number(e.target.value))}}/></label>}
-    {error&&<p className="error">{error}</p>}{data?<AssemblyViewport data={data} field/>:<p className="muted">Loading computed cells…</p>}
-    <p className="muted">Finite-volume cell values from this saved run. Click a facet to probe its cell. An empty slice can lie in a gap between passages. Download the case for ParaView filters and streamlines.</p>
-  </section>
-}
-function Results({job}){
-  const r=job.results,t=r.thermal
-  return <><div className="overview"><Metric label="Pressure drop" value={r.pressure_drop_pa} unit="Pa"/><Metric label="Actual flow" value={r.volumetric_flow_l_min} unit="L/min"/><Metric label="Flow balance error" value={r.mass_balance_error_percent} unit="%"/></div>
-    <AssemblyFields key={job.id} job={job}/>
-    {t&&<section className="panel"><h2>Heating & cooling balance</h2><div className="overview"><Metric label="Outlet mixing temperature" value={t.outlet_temperature_c} unit="°C"/><Metric label="Maximum solid cell temperature" value={t.maximum_solid_temperature_c} unit="°C"/><Metric label="Energy balance error" value={t.energy_balance_error_percent} unit="%"/></div>
-      <p className="muted">Fluid heat gain {fmt(t.advective_heat_gain_w)} W · inlet conductive loss {fmt(t.inlet_conductive_loss_w)} W. Positive face power below leaves the solid; negative power heats it.</p>
-      <div className="table-scroll"><table><thead><tr><th>Face</th><th>Boundary</th><th>Mean surface °C</th><th>Computed W</th><th>Specified W</th></tr></thead><tbody>{t.faces.map(f=><tr key={f.face}><td>{f.face}</td><td>{f.kind}</td><td>{fmt(f.mean_temperature_c)}</td><td>{fmt(f.computed_heat_leaving_w)}</td><td>{fmt(f.specified_boundary_heat_leaving_w)}</td></tr>)}</tbody></table></div></section>}
-    <section className="panel"><h2>Numerical checks & reference comparison</h2><p className="notice warn">The new 3D solver has not yet met its pipe pressure-gradient accuracy target. Review the <a href="https://github.com/MichaelBialocur/JJC-Open-Foam-UI/blob/main/docs/ASSEMBLY_BENCHMARKS.md" target="_blank" rel="noreferrer">measured validation report</a> and compare refined meshes before using predictions.</p><div className="checks">{Object.entries(r.checks).map(([name,ok])=><span key={name} className={ok?'good':'warn'}>{ok?'✓':'!'} {name.replaceAll('_',' ')}</span>)}</div>
-      <p className="muted">{r.fluid_cells.toLocaleString()} fluid cells{t?` · ${t.solid_cells.toLocaleString()} solid cells`:''}. Convergence and conservation do not establish mesh independence.</p>
-      <p className="muted">{r.reference.note}</p>{r.reference.kind==='analytical'&&<p className="muted"><a href={r.reference.url} target="_blank" rel="noreferrer">{r.reference.title}</a>: {fmt(r.reference.error_percent)}% friction-factor deviation · {r.reference.applicable?'developed-flow checks passed':'comparison not qualified'}.</p>}
-      <div className="exports"><a href={`/api/jobs/${job.id}/results.json`}>Results JSON</a><a href={`/api/jobs/${job.id}/case.zip`}>OpenFOAM case / ParaView</a></div>
-    </section></>
 }
 
 export default function AssemblyApp(){
@@ -133,7 +98,7 @@ export default function AssemblyApp(){
   const changePart=(key,value)=>changeGeometry({...draft.geometry,parts:editPart(draft.geometry.parts,index,key,value)})
   const totals=thermalTotals(draft.boundaries),faces=built?.faces.filter(f=>f.selectable)??[],assigned=Object.fromEntries(draft.boundaries.flatMap(g=>g.faces.map(f=>[f,g.name])))
   const disabled=busy||!built||!operating||operating.run_errors.length>0||!health?.mesher.available||!health?.openfoam.available
-  return <div className="assembly-app"><header><div><h1>Geometry builder <span className="version">0.6.2</span></h1><p>Connected piping, manifolds and multi-port cold plates</p></div><div className="header-actions"><button className="secondary" onClick={build} disabled={busy}>{busy?'Building…':'Build geometry'}</button><button onClick={run} disabled={disabled}>Mesh & run simulation</button></div></header>
+  return <div className="assembly-app"><header><div><h1>Geometry builder <span className="version">0.7.0</span></h1><p>Connected piping, manifolds and multi-port cold plates</p></div><div className="header-actions"><button className="secondary" onClick={build} disabled={busy}>{busy?'Building…':'Build geometry'}</button><button onClick={run} disabled={disabled}>Mesh & run simulation</button></div></header>
     <main className="assembly-layout"><aside className="controls" tabIndex={0} aria-label="Geometry controls">
       <section><h2>Design</h2><label>Design name<input value={draft.name} maxLength={80} onChange={e=>setDraft(old=>({...old,name:e.target.value}))}/></label>
         <label>Start from<select value="" onChange={e=>loadPreset(e.target.value)}><option value="" disabled>Choose a template…</option>{Object.entries(presets).map(([id,p])=><option value={id} key={id}>{p.name}</option>)}</select></label>
@@ -179,7 +144,7 @@ export default function AssemblyApp(){
       <section className="panel"><h2>Saved assembly runs</h2><RunHistory jobs={jobs} selectedId={selectedJob} onSelect={id=>{setSelectedJob(id);setJob(null);setError('')}} onDeleted={runsDeleted} onDeletingChange={setDeletingRuns}>{j=><><span>{j.inputs.name} · {j.inputs.mesh_size_mm} mm</span><span className="badge">{j.status.replaceAll('_',' ')}</span></>}</RunHistory>
         {job&&<><div className="run-status"><b>{job.status.replaceAll('_',' ')}</b><span>Flow {job.progress?.iteration??0} · thermal {job.thermal_progress?.iteration??0}</span>{activeStates.includes(job.status)?<button className="danger" onClick={()=>api(`/api/jobs/${job.id}/cancel`,{}).then(setJob).catch(e=>setError(e.message))}>Cancel run</button>:<button className="secondary" onClick={()=>{revision.current++;setDraft(structuredClone(job.inputs));setBuilt(null);setSelection([]);setPartIndex(0);setNotice('Saved design loaded. Build geometry to inspect its assigned faces.')}}>Load this design</button>}</div><p className="muted">Results below belong to “{job.inputs.name}”, saved with {job.inputs.geometry.parts.length} parts and a {job.inputs.mesh_size_mm} mm mesh target. The editable design above is independent.</p>{job.error&&<p className="error">{job.error}</p>}<details><summary>Run log</summary><pre>{job.log||'Queued…'}</pre></details></>}
       </section>{job?.results&&<Results job={job}/>}
-      <footer>Full 3D incompressible flow and frozen-flow, coupled fluid/solid heating. Constant properties; no buoyancy, radiation, phase change or contact resistance. Inline manifolds feed parallel channels. CAD import and general branched networks remain future work.</footer>
+      <footer>Full 3D incompressible flow and frozen-flow, coupled fluid/solid heating. Constant properties; no buoyancy, radiation, phase change or contact resistance. Inline manifolds feed parallel channels. Use the CAD import workspace for closed CAD bodies and explicit inlet/outlet face assignments.</footer>
     </div></main>
     {editor&&<PropertyEditor title={editor==='solid'?'Edit wall material':'Edit fluid properties'} properties={editor==='solid'?solidProperties:fluidProperties} form={draft.physics} preset={editor==='solid'?catalog.materials[draft.physics.material]:catalog.fluids[draft.physics.fluid]} solid={editor==='solid'} onClose={()=>setEditor(null)} onApply={values=>{updatePhysics(values);setEditor(null)}}/>}
   </div>

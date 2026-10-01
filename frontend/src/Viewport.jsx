@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { attachCadControls, attachClickPicker } from './cadControls'
 import { SVGRenderer } from 'three/addons/renderers/SVGRenderer.js'
 import { pipeShell, resultSurface } from './fieldGeometry'
 
 export default function Viewport({ spec, data, field, mode = 'cutaway', station = 0, range, wire = false, onPick }) {
-  const host = useRef(null), note = useRef(null), savedCamera = useRef(null)
+  const host = useRef(null), note = useRef(null), savedCamera = useRef(null), pick = useRef(onPick)
+  useEffect(() => { pick.current = onPick }, [onPick])
   const [expanded, setExpanded] = useState(true), [reset, setReset] = useState(0)
   const [angle, setAngle] = useState('isometric')
   const length = Number(spec.length_mm) / 1000, radius = Number(spec.inner_diameter_mm) / 2000
@@ -31,18 +32,20 @@ export default function Viewport({ spec, data, field, mode = 'cutaway', station 
     renderer.domElement.style.touchAction='none'
     container.appendChild(renderer.domElement)
     note.current.textContent = svg && data ? 'Cross-section rendering is active in this browser. The complete axial field is shown below.' : ''
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.enableDamping = false; controls.minDistance=.05; controls.maxDistance=200
+    camera.position.set(3,2,5)
+    const navigation = attachCadControls(camera, renderer.domElement, render), controls = navigation.controls
     const scale=4/length, radialScale=scale*factor, r=radius*radialScale, outer=(radius+wall)*radialScale
     const geometryKey=`${length}/${radius}/${wall}/${factor}`
     const restore=savedCamera.current?.reset===reset && savedCamera.current?.geometryKey===geometryKey
     controls.target.set(0,0,0)
-    if(restore) { camera.position.fromArray(savedCamera.current.position); controls.target.fromArray(savedCamera.current.target) }
+    if(restore) { camera.position.fromArray(savedCamera.current.position); camera.up.fromArray(savedCamera.current.up); controls.target.fromArray(savedCamera.current.target) }
     const shell = new THREE.Mesh(pipeShell(4,r,outer,!data),new THREE.MeshPhongMaterial({color:0x748da8,side:THREE.DoubleSide,
       transparent:!!data,opacity: data ? .08 : 1,depthWrite:!data,shininess:70}))
     scene.add(shell)
-    scene.add(new THREE.AmbientLight(0xffffff,.65))
-    const light=new THREE.DirectionalLight(0xffffff,1);light.position.set(-2,4,5);scene.add(light)
+    const ambient=new THREE.AmbientLight(0xffffff,.65)
+    if(svg)ambient.color.multiplyScalar(.45)
+    scene.add(ambient)
+    const light=new THREE.DirectionalLight(0xffffff,svg?.5:1);light.position.set(-2,4,5);scene.add(light)
     // End rings remain legible in a long pipe and identify the flow direction.
     for(const [x,c] of [[-2,0x59b9fa],[2,0x62d5aa]]) {
       const points=Array.from({length:65},(_,i)=>new THREE.Vector3(x,r*Math.cos(i*Math.PI/32),r*Math.sin(i*Math.PI/32)))
@@ -59,6 +62,7 @@ export default function Viewport({ spec, data, field, mode = 'cutaway', station 
     function resize() {
       const width=container.clientWidth || 720,height=container.clientHeight || 330
       renderer.setSize(width,height);camera.aspect=width/height;camera.updateProjectionMatrix()
+      navigation.resize()
       if(firstResize&&!restore){
         const direction=new THREE.Vector3(...(angle==='end'?[1,0,0]:[.35,.24,1])).normalize()
         const right=new THREE.Vector3().crossVectors(new THREE.Vector3(0,1,0),direction).normalize()
@@ -73,29 +77,25 @@ export default function Viewport({ spec, data, field, mode = 'cutaway', station 
       firstResize=false;render()
     }
     const observer=new ResizeObserver(resize);observer.observe(container)
-    controls.addEventListener('change',render);controls.update();resize()
-    const down={x:0,y:0}, ray=new THREE.Raycaster()
-    function pointerDown(e){down.x=e.clientX;down.y=e.clientY}
-    function pointerUp(e){
-      if(!pickMesh || Math.hypot(e.clientX-down.x,e.clientY-down.y)>4) return
+    controls.update();resize()
+    const ray=new THREE.Raycaster()
+    const unpick=attachClickPicker(renderer.domElement,e=>{
+      if(!pickMesh) return
       const rect=renderer.domElement.getBoundingClientRect()
       ray.setFromCamera(new THREE.Vector2((e.clientX-rect.left)/rect.width*2-1,1-(e.clientY-rect.top)/rect.height*2),camera)
       const hit=ray.intersectObject(pickMesh)[0]
-      if(hit) onPick?.(pickMesh.geometry.userData.cellIds[hit.faceIndex])
-    }
-    renderer.domElement.addEventListener('pointerdown',pointerDown)
-    renderer.domElement.addEventListener('pointerup',pointerUp)
+      if(hit) pick.current?.(pickMesh.geometry.userData.cellIds[hit.faceIndex])
+    })
     return () => {
-      savedCamera.current={position:camera.position.toArray(),target:controls.target.toArray(),reset,geometryKey}
-      observer.disconnect();controls.dispose()
-      renderer.domElement.removeEventListener('pointerdown',pointerDown);renderer.domElement.removeEventListener('pointerup',pointerUp)
+      savedCamera.current={position:camera.position.toArray(),up:camera.up.toArray(),target:controls.target.toArray(),reset,geometryKey}
+      observer.disconnect();navigation.dispose();unpick()
       scene.traverse(object=>{object.geometry?.dispose();if(Array.isArray(object.material))object.material.forEach(m=>m.dispose());else object.material?.dispose()})
       renderer.dispose?.();renderer.domElement.remove()
     }
-  },[length,radius,wall,factor,data,field,mode,station,range,wire,onPick,reset,angle])
+  },[length,radius,wall,factor,data,field,mode,station,range,wire,reset,angle])
   return <div className="viewport-wrap">
     <div ref={host} className="viewport" />
-    <div className="view-caption"><span><b className="inlet">● Inlet</b> → <b className="outlet">● Outlet</b></span><span>Drag to orbit · scroll to zoom · right-drag to pan</span></div>
+    <div className="view-caption"><span><b className="inlet">● Inlet</b> → <b className="outlet">● Outlet</b></span><span>Left-drag: free orbit · wheel: zoom · middle/right-drag: pan</span></div>
     <div className="view-tools"><label className="check-label"><input type="checkbox" checked={expanded} onChange={e=>setExpanded(e.target.checked)}/> Enlarge diameter for viewing</label>
       <span className="muted">{factor===1?'True dimensional proportions':`Diameter shown ×${Number(factor.toPrecision(3))}; length unchanged`}</span>
       <button className="secondary" onClick={()=>{setAngle('end');setReset(r=>r+1)}}>End view</button>

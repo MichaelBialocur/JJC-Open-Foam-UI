@@ -26,13 +26,17 @@ First strengthen the flow baseline: the initial turbulent study still changes Da
 
 Selectable heated surfaces and external convection shipped in v0.6. Improve tetrahedral pressure-gradient accuracy and wall-layer resolution next, then add contact resistance and temperature-dependent properties where needed. Compare thermal predictions with a traceable heated-pipe experiment, including boundary conditions and measurement uncertainty; current analytical agreement is not experimental validation. Review field visualization while this is developed.
 
+## Delivered in v0.7
+
+Local STEP/STP, IGES/IGS and BREP import of closed bodies; explicit fluid/solid/ignore roles; declared unit conversion and checked scaling; selectable planar fluid inlet/outlet faces and exterior solid heating/convection groups; conformal tetrahedral meshing, fluid-only flow or coupled conduction, source/setup persistence, and separate deletable CAD run history. All 3D viewers use damped free rotation with pan/zoom and stable camera state during face selection. See [CAD_IMPORT.md](CAD_IMPORT.md) and [CAD_BENCHMARKS.md](CAD_BENCHMARKS.md). Native CAD solves and conservation pass, but pressure-gradient accuracy is still unqualified.
+
 ## Extend the geometry builder
 
 The inline pipe → manifold → multi-port tube → manifold → pipe workflow is available. Next extend to general branch junctions and arbitrary header-port placement, add channel-resolved flow-distribution reporting and boundary-layer meshing, and validate pressure/temperature against matched cold-plate measurements.
 
 ## CAD and complex geometry
 
-Import CAD using a defined STEP/IGES or triangulated-surface pipeline; check units, watertightness and fluid/solid regions. Let the user select/name boundaries, define physical boundary conditions, generate a suitable mesh with boundary layers, inspect quality and run the solver. Reuse the builder’s full 3D meshing, thermal regions and surface/cell post-processing where suitable.
+Closed-body CAD import shipped in v0.7. Extend it with automatic fluid-cavity extraction, a defined STL/OBJ surface-repair/volume pipeline, boundary layers, per-body solid materials, nonplanar ports and broader real engineering geometry qualification. The current importer requires an explicit connected fluid volume and rejects ambiguous open or overlapping bodies. Native feature-tree editing remains outside the solver UI.
 
 ## Visualization and model evidence
 

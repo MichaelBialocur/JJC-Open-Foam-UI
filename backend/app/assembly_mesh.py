@@ -58,6 +58,19 @@ def wall_boundary(path):
     path.write_text(text)
 
 
+def cad_wall_patches(path):
+    """Gmsh surface groups default to patch; unassigned CAD fluid faces are walls.
+
+    Preserve mappedWall coupling and the explicitly named inlet/outlet patches.
+    Wall-function turbulence fields require an actual wall polyPatch.
+    """
+    text=path.read_text()
+    def replace(match):
+        body=re.sub(r'\btype\s+patch\s*;', 'type wall;', match[2])
+        return match[1]+'{'+body+'}'
+    path.write_text(re.sub(r'(\bf_cad_\d+\s*)\{([^{}]*)\}', replace, text))
+
+
 @lru_cache(maxsize=6)
 def cached_mesh(path):
     from pathlib import Path

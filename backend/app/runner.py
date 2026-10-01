@@ -138,7 +138,7 @@ class JobManager:
             if self.cancel_events[job_id].is_set():
                 raise Cancelled()
             env = foam_environment()
-            if spec.geometry_type == 'assembly':
+            if spec.geometry_type in ('assembly', 'cad'):
                 from .assembly_solver import run_assembly
                 run_assembly(self,job_id,spec,env)
                 return

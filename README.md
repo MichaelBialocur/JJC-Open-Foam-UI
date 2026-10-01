@@ -1,12 +1,14 @@
-# Pipe CFD · v0.6.2
+# Pipe CFD · v0.7.0
 
-A local React/FastAPI interface to **Foundation OpenFOAM 14**. Build connected piping, bends, manifolds and multi-port cold plates; select exterior faces for heating or convection; mesh and solve full 3D flow with coupled solid-wall conduction. The separate straight-pipe workspace retains its axisymmetric reference benchmarks. Both viewers use actual computed fields.
+A local React/FastAPI interface to **Foundation OpenFOAM 14**. Import closed CAD bodies or build connected piping, bends, manifolds and multi-port cold plates; select flow and thermal boundaries; mesh and solve full 3D flow with coupled solid conduction. The separate straight-pipe workspace retains its axisymmetric reference benchmarks. All result viewers use actual computed fields.
 
-**New in 0.6.2:** assembly runs have no fixed cell-count ceiling or elapsed-time cutoff. Larger meshes are limited by available RAM, disk space and practical runtime; cancellation, iteration settings and mesh-quality checks remain active. Saved-run deletion and independent desktop panel scrolling are also included. [Geometry builder guide](docs/GEOMETRY_BUILDER.md) · [3D benchmark results and remaining errors](docs/ASSEMBLY_BENCHMARKS.md). The assembly solver is an early workflow, not an experimentally validated cold-plate predictor.
+**New in 0.7.0:** the **CAD import** workspace accepts STEP/STP, IGES/IGS and BREP closed bodies. Identify the fluid and solid volumes, then select inlet/outlet faces, heated faces and convection cooling faces. All 3D viewers now use damped free rotation, pan and zoom; selecting faces preserves the camera and renderer. [CAD import guide](docs/CAD_IMPORT.md) · [CAD benchmark results and remaining errors](docs/CAD_BENCHMARKS.md).
+
+Saved-run deletion, independent desktop panel scrolling and uncapped 3D solver elapsed time/cell count remain available. Larger meshes depend on available RAM, disk space and practical runtime; cancellation, iteration settings and mesh-quality checks remain active. The 3D solver remains an early workflow, not an experimentally validated cold-plate predictor.
 
 ## Start on your Windows PC
 
-Open PowerShell and enter Ubuntu:
+Stop the existing app with **Ctrl+C**, then open PowerShell and enter Ubuntu:
 
 ```powershell
 wsl -d Ubuntu-24.04
@@ -30,6 +32,12 @@ The server binds to localhost. It is a local engineering tool, not an authentica
 ## First builder run
 
 Choose **Geometry builder**, use the cold-plate template, and click **Build geometry**. Select exterior faces and assign heating in watts or convection with a coefficient and ambient temperature. Set fluid, inlet flow and mesh size, then **Mesh & run simulation**. See the [step-by-step builder guide](docs/GEOMETRY_BUILDER.md). The first setup may ask for your Ubuntu password to install Gmsh native libraries.
+
+## First CAD run
+
+Choose **CAD import → Choose CAD file**. STEP is recommended. Export the **fluid cavity as its own closed body**, with separate surrounding metal bodies for heat transfer. Assign body roles, check dimensions, and click **Prepare selected bodies**. Select planar exterior fluid faces for inlet/outlet and exterior solid faces for heating/convection. Set operating conditions and mesh size, then **Mesh & run simulation**. A metal part alone does not define its internal fluid volume. STL/OBJ and native CAD project files are not accepted by this solid-body importer; see the [format and preparation guide](docs/CAD_IMPORT.md).
+
+Left-drag freely rotates the model, middle/right-drag pans, and the wheel or pinch zooms. **Fit / reset view** recentres the geometry. Rotation can pass through either pole and roll; face selection and assignment do not reset the view. WebGL provides the interactive rendering path; the SVG fallback is explicitly labelled as reduced performance.
 
 ## Panels and saved runs
 
@@ -83,7 +91,7 @@ See [property provenance, conversion checks and the glycol mesh study](INPUTS_AN
 - Positive heat input enables a thermal solve on computed frozen velocity/flux/turbulence fields. In **Coupled fluid + solid wall** mode, native `foamMultiRun` fluid/solid modules solve radial and axial wall conduction with perfect thermal contact. Uniform power enters the **outer** wall; solid ends are insulated. Inlet fluid temperature is fixed and the outlet has zero temperature gradient. Wall thickness and conductivity affect the computed temperatures.
 - **Fluid only** mode retains the prescribed inner-wall flux and `scalarTransport` benchmark. The heat capacity, fluid conductivity and turbulent Prandtl number are explicit inputs in both modes. 0 W runs flow only. The UI defaults to coupled mode; legacy API inputs with no mode retain fluid-only behavior.
 - **Temperature feedback on flow, buoyancy, radiation, temperature-dependent properties and phase change are not solved.** Coupled mode includes the native fluid equation's kinetic-energy transport in its energy balance; it does not provide a viscous-heating model or a compressible flow calculation.
-- No compressibility, cavitation, roughness, multiphase flow or gravity. Bends and inline manifolds are available in the separate geometry-builder workspace; CAD import remains future work. The user must check that constant-property incompressible assumptions fit the selected fluid and conditions.
+- No compressibility, cavitation, roughness, multiphase flow or gravity. Bends and inline manifolds are available in the geometry-builder workspace; closed CAD bodies use the separate CAD import workspace. The wedge and radial grading above apply only to straight-pipe benchmarks. Builder/CAD runs use full 3D tetrahedra without boundary layers. The user must check that constant-property incompressible assumptions fit the selected fluid and conditions.
 - Preview values use analytical geometry relations. Simulation results come from the written OpenFOAM fields.
 
 ## How results are computed
@@ -109,9 +117,12 @@ npm --prefix frontend run build
 npm --prefix frontend run lint
 npm --prefix frontend test
 .venv/bin/python scripts/validate.py --case all
+.venv/bin/python scripts/validate_cad.py
 ```
 
-The final command runs all four presets on all three meshes and saves `validation-output/summary.json` and full cases. Allow tens of minutes for the complete serial study. For a short complete coupled check use `--case heated_wall --meshes coarse`. Validation has its own run directory. Experimental disagreements remain in the report; a solver failure or failed laminar/thermal verification gives a nonzero exit status. To reuse existing converged flow fields for the thermal mesh study, use `scripts/validate_conjugate.py <coarse-case> <medium-case> <fine-case>` (or `validate_thermal.py` for fluid-only heating); provenance and exact inputs are recorded.
+`validate.py` runs all four presets on all three meshes and saves `validation-output/summary.json` and full cases. Allow tens of minutes for the complete serial study. For a short complete coupled check use `--case heated_wall --meshes coarse`. Validation has its own run directory. Experimental disagreements remain in the report; a solver failure or failed laminar/thermal verification gives a nonzero exit status. To reuse existing converged flow fields for the thermal mesh study, use `scripts/validate_conjugate.py <coarse-case> <medium-case> <fine-case>` (or `validate_thermal.py` for fluid-only heating); provenance and exact inputs are recorded.
+
+`validate_cad.py` generates and imports a STEP fluid/solid pipe, assigns boundaries through the API, and runs three actual OpenFOAM flow/thermal meshes. It saves `validation-output/cad-v070/summary.json` and cases. Its exit code checks execution only; inspect convergence and analytical deviations in the report. See [CAD_BENCHMARKS.md](docs/CAD_BENCHMARKS.md) for fluid-only, reverse-flow and partial-wall checks.
 
 ## Source layout
 
@@ -126,6 +137,8 @@ The final command runs all four presets on all three meshes and saves `validatio
 | `backend/app/conjugate.py` | Native fluid/solid coupling, solid mesh, interface conservation and wall resistance |
 | `backend/app/fields.py` | Actual mesh/cell data for the viewer and VTK export |
 | `backend/app/references.py` | Reference data and provenance |
+| `backend/app/cad_api.py`, `cad_models.py`, `cad_geometry.py` | CAD uploads, explicit body/face roles, units and conformal volume meshing |
+| `frontend/src/cadControls.js` | Shared free-orbit navigation, damping and click-versus-drag handling |
 | `frontend/src` | Inputs, run monitoring, comparison plots and exports |
 
-The assembly generator shares the execution queue and uses separate arbitrary-mesh, boundary-face and cell-slice post-processing. The older section-based post-processor remains specific to the straight-pipe benchmark. CAD import and general branch geometry can build on the assembly path.
+The builder and CAD importer share the execution queue and arbitrary-mesh, boundary-face and cell-slice post-processing. The older section-based post-processor remains specific to the straight-pipe benchmark. CAD sources and prepared geometry are cached locally under `runs/`; each submitted CAD run keeps its own source copy and exact assignments.
