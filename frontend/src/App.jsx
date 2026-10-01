@@ -96,7 +96,7 @@ function App() {
   const solidStudy = studyRows.some(s=>s.inputs.thermal_mode==='conjugate'&&s.inputs.applied_heat_w>0)
 
   return <div className="app">
-    <header><div><h1>Pipe CFD <span className="version">0.5</span></h1><p>OpenFOAM · flow, solid wall conduction & computed field views</p></div>
+    <header><div><h1>Pipe CFD <span className="version">0.6</span></h1><p>OpenFOAM · flow, solid wall conduction & computed field views</p></div>
       <div className="header-actions"><span className={`badge ${health?.openfoam?.available ? 'good' : 'warn'}`}>{health?.openfoam?.available ? 'OpenFOAM 14 ready' : 'OpenFOAM unavailable'}</span>
         <button disabled={disabled} onClick={() => submit()}>Run simulation</button></div></header>
     <main><aside className="controls">
@@ -190,7 +190,7 @@ function App() {
         const tv=s.results?.thermal?.validation
         return <tr key={s.id}><td>{s.inputs.mesh_level}</td><td>{statusText(s.status)}</td><td>{fmt(f,6)}</td><td>{fmt(s.results?.validation.friction_error_percent)}%</td><td>{prev && f ? `${fmt(100*Math.abs(f-prev)/Math.abs(f))}%`:'—'}</td>{heatedStudy&&<><td>{fmt(nu,6)}</td><td>{fmt(solidStudy?tv?.wall_resistance_error_percent:tv?.nusselt_error_percent)}%</td><td>{previousNu&&nu?`${fmt(100*Math.abs(nu-previousNu)/Math.abs(nu))}%`:'—'}</td></>}{solidStudy&&<><td>{fmt(s.results?.thermal?.solid.maximum_temperature_c,6)}</td><td>{fmt(s.results?.thermal?.solid.mean_wall_drop_k,5)}</td></>}</tr>
       })}</tbody></table></div><p className="muted">{solidStudy?'Thermal reference error compares the mean solid-wall drop with cylindrical conduction. ':''}Inspect convergence and reference checks for every mesh. A small mesh-to-mesh change alone is not proof of model accuracy.</p></section>}
-      <footer>Pipe CFD 0.5 · Actual OpenFOAM flow and coupled fluid/solid temperatures · Axisymmetric pipe model · CAD and full 3D flow are future stages.</footer>
+      <footer>Pipe CFD 0.6 · Actual OpenFOAM flow and coupled fluid/solid temperatures · Axisymmetric pipe model · Use Geometry builder for full 3D assemblies.</footer>
     </div></main>
     {editor&&catalog&&<PropertyEditor title={editor==='solid'?'Edit wall material':'Edit fluid properties'} properties={editor==='solid'?solidProperties:fluidProperties} form={form}
       preset={editor==='solid'?catalog.materials[form.material]:catalog.fluids[form.fluid]} solid={editor==='solid'}

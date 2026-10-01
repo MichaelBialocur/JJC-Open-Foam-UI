@@ -1,0 +1,16 @@
+.workspace-tabs { display:flex; gap:8px; padding:10px 28px; background:#0b131d; border-bottom:1px solid #2c3b4a; }
+.workspace-tabs button { background:transparent; border-color:transparent; color:#9bb0c3; }
+.workspace-tabs button[aria-selected="true"] { color:#e2f2ff; border-color:#4679a4; background:#1c3146; }
+.assembly-layout { grid-template-columns:330px minmax(0,1fr); }
+.assembly-app .workspace { align-self:start; }
+.builder-actions,.boundary-actions,.view-buttons { display:flex; flex-wrap:wrap; gap:7px; align-items:center; }
+.builder-actions { margin:12px 0; }.builder-actions button { padding:8px 10px; font-size:11px; }
+.boundary-actions { margin-bottom:18px; }.boundary-actions label { flex:1; min-width:210px; margin:0; }
+.part-list { list-style:none; padding:0; display:grid; gap:7px; }.part-list button { text-align:left; width:100%; background:#172635; border-color:#34495c; }.part-list button.selected { border-color:#61b5f4; background:#1c3a52; }.part-list small { display:block; font-weight:400; color:#9eb7ca; margin-top:6px; }
+.assembly-app fieldset { border:1px solid #304658; border-radius:6px; margin:17px 0; padding:13px; }.assembly-app legend { color:#b7d6ed; font-size:12px; padding:0 6px; }
+.assembly-viewport { height:440px; }.hidden { display:none; }
+.build-placeholder { min-height:260px; display:flex; align-items:center; justify-content:center; flex-direction:column; color:#a8c2d7; text-align:center; padding:30px; background:#0b1622; border-radius:7px; }.build-placeholder p { font-size:13px; max-width:400px; line-height:1.6; }
+.face-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; max-height:320px; overflow:auto; padding:12px; background:#0e1823; border-radius:6px; }.face-list label { align-items:flex-start; }.face-list span { font-size:12px; color:#bfd1df; line-height:1.5; }
+.boundary-groups { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }.boundary-card { border:1px solid #476173; border-top:3px solid #f29c58; border-radius:7px; padding:16px; margin-top:15px; background:#0d1823; }.boundary-card.convection { border-top-color:#55cde3; }.boundary-card label span { min-width:56px; }
+@media(max-width:1000px) { .assembly-layout { grid-template-columns:285px minmax(0,1fr); }.boundary-groups,.face-list { grid-template-columns:1fr; }.assembly-app .overview { grid-template-columns:1fr; }.assembly-app .metric strong { font-size:22px; }.assembly-app .metric { padding:12px; } }
+@media(max-width:760px) { .assembly-layout { grid-template-columns:1fr; }.assembly-app .controls { display:block; }.assembly-app .controls section { margin-bottom:20px; }.assembly-viewport { height:330px; }.assembly-app .overview { grid-template-columns:repeat(3,minmax(0,1fr)); }.workspace-tabs { padding:8px; }.assembly-app header { flex-wrap:wrap; } }

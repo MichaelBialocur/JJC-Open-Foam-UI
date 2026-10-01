@@ -1,0 +1,1461 @@
+{
+  "version": "0.6",
+  "openfoam": "Foundation 14",
+  "gmsh": "4.15.2",
+  "gradient_scheme": "leastSquares",
+  "created_utc": "2026-10-01",
+  "reference_url": "https://archive.nptel.ac.in/content/storage2/courses/112104118/lecture-26/26-3_hag_poiseuille.htm",
+  "studies": {
+    "pipe": [
+      {
+        "case": "pipe",
+        "mesh_size_mm": 2,
+        "job_id": "322dd492-11dc-4df3-9eb6-08d514230640",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "pipe 2 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Pipe",
+                "kind": "straight",
+                "length_mm": 50.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "velocity",
+              "value": 0.001,
+              "unit": "m/s"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 2.0,
+          "boundaries": [],
+          "boundary_geometry_key": "9378c4ec7635e979f17be9a3bf9c8e9efb40393a70bc84df85e2c1da4b769c02"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 79,
+          "fluid_cells": 4971,
+          "volumetric_flow_l_min": 0.0046352549156236204,
+          "mass_flow_kg_s": 7.711574335276286e-05,
+          "inlet_mesh_area_m2": 7.725424859373684e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.0009999999999998727,
+          "pressure_drop_pa": 0.02002342687480745,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 8.549696908899514e-09,
+          "minimum_pressure_pa": -0.00036065822063525543,
+          "maximum_speed_m_s": 0.0020018147801464793,
+          "convergence": {
+            "iteration": 79,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 79,
+              "Ux": 1.54026506024e-07,
+              "Uy": 9.14431593428e-07,
+              "Uz": 7.59585851276e-07,
+              "p": 6.81278882652e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": null
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "analytical_reference_within_5_percent": false
+          },
+          "reference": {
+            "applicable": true,
+            "kind": "analytical",
+            "title": "Hagen\u2013Poiseuille developed pressure gradient",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/112104118/lecture-26/26-3_hag_poiseuille.htm",
+            "reynolds": 9.803034351180147,
+            "computed_darcy_f": 7.577148574347088,
+            "analytical_darcy_f": 6.528590812526869,
+            "error_percent": 16.061012122375274,
+            "profile_rmse_percent_of_bulk": 3.3775931885523027,
+            "gradient_drift_percent": 3.192422229817576,
+            "note": "Fit over 60\u201385% of length. Applicability screens entrance length and <5% downstream gradient drift; it is not proof of development. The verification target is <5% friction error and velocity-profile RMSE. Analytical verification, not an experiment."
+          }
+        }
+      },
+      {
+        "case": "pipe",
+        "mesh_size_mm": 1,
+        "job_id": "59116bd6-c7a5-490b-aca8-5bcd2f384d1d",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "pipe 1 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Pipe",
+                "kind": "straight",
+                "length_mm": 50.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "velocity",
+              "value": 0.001,
+              "unit": "m/s"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 1.0,
+          "boundaries": [],
+          "boundary_geometry_key": "9378c4ec7635e979f17be9a3bf9c8e9efb40393a70bc84df85e2c1da4b769c02"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 139,
+          "fluid_cells": 17627,
+          "volumetric_flow_l_min": 0.004682167728386639,
+          "mass_flow_kg_s": 7.789622177193141e-05,
+          "inlet_mesh_area_m2": 7.803612880645131e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.0009999999999999061,
+          "pressure_drop_pa": 0.020443655757289177,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 4.7675441994120065e-09,
+          "minimum_pressure_pa": -0.0005053740161448402,
+          "maximum_speed_m_s": 0.0020107241140433795,
+          "convergence": {
+            "iteration": 139,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 139,
+              "Ux": 1.36249922911e-07,
+              "Uy": 8.93486546833e-07,
+              "Uz": 9.90052753306e-07,
+              "p": 5.93739227235e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": 0.00021517153486026266
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "analytical_reference_within_5_percent": false
+          },
+          "reference": {
+            "applicable": true,
+            "kind": "analytical",
+            "title": "Hagen\u2013Poiseuille developed pressure gradient",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/112104118/lecture-26/26-3_hag_poiseuille.htm",
+            "reynolds": 9.902249588183889,
+            "computed_darcy_f": 7.467161640791004,
+            "analytical_darcy_f": 6.46317782944692,
+            "error_percent": 15.533903566289453,
+            "profile_rmse_percent_of_bulk": 2.07846786334061,
+            "gradient_drift_percent": 1.0090088480248571,
+            "note": "Fit over 60\u201385% of length. Applicability screens entrance length and <5% downstream gradient drift; it is not proof of development. The verification target is <5% friction error and velocity-profile RMSE. Analytical verification, not an experiment."
+          }
+        }
+      },
+      {
+        "case": "pipe",
+        "mesh_size_mm": 0.65,
+        "job_id": "c356356f-9a27-490d-bb4f-6444db8ff6fd",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "pipe 0.65 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Pipe",
+                "kind": "straight",
+                "length_mm": 50.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "velocity",
+              "value": 0.001,
+              "unit": "m/s"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 0.65,
+          "boundaries": [],
+          "boundary_geometry_key": "9378c4ec7635e979f17be9a3bf9c8e9efb40393a70bc84df85e2c1da4b769c02"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 296,
+          "fluid_cells": 59532,
+          "volumetric_flow_l_min": 0.00469948569190638,
+          "mass_flow_kg_s": 7.818433702222314e-05,
+          "inlet_mesh_area_m2": 7.832476153175994e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.0010000000000001668,
+          "pressure_drop_pa": 0.020477750463969355,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 2.173265923121401e-09,
+          "minimum_pressure_pa": -0.0005485567076980531,
+          "maximum_speed_m_s": 0.002017283553676576,
+          "convergence": {
+            "iteration": 296,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 296,
+              "Ux": 7.28314553739e-08,
+              "Uy": 9.60327116596e-07,
+              "Uz": 9.83148198224e-07,
+              "p": 3.38251794952e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": 0.0003386619580864382
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "analytical_reference_within_5_percent": false
+          },
+          "reference": {
+            "applicable": true,
+            "kind": "analytical",
+            "title": "Hagen\u2013Poiseuille developed pressure gradient",
+            "url": "https://archive.nptel.ac.in/content/storage2/courses/112104118/lecture-26/26-3_hag_poiseuille.htm",
+            "reynolds": 9.938875101638239,
+            "computed_darcy_f": 7.2204718746613885,
+            "analytical_darcy_f": 6.439360525765213,
+            "error_percent": 12.130262714298844,
+            "profile_rmse_percent_of_bulk": 1.5241717414723457,
+            "gradient_drift_percent": 1.6683119541266453,
+            "note": "Fit over 60\u201385% of length. Applicability screens entrance length and <5% downstream gradient drift; it is not proof of development. The verification target is <5% friction error and velocity-profile RMSE. Analytical verification, not an experiment."
+          }
+        }
+      }
+    ],
+    "coldplate": [
+      {
+        "case": "coldplate",
+        "mesh_size_mm": 2,
+        "job_id": "988847ef-70c3-4448-a5f4-1f180d09de2d",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "coldplate 2 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Inlet pipe",
+                "kind": "straight",
+                "length_mm": 25.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "header1",
+                "name": "Inlet manifold",
+                "kind": "manifold",
+                "length_mm": 20.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "plate1",
+                "name": "Multi-port plate",
+                "kind": "multiport",
+                "length_mm": 50.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "header2",
+                "name": "Outlet manifold",
+                "kind": "manifold",
+                "length_mm": 20.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "pipe2",
+                "name": "Outlet pipe",
+                "kind": "straight",
+                "length_mm": 25.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "volumetric_flow",
+              "value": 0.1,
+              "unit": "L/min"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 2.0,
+          "boundaries": [
+            {
+              "id": "heat1",
+              "name": "Top and bottom, 10 W total",
+              "kind": "heat",
+              "faces": [
+                "f_plate1_1",
+                "f_plate1_2"
+              ],
+              "power_w": 10.0,
+              "h_w_m2_k": 100.0,
+              "ambient_c": 20.0
+            },
+            {
+              "id": "cool1",
+              "name": "Side convection",
+              "kind": "convection",
+              "faces": [
+                "f_plate1_0",
+                "f_plate1_3"
+              ],
+              "power_w": 10.0,
+              "h_w_m2_k": 500.0,
+              "ambient_c": 20.0
+            }
+          ],
+          "boundary_geometry_key": "ee260071b75f96ab06bd29e9aee80c98067140243ed6a4161a38e49dd36031e0"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 248,
+          "fluid_cells": 18955,
+          "volumetric_flow_l_min": 0.09999999999998402,
+          "mass_flow_kg_s": 0.0016636785841664008,
+          "inlet_mesh_area_m2": 7.725424859373685e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.02157378651666182,
+          "pressure_drop_pa": 2.5695479666964727,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 4.488538548817345e-08,
+          "minimum_pressure_pa": -0.06825687896998883,
+          "maximum_speed_m_s": 0.03957094755821198,
+          "convergence": {
+            "iteration": 248,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 248,
+              "Ux": 9.79759847958e-08,
+              "Uy": 4.67854222828e-07,
+              "Uz": 9.81866652712e-07,
+              "p": 6.81525954954e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": 0.00939969721804006
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "thermal_converged": true,
+            "energy_balance_below_0_5_percent": true,
+            "boundary_power_agreement_below_0_5_percent": true,
+            "interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "applicable": false,
+            "kind": "none",
+            "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+          },
+          "thermal": {
+            "solution_iteration": 500,
+            "solid_cells": 21918,
+            "outlet_temperature_c": 21.355119373106618,
+            "maximum_solid_temperature_c": 22.243365625000024,
+            "minimum_solid_temperature_c": 20.07702431200005,
+            "advective_heat_gain_w": 9.432872020616223,
+            "inlet_conductive_loss_w": 1.9082344805214372e-06,
+            "kinetic_energy_transport_w": 2.8194860237782584e-07,
+            "external_heat_leaving_w": -9.432874227330084,
+            "fluid_interface_heat_leaving_w": -9.4328741956558,
+            "energy_balance_error_percent": 1.564358849507331e-07,
+            "maximum_interface_temperature_jump_k": 0.0,
+            "maximum_interface_flux_mismatch_percent": 0.0001694818197065986,
+            "faces": [
+              {
+                "face": "f_plate1_1",
+                "group_id": "heat1",
+                "kind": "heat",
+                "mesh_area_m2": 0.0015,
+                "power_w": 5.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.9397506249407,
+                "computed_heat_leaving_w": -5.000000012797465,
+                "specified_boundary_heat_leaving_w": -5.0
+              },
+              {
+                "face": "f_plate1_2",
+                "group_id": "heat1",
+                "kind": "heat",
+                "mesh_area_m2": 0.0015,
+                "power_w": 5.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.940677614972458,
+                "computed_heat_leaving_w": -4.999999997150877,
+                "specified_boundary_heat_leaving_w": -5.0
+              },
+              {
+                "face": "f_plate1_0",
+                "group_id": "cool1",
+                "kind": "convection",
+                "mesh_area_m2": 0.00030000000000000003,
+                "power_w": null,
+                "h_w_m2_k": 500.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.889394603891105,
+                "computed_heat_leaving_w": 0.2834091795861642,
+                "specified_boundary_heat_leaving_w": 0.28340919058367503
+              },
+              {
+                "face": "f_plate1_3",
+                "group_id": "cool1",
+                "kind": "convection",
+                "mesh_area_m2": 0.00030000000000000003,
+                "power_w": null,
+                "h_w_m2_k": 500.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.891444091279652,
+                "computed_heat_leaving_w": 0.28371660303209495,
+                "specified_boundary_heat_leaving_w": 0.28371661369194806
+              }
+            ],
+            "convergence": {
+              "iteration": 500,
+              "solver_converged": false,
+              "residuals": {
+                "iteration": 500,
+                "h": 9.51205459268e-12,
+                "e": 9.96489263591e-12
+              },
+              "converged": true,
+              "relative_saved_field_change": 0.0
+            }
+          }
+        }
+      },
+      {
+        "case": "coldplate",
+        "mesh_size_mm": 1.4,
+        "job_id": "f14cea56-4e98-4b31-be29-d98d335a1b85",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "coldplate 1.4 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Inlet pipe",
+                "kind": "straight",
+                "length_mm": 25.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "header1",
+                "name": "Inlet manifold",
+                "kind": "manifold",
+                "length_mm": 20.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "plate1",
+                "name": "Multi-port plate",
+                "kind": "multiport",
+                "length_mm": 50.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "header2",
+                "name": "Outlet manifold",
+                "kind": "manifold",
+                "length_mm": 20.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "pipe2",
+                "name": "Outlet pipe",
+                "kind": "straight",
+                "length_mm": 25.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "volumetric_flow",
+              "value": 0.1,
+              "unit": "L/min"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 1.4,
+          "boundaries": [
+            {
+              "id": "heat1",
+              "name": "Top and bottom, 10 W total",
+              "kind": "heat",
+              "faces": [
+                "f_plate1_1",
+                "f_plate1_2"
+              ],
+              "power_w": 10.0,
+              "h_w_m2_k": 100.0,
+              "ambient_c": 20.0
+            },
+            {
+              "id": "cool1",
+              "name": "Side convection",
+              "kind": "convection",
+              "faces": [
+                "f_plate1_0",
+                "f_plate1_3"
+              ],
+              "power_w": 10.0,
+              "h_w_m2_k": 500.0,
+              "ambient_c": 20.0
+            }
+          ],
+          "boundary_geometry_key": "ee260071b75f96ab06bd29e9aee80c98067140243ed6a4161a38e49dd36031e0"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 203,
+          "fluid_cells": 32179,
+          "volumetric_flow_l_min": 0.09999999999998219,
+          "mass_flow_kg_s": 0.0016636785841663703,
+          "inlet_mesh_area_m2": 7.756657170764449e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.021486919300084437,
+          "pressure_drop_pa": 2.687049693265822,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 2.463902800049425e-08,
+          "minimum_pressure_pa": -0.039336492853405625,
+          "maximum_speed_m_s": 0.04035709788589647,
+          "convergence": {
+            "iteration": 203,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 203,
+              "Ux": 1.65377544255e-07,
+              "Uy": 3.10666257574e-07,
+              "Uz": 7.08511448401e-07,
+              "p": 9.62030430701e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": 0.0003369876823090168
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "thermal_converged": true,
+            "energy_balance_below_0_5_percent": true,
+            "boundary_power_agreement_below_0_5_percent": true,
+            "interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "applicable": false,
+            "kind": "none",
+            "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+          },
+          "thermal": {
+            "solution_iteration": 500,
+            "solid_cells": 36575,
+            "outlet_temperature_c": 21.358094935567124,
+            "maximum_solid_temperature_c": 22.189619953000033,
+            "minimum_solid_temperature_c": 20.06177709900004,
+            "advective_heat_gain_w": 9.453584658810792,
+            "inlet_conductive_loss_w": 5.8326497009465e-06,
+            "kinetic_energy_transport_w": 2.9106660051038396e-07,
+            "external_heat_leaving_w": -9.453590752016941,
+            "fluid_interface_heat_leaving_w": -9.45359077410094,
+            "energy_balance_error_percent": 2.8929420742864884e-07,
+            "maximum_interface_temperature_jump_k": 1.0000462680181954e-09,
+            "maximum_interface_flux_mismatch_percent": 0.00017739178649529486,
+            "faces": [
+              {
+                "face": "f_plate1_1",
+                "group_id": "heat1",
+                "kind": "heat",
+                "mesh_area_m2": 0.0015,
+                "power_w": 5.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.860575419747477,
+                "computed_heat_leaving_w": -4.999999971259953,
+                "specified_boundary_heat_leaving_w": -5.0
+              },
+              {
+                "face": "f_plate1_2",
+                "group_id": "heat1",
+                "kind": "heat",
+                "mesh_area_m2": 0.0015,
+                "power_w": 5.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.861485821457563,
+                "computed_heat_leaving_w": -4.999999994876682,
+                "specified_boundary_heat_leaving_w": -5.0
+              },
+              {
+                "face": "f_plate1_0",
+                "group_id": "cool1",
+                "kind": "convection",
+                "mesh_area_m2": 0.00030000000000000003,
+                "power_w": null,
+                "h_w_m2_k": 500.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.825634106395455,
+                "computed_heat_leaving_w": 0.27384511170091674,
+                "specified_boundary_heat_leaving_w": 0.27384511595931066
+              },
+              {
+                "face": "f_plate1_3",
+                "group_id": "cool1",
+                "kind": "convection",
+                "mesh_area_m2": 0.00030000000000000003,
+                "power_w": null,
+                "h_w_m2_k": 500.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.817094065668414,
+                "computed_heat_leaving_w": 0.2725641024187774,
+                "specified_boundary_heat_leaving_w": 0.27256410985026086
+              }
+            ],
+            "convergence": {
+              "iteration": 500,
+              "solver_converged": false,
+              "residuals": {
+                "iteration": 500,
+                "h": 8.20224489673e-12,
+                "e": 1.39541988308e-11
+              },
+              "converged": true,
+              "relative_saved_field_change": 4.567213897772607e-10
+            }
+          }
+        }
+      },
+      {
+        "case": "coldplate",
+        "mesh_size_mm": 1,
+        "job_id": "ea101d14-9777-401e-8ac3-b4583713976b",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "coldplate 1 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Inlet pipe",
+                "kind": "straight",
+                "length_mm": 25.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "header1",
+                "name": "Inlet manifold",
+                "kind": "manifold",
+                "length_mm": 20.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "plate1",
+                "name": "Multi-port plate",
+                "kind": "multiport",
+                "length_mm": 50.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "header2",
+                "name": "Outlet manifold",
+                "kind": "manifold",
+                "length_mm": 20.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "rectangle",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "pipe2",
+                "name": "Outlet pipe",
+                "kind": "straight",
+                "length_mm": 25.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "volumetric_flow",
+              "value": 0.1,
+              "unit": "L/min"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 1.0,
+          "boundaries": [
+            {
+              "id": "heat1",
+              "name": "Top and bottom, 10 W total",
+              "kind": "heat",
+              "faces": [
+                "f_plate1_1",
+                "f_plate1_2"
+              ],
+              "power_w": 10.0,
+              "h_w_m2_k": 100.0,
+              "ambient_c": 20.0
+            },
+            {
+              "id": "cool1",
+              "name": "Side convection",
+              "kind": "convection",
+              "faces": [
+                "f_plate1_0",
+                "f_plate1_3"
+              ],
+              "power_w": 10.0,
+              "h_w_m2_k": 500.0,
+              "ambient_c": 20.0
+            }
+          ],
+          "boundary_geometry_key": "ee260071b75f96ab06bd29e9aee80c98067140243ed6a4161a38e49dd36031e0"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 237,
+          "fluid_cells": 67895,
+          "volumetric_flow_l_min": 0.1000000000000032,
+          "mass_flow_kg_s": 0.00166367858416672,
+          "inlet_mesh_area_m2": 7.803612880645131e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.0213576287311799,
+          "pressure_drop_pa": 2.826020796502388,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 6.194982982816204e-09,
+          "minimum_pressure_pa": -0.022006319079878878,
+          "maximum_speed_m_s": 0.03885150969093098,
+          "convergence": {
+            "iteration": 237,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 237,
+              "Ux": 2.66927810778e-07,
+              "Uy": 2.54776207016e-07,
+              "Uz": 3.14899691738e-07,
+              "p": 9.73881188679e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": 0.0003859657190306449
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true,
+            "thermal_converged": true,
+            "energy_balance_below_0_5_percent": true,
+            "boundary_power_agreement_below_0_5_percent": true,
+            "interface_flux_mismatch_below_0_5_percent": true,
+            "interface_temperature_continuity": true
+          },
+          "reference": {
+            "applicable": false,
+            "kind": "none",
+            "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+          },
+          "thermal": {
+            "solution_iteration": 500,
+            "solid_cells": 63525,
+            "outlet_temperature_c": 21.360437714151942,
+            "maximum_solid_temperature_c": 22.151491496999995,
+            "minimum_solid_temperature_c": 20.04606919600002,
+            "advective_heat_gain_w": 9.469892541814685,
+            "inlet_conductive_loss_w": 5.8349202542174594e-06,
+            "kinetic_energy_transport_w": 3.032362450667577e-07,
+            "external_heat_leaving_w": -9.46989868365317,
+            "fluid_interface_heat_leaving_w": -9.469898678081785,
+            "energy_balance_error_percent": 3.496629476887783e-08,
+            "maximum_interface_temperature_jump_k": 1.0000462680181954e-09,
+            "maximum_interface_flux_mismatch_percent": 0.00012495919406852143,
+            "faces": [
+              {
+                "face": "f_plate1_1",
+                "group_id": "heat1",
+                "kind": "heat",
+                "mesh_area_m2": 0.0015,
+                "power_w": 5.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.804380188627647,
+                "computed_heat_leaving_w": -5.000000005606085,
+                "specified_boundary_heat_leaving_w": -5.0
+              },
+              {
+                "face": "f_plate1_2",
+                "group_id": "heat1",
+                "kind": "heat",
+                "mesh_area_m2": 0.0015,
+                "power_w": 5.0,
+                "h_w_m2_k": 100.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.804309450451797,
+                "computed_heat_leaving_w": -5.000000002538469,
+                "specified_boundary_heat_leaving_w": -5.0
+              },
+              {
+                "face": "f_plate1_0",
+                "group_id": "cool1",
+                "kind": "convection",
+                "mesh_area_m2": 0.00030000000000000003,
+                "power_w": null,
+                "h_w_m2_k": 500.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.763404735380618,
+                "computed_heat_leaving_w": 0.2645107130063885,
+                "specified_boundary_heat_leaving_w": 0.26451071030709006
+              },
+              {
+                "face": "f_plate1_3",
+                "group_id": "cool1",
+                "kind": "convection",
+                "mesh_area_m2": 0.00030000000000000003,
+                "power_w": null,
+                "h_w_m2_k": 500.0,
+                "ambient_c": 20.0,
+                "mean_temperature_c": 21.770604076958193,
+                "computed_heat_leaving_w": 0.2655906114849957,
+                "specified_boundary_heat_leaving_w": 0.265590611543729
+              }
+            ],
+            "convergence": {
+              "iteration": 500,
+              "solver_converged": false,
+              "residuals": {
+                "iteration": 500,
+                "h": 9.86002692773e-12,
+                "e": 1.81677504174e-11
+              },
+              "converged": true,
+              "relative_saved_field_change": 4.6481534759149353e-10
+            }
+          }
+        }
+      }
+    ],
+    "elbow": [
+      {
+        "case": "elbow",
+        "mesh_size_mm": 2,
+        "job_id": "c9f2262a-3006-4395-a50f-5ffbbeb121ad",
+        "status": "completed",
+        "error": null,
+        "inputs": {
+          "geometry_type": "assembly",
+          "name": "elbow 2 mm",
+          "geometry": {
+            "parts": [
+              {
+                "id": "pipe1",
+                "name": "Inlet pipe",
+                "kind": "straight",
+                "length_mm": 40.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "bend1",
+                "name": "90\u00b0 bend",
+                "kind": "bend",
+                "length_mm": 40.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              },
+              {
+                "id": "pipe2",
+                "name": "Outlet pipe",
+                "kind": "straight",
+                "length_mm": 40.0,
+                "radius_mm": 20.0,
+                "angle_deg": 90.0,
+                "roll_deg": 0.0,
+                "start": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "end": {
+                  "shape": "round",
+                  "diameter_mm": 10.0,
+                  "width_mm": 30.0,
+                  "height_mm": 6.0,
+                  "wall_mm": 1.0
+                },
+                "channels": 5,
+                "web_mm": 1.0
+              }
+            ],
+            "origin_mm": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "yaw_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "physics": {
+            "fluid": "water",
+            "inlet": {
+              "kind": "volumetric_flow",
+              "value": 0.1,
+              "unit": "L/min"
+            },
+            "max_iterations": 2500,
+            "thermal_iterations": 500
+          },
+          "mesh_size_mm": 2.0,
+          "boundaries": [],
+          "boundary_geometry_key": "f76f789b808bdcf8ad7faf7006d82a781e12d1421bac321bef428709dfec63db"
+        },
+        "results": {
+          "geometry_type": "assembly",
+          "solution_iteration": 163,
+          "fluid_cells": 11032,
+          "volumetric_flow_l_min": 0.09999999999998399,
+          "mass_flow_kg_s": 0.0016636785841664004,
+          "inlet_mesh_area_m2": 7.725424859373684e-05,
+          "inlet_cad_area_m2": 7.853981633974483e-05,
+          "inlet_mean_velocity_m_s": 0.021573786516661815,
+          "pressure_drop_pa": 1.509580112319032,
+          "pressure_measurement": "Area-weighted inlet zero-gradient patch pressure minus the 0 Pa outlet patch.",
+          "mass_balance_error_percent": 1.8699590622698336e-08,
+          "minimum_pressure_pa": -0.03650743419800357,
+          "maximum_speed_m_s": 0.0414089814564132,
+          "convergence": {
+            "iteration": 163,
+            "solver_converged": true,
+            "residuals": {
+              "iteration": 163,
+              "Ux": 7.09417461847e-08,
+              "Uy": 2.04471851376e-07,
+              "Uz": 5.27378728796e-07,
+              "p": 9.25988270066e-07
+            },
+            "converged": true,
+            "relative_saved_field_change": 0.01462154372198584
+          },
+          "checks": {
+            "flow_converged": true,
+            "mass_balance_below_0_5_percent": true
+          },
+          "reference": {
+            "applicable": false,
+            "kind": "none",
+            "note": "No experimental validation is claimed for this assembly. Check mesh sensitivity and suitable geometry-specific research data."
+          }
+        }
+      }
+    ]
+  },
+  "retained_initial_attempts": [
+    {
+      "case": "pipe",
+      "mesh_size_mm": 2,
+      "job_id": "60f5cae5-5ab0-4af5-9101-deae25081162",
+      "gradient_scheme": "cellLimited Gauss linear 1",
+      "status": "completed",
+      "friction_error_percent": 37.50517007755298,
+      "checks": {
+        "flow_converged": true,
+        "mass_balance_below_0_5_percent": true
+      },
+      "note": "Rejected initial discretization. Pipe error failed to decrease on refinement; cold-plate residuals entered a two-iteration cycle. Full native logs retained locally."
+    },
+    {
+      "case": "pipe",
+      "mesh_size_mm": 1,
+      "job_id": "3f66549d-1e81-4cd9-a6dd-18d5243ad3ab",
+      "gradient_scheme": "cellLimited Gauss linear 1",
+      "status": "completed",
+      "friction_error_percent": 40.74496397295715,
+      "checks": {
+        "flow_converged": true,
+        "mass_balance_below_0_5_percent": true
+      },
+      "note": "Rejected initial discretization. Pipe error failed to decrease on refinement; cold-plate residuals entered a two-iteration cycle. Full native logs retained locally."
+    },
+    {
+      "case": "pipe",
+      "mesh_size_mm": 0.65,
+      "job_id": "102994ad-e877-46c7-b96b-75651f643330",
+      "gradient_scheme": "cellLimited Gauss linear 1",
+      "status": "completed",
+      "friction_error_percent": 49.15223418557277,
+      "checks": {
+        "flow_converged": true,
+        "mass_balance_below_0_5_percent": true
+      },
+      "note": "Rejected initial discretization. Pipe error failed to decrease on refinement; cold-plate residuals entered a two-iteration cycle. Full native logs retained locally."
+    },
+    {
+      "case": "coldplate",
+      "mesh_size_mm": 2,
+      "job_id": "89c55f0c-7dec-44b6-b50a-cdd63ecb0018",
+      "gradient_scheme": "cellLimited Gauss linear 1",
+      "status": "not_converged",
+      "friction_error_percent": null,
+      "checks": {
+        "flow_converged": false,
+        "mass_balance_below_0_5_percent": true,
+        "thermal_converged": false,
+        "energy_balance_below_0_5_percent": true,
+        "interface_flux_mismatch_below_0_5_percent": true,
+        "interface_temperature_continuity": true
+      },
+      "note": "Rejected initial discretization. Pipe error failed to decrease on refinement; cold-plate residuals entered a two-iteration cycle. Full native logs retained locally."
+    },
+    {
+      "case": "initial Re98, L/D5 pipe",
+      "job_id": "36e5517f-2148-4af8-b033-55ec6b1cdac2",
+      "friction_error_percent": 70.1388041925615,
+      "note": "Unqualified: uniform-inlet development overlaps fitting region; also used the subsequently rejected limited-gradient scheme."
+    }
+  ],
+  "notes": [
+    "Analytical verification and conservation only. No experimental cold-plate or bend validation.",
+    "All final CFD fields are native solutions; reference curves never replace computed values.",
+    "Solid wall and external convection use Foundation coupledTemperature/externalTemperature.",
+    "Initial coupled-case postprocessing encountered NumPy boolean JSON serialization and default-number hash round-trip defects; both fixed. Existing solver fields were recovered without altering them. Canonical hash round trips and native topology are now tested.",
+    "Three-mesh cold-plate pressure drop is not mesh independent. The pipe pressure gradient remains outside the 5% screening target."
+  ]
+}

@@ -17,14 +17,14 @@ export function boundaryOf(form) {
 
 export function inletVelocity(form, catalog) {
   const inlet=boundaryOf(form),factor=catalog.inlet_units[inlet.kind].units.find(u=>u.id===inlet.unit)?.factor_to_si
-  const area=Math.PI*(Number(form.inner_diameter_mm)/1000)**2/4,density=Number(form.density_kg_m3)
+  const area=form.inlet_area_m2??Math.PI*(Number(form.inner_diameter_mm)/1000)**2/4,density=Number(form.density_kg_m3)
   if(!(Number(inlet.value)>0&&area>0&&density>0&&factor>0))return null
   const si=Number(inlet.value)*factor
   return inlet.kind==='velocity'?si:inlet.kind==='volumetric_flow'?si/area:si/(density*area)
 }
 
 export function changeBoundary(form, catalog, kind, unit=catalog.inlet_units[kind].default_unit) {
-  const velocity=inletVelocity(form,catalog),area=Math.PI*(Number(form.inner_diameter_mm)/1000)**2/4
+  const velocity=inletVelocity(form,catalog),area=form.inlet_area_m2??Math.PI*(Number(form.inner_diameter_mm)/1000)**2/4
   const factor=catalog.inlet_units[kind].units.find(u=>u.id===unit)?.factor_to_si
   const si=kind==='velocity'?velocity:kind==='volumetric_flow'?velocity*area:velocity*area*Number(form.density_kg_m3)
   const value=velocity===null||!Number.isFinite(si/factor)?'':Number((si/factor).toPrecision(12))

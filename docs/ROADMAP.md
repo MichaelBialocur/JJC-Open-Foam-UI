@@ -6,7 +6,7 @@ A straight-pipe flow workflow: typed inputs → axisymmetric mesh → mesh check
 
 ## Delivered in v0.3
 
-Round plot ticks and explicit zero baselines; interactive 3D pipe geometry; computed field slices, cell probes, temperature/speed/pressure colour maps and VTK export. A one-way fluid energy solve adds uniform inner-wall heating with explicit constant properties. Three laminar thermal meshes were checked against Nu = 48/11 and energy conservation; see the measured thermal benchmark report. The 3D view revolves the axisymmetric solution. Solid conduction followed in v0.4; full 3D flow remains future work.
+Round plot ticks and explicit zero baselines; interactive 3D pipe geometry; computed field slices, cell probes, temperature/speed/pressure colour maps and VTK export. A one-way fluid energy solve adds uniform inner-wall heating with explicit constant properties. Three laminar thermal meshes were checked against Nu = 48/11 and energy conservation; see the measured thermal benchmark report. The 3D view revolves the axisymmetric solution. Solid conduction followed in v0.4; full 3D flow followed in v0.6.
 
 ## Delivered in v0.4
 
@@ -16,19 +16,23 @@ Native coupled fluid/solid temperature solves with radial and axial wall conduct
 
 Velocity, volumetric-flow and mass-flow inlet choices with adjacent unit selectors, including L/min, kg/h and actual CFM. Compact fluid and wall-material selectors open separate property editors. Sourced water, air and glycol presets use constant 20 °C properties; aluminium and copper remain editable. Unit-equivalence tests preserve the existing benchmark solver inputs; the additional glycol mass-flow mesh study is documented in [INPUTS_AND_MATERIALS.md](../INPUTS_AND_MATERIALS.md).
 
-## Next: stronger reference evidence and thermal boundary options
+## Delivered in v0.6
+
+A connected pipe/bend/taper/manifold/multi-port builder, start/end sections, wall/web thickness, native CAD face selection, multiple heating and convection groups, conforming 3D fluid/solid tetrahedral meshes, steady OpenFOAM flow and coupled conduction, actual cell slices/probes, design persistence and case export. See [GEOMETRY_BUILDER.md](GEOMETRY_BUILDER.md) and [ASSEMBLY_BENCHMARKS.md](ASSEMBLY_BENCHMARKS.md).
+
+## Next: improve 3D accuracy and add matched research data
 
 First strengthen the flow baseline: the initial turbulent study still changes Darcy f by 3.74% from medium to fine. Extend mesh/angular sensitivity and compare corrected experimental data before claiming mesh independence or general model accuracy.
 
-Add selectable heated surfaces, external convection, contact resistance and temperature-dependent properties where needed. Compare thermal predictions with a traceable heated-pipe experiment, including boundary conditions and measurement uncertainty; current analytical agreement is not experimental validation. Review field visualization while this is developed.
+Selectable heated surfaces and external convection shipped in v0.6. Improve tetrahedral pressure-gradient accuracy and wall-layer resolution next, then add contact resistance and temperature-dependent properties where needed. Compare thermal predictions with a traceable heated-pipe experiment, including boundary conditions and measurement uncertainty; current analytical agreement is not experimental validation. Review field visualization while this is developed.
 
-## Geometry builder
+## Extend the geometry builder
 
-Build a connected **pipe → manifold → multiport tube (plate of channels)** model. Represent parts, ports, materials and named boundary regions explicitly. Support channel count/dimensions, branches and junctions, then verify total conservation, pressure loss and flow distribution.
+The inline pipe → manifold → multi-port tube → manifold → pipe workflow is available. Next extend to general branch junctions and arbitrary header-port placement, add channel-resolved flow-distribution reporting and boundary-layer meshing, and validate pressure/temperature against matched cold-plate measurements.
 
 ## CAD and complex geometry
 
-Import CAD using a defined STEP/IGES or triangulated-surface pipeline; check units, watertightness and fluid/solid regions. Let the user select/name boundaries, define physical boundary conditions, generate a suitable mesh with boundary layers, inspect quality and run the solver. Full 3D geometry and surface-based post-processing replace the axisymmetric/section-specific assumptions.
+Import CAD using a defined STEP/IGES or triangulated-surface pipeline; check units, watertightness and fluid/solid regions. Let the user select/name boundaries, define physical boundary conditions, generate a suitable mesh with boundary layers, inspect quality and run the solver. Reuse the builder’s full 3D meshing, thermal regions and surface/cell post-processing where suitable.
 
 ## Visualization and model evidence
 

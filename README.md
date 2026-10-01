@@ -1,6 +1,8 @@
-# Pipe CFD · v0.5
+# Pipe CFD · v0.6
 
-A local React/FastAPI interface to **Foundation OpenFOAM 14**. Generate a straight circular pipe, inspect its 3D geometry, mesh it, and solve steady flow and optional coupled fluid–solid heating. Inspect actual pressure, speed, fluid temperature and solid temperature fields, and compare results with traceable analytical or experimental references.
+A local React/FastAPI interface to **Foundation OpenFOAM 14**. Build connected piping, bends, manifolds and multi-port cold plates; select exterior faces for heating or convection; mesh and solve full 3D flow with coupled solid-wall conduction. The separate straight-pipe workspace retains its axisymmetric reference benchmarks. Both viewers use actual computed fields.
+
+**New:** [Geometry builder guide](docs/GEOMETRY_BUILDER.md) · [3D benchmark results and remaining errors](docs/ASSEMBLY_BENCHMARKS.md). The new assembly solver is an early workflow, not an experimentally validated cold-plate predictor.
 
 ## Start on your Windows PC
 
@@ -25,7 +27,11 @@ Requirements: Ubuntu/WSL2, Python 3.12, Node 22.12+ (your Node 24 is suitable), 
 
 The server binds to localhost. It is a local engineering tool, not an authenticated public simulation service. Run one backend worker; a lock prevents two processes owning the same run directory. Do not use Uvicorn reload while jobs are running.
 
-## First run
+## First builder run
+
+Choose **Geometry builder**, use the cold-plate template, and click **Build geometry**. Select exterior faces and assign heating in watts or convection with a coefficient and ambient temperature. Set fluid, inlet flow and mesh size, then **Mesh & run simulation**. See the [step-by-step builder guide](docs/GEOMETRY_BUILDER.md). The first setup may ask for your Ubuntu password to install Gmsh native libraries.
+
+## First straight-pipe benchmark run
 
 1. Click **Solid wall · conduction check**, choose **Coarse**, then **Run simulation**. The preset adds 10 W at the outside of a 2 mm aluminium wall around water entering at 20 °C, Re 100.
 2. Follow meshing, flow and temperature stages. Inspect heat balance, outlet temperature, maximum solid temperature, interface continuity and the cylindrical wall-conduction comparison.
@@ -69,7 +75,7 @@ See [property provenance, conversion checks and the glycol mesh study](INPUTS_AN
 - Positive heat input enables a thermal solve on computed frozen velocity/flux/turbulence fields. In **Coupled fluid + solid wall** mode, native `foamMultiRun` fluid/solid modules solve radial and axial wall conduction with perfect thermal contact. Uniform power enters the **outer** wall; solid ends are insulated. Inlet fluid temperature is fixed and the outlet has zero temperature gradient. Wall thickness and conductivity affect the computed temperatures.
 - **Fluid only** mode retains the prescribed inner-wall flux and `scalarTransport` benchmark. The heat capacity, fluid conductivity and turbulent Prandtl number are explicit inputs in both modes. 0 W runs flow only. The UI defaults to coupled mode; legacy API inputs with no mode retain fluid-only behavior.
 - **Temperature feedback on flow, buoyancy, radiation, temperature-dependent properties and phase change are not solved.** Coupled mode includes the native fluid equation's kinetic-energy transport in its energy balance; it does not provide a viscous-heating model or a compressible flow calculation.
-- No compressibility, cavitation, roughness, multiphase flow, gravity, bends, manifolds, or CAD meshing yet. The user must check that constant-property incompressible assumptions fit the selected fluid and conditions.
+- No compressibility, cavitation, roughness, multiphase flow or gravity. Bends and inline manifolds are available in the separate geometry-builder workspace; CAD import remains future work. The user must check that constant-property incompressible assumptions fit the selected fluid and conditions.
 - Preview values use analytical geometry relations. Simulation results come from the written OpenFOAM fields.
 
 ## How results are computed
@@ -114,4 +120,4 @@ The final command runs all four presets on all three meshes and saves `validatio
 | `backend/app/references.py` | Reference data and provenance |
 | `frontend/src` | Inputs, run monitoring, comparison plots and exports |
 
-Future geometry generators can use the execution queue. The current section-based post-processor is pipe-specific; CAD and branching geometries will need boundary/surface-based result extraction.
+The assembly generator shares the execution queue and uses separate arbitrary-mesh, boundary-face and cell-slice post-processing. The older section-based post-processor remains specific to the straight-pipe benchmark. CAD import and general branch geometry can build on the assembly path.

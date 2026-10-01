@@ -136,6 +136,10 @@ class JobManager:
             if self.cancel_events[job_id].is_set():
                 raise Cancelled()
             env = foam_environment()
+            if spec.geometry_type == 'assembly':
+                from .assembly_solver import run_assembly
+                run_assembly(self,job_id,spec,env)
+                return
             self.update(job_id, status="generating", openfoam_version=env["WM_PROJECT_VERSION"])
             generate_pipe(case, spec)
             self.update(job_id, status="meshing")
@@ -191,7 +195,7 @@ class JobManager:
         if details:
             case = self.root / job_id
             logs = []
-            for name in ("blockMesh", "checkMesh", "centres", "volumes", "foamRun", "solidMesh", "solidCheck", "solidCentres", "thermal"):
+            for name in ("cadMesh", "gmshToFoam", "splitRegions", "fluidCheck", "blockMesh", "checkMesh", "centres", "volumes", "foamRun", "solidMesh", "solidCheck", "solidCentres", "thermal"):
                 file = case / f"log.{name}"
                 if file.exists():
                     with file.open("rb") as stream:

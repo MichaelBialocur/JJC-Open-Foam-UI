@@ -14,6 +14,7 @@ from .references import reference_for
 from .runner import ACTIVE, JobManager, health as foam_health
 from .fields import fields_json, meridional_vtk
 from .properties import CATALOG
+from .assembly_api import router as assembly_router
 
 
 @asynccontextmanager
@@ -23,7 +24,8 @@ async def lifespan(app):
     app.state.jobs.close()
 
 
-app = FastAPI(title="Pipe CFD", version="0.5.0", lifespan=lifespan)
+app = FastAPI(title="Pipe CFD", version="0.6.0", lifespan=lifespan)
+app.include_router(assembly_router)
 
 
 @app.get("/")
@@ -83,7 +85,7 @@ def mesh_study(pipe: PipeDefinition):
 
 @app.get("/api/jobs")
 def jobs():
-    return app.state.jobs.recent()
+    return [j for j in app.state.jobs.recent() if j['inputs'].get('geometry_type')!='assembly']
 
 
 def get_job(job_id):
