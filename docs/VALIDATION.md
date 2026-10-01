@@ -82,3 +82,9 @@ The wall-flux postprocessor uses two independent one-sided conductive gradients 
 Material presets: aluminium EN AW-6060 uses **200 W/(m K)**, the lower end of [thyssenkrupp's 200–220 W/(m K) room-temperature guidance](https://www.thyssenkrupp-materials.co.uk/aluminium-6060.html); copper C11000 uses **391.1 W/(m K) at 20 °C**, from [Aviva Metals' material data](https://www.avivametals.com/collections/copper-alloys/beryllium-copper/c11000-cda-110-cu-etp-electrolytic-tough-pitch-etp-copper). These are explicit constant-property presets, not universal values for all grades or temperatures. Users can override conductivity. Solid density/heat capacity are representative constants required by the native thermo model; they do not affect this steady equation. Transient storage is not implemented.
 
 Measured results, the initially unconverged fine mesh, and remaining limitations are retained in [CONJUGATE_BENCHMARKS.md](CONJUGATE_BENCHMARKS.md).
+
+## Input units and material selection: v0.5
+
+The inlet/material update does not change the numerical equations or mesh. Equivalent velocity, volume-flow and mass-flow inputs generate byte-identical hydraulic solver dictionaries on all three meshes for both existing flow benchmarks (the provenance manifest records the different original input). Legacy defaults and benchmark properties are preserved. Explicit overrides take precedence over preset values, while a structured inlet takes precedence over an old cached velocity.
+
+[INPUTS_AND_MATERIALS.md](../INPUTS_AND_MATERIALS.md) records unit definitions, CoolProp/material provenance, constant-property assumptions and an additional three-mesh analytical check using 6 kg/h of the new 30%-by-mass ethylene-glycol preset. This verifies input conversion and numerical integration; it is not a glycol experiment or independent validation of the property correlations. Existing turbulent and thermal evidence and its limitations remain applicable.

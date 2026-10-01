@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import Chart from './Chart'
 import Viewport from './Viewport'
 import FieldViewer from './FieldViewer'
+import PropertyEditor from './PropertyEditor'
+import InletControls from './InletControls'
+import { fluidProperties, solidProperties, chooseFluid, chooseMaterial, isEdited, inputsDiffer } from './setupInputs'
 import './App.css'
 
 const defaults = { geometry_type: 'pipe', length_mm: 500, inner_diameter_mm: 10, wall_thickness_mm: 2,
@@ -9,7 +12,8 @@ const defaults = { geometry_type: 'pipe', length_mm: 500, inner_diameter_mm: 10,
   density_kg_m3: 998, dynamic_viscosity_pa_s: 0.001002, flow_model: 'auto', mesh_level: 'medium',
   max_iterations: 2500, residual_tolerance: 0.000001, turbulence_intensity: 0.05, reference: 'auto',
   specific_heat_j_kg_k: 4182, thermal_conductivity_w_m_k: .6, turbulent_prandtl: .85, thermal_iterations: 2000,
-  thermal_mode:'conjugate', solid_conductivity_w_m_k:null }
+  thermal_mode:'conjugate', solid_conductivity_w_m_k:null, solid_density_kg_m3:null, solid_specific_heat_j_kg_k:null,
+  fluid:'water', inlet:{kind:'velocity',value:1,unit:'m/s'} }
 const activeStates = ['queued', 'generating', 'meshing', 'checking', 'solving', 'heating', 'processing']
 const fmt = (x, digits = 3) => x == null || !Number.isFinite(x) ? '—' : Number(x.toPrecision(digits)).toLocaleString('en', { maximumSignificantDigits: digits })
 const statusText = s => ({ not_converged: 'Iteration limit reached', completed: 'Convergence checks passed', not_qualified: 'Checks need attention', within_project_target: 'Within screening target', outside_project_target: 'Outside screening target' }[s] || s?.replaceAll('_', ' '))
@@ -25,13 +29,14 @@ function Metric({ label, value, unit, detail }) {
 function App() {
   const [form, setForm] = useState(defaults), [preview, setPreview] = useState(null)
   const [health, setHealth] = useState(null), [presets, setPresets] = useState({})
+  const [catalog,setCatalog]=useState(null),[editor,setEditor]=useState(null)
   const [jobs, setJobs] = useState([]), [selected, setSelected] = useState(null), [job, setJob] = useState(null)
   const [error, setError] = useState(''), [previewError, setPreviewError] = useState(''), [busy, setBusy] = useState(false)
   const [study, setStudy] = useState([])
   useEffect(() => {
     const controller = new AbortController()
-    Promise.all([api('/api/health', undefined, controller.signal), api('/api/presets', undefined, controller.signal)])
-      .then(([h, p]) => { setHealth(h); setPresets(p) }).catch(e => { if (e.name !== 'AbortError') setError(`Backend unavailable: ${e.message}`) })
+    Promise.all([api('/api/health', undefined, controller.signal), api('/api/presets', undefined, controller.signal),api('/api/materials',undefined,controller.signal)])
+      .then(([h,p,c]) => { setHealth(h);setPresets(p);setCatalog(c);setForm(old=>chooseFluid(old,c,old.fluid)) }).catch(e => { if (e.name !== 'AbortError') setError(`Backend unavailable: ${e.message}`) })
     return () => controller.abort()
   }, [])
   useEffect(() => {
@@ -66,7 +71,6 @@ function App() {
   function update(event) {
     const { name, value, type } = event.target
     setForm(old => ({ ...old, [name]: type === 'number' ? (value === '' ? '' : Number(value)) : value,
-      ...(name==='material'?{solid_conductivity_w_m_k:null}:{}),
       ...(name==='thermal_mode'&&value==='conjugate'?{thermal_iterations:Math.max(2000,old.thermal_iterations)}:{}) }))
   }
   async function submit(meshStudy = false) {
@@ -80,35 +84,36 @@ function App() {
   async function cancel() {
     try { setJob(await api(`/api/jobs/${selected}/cancel`, {})) } catch (e) { setError(e.message) }
   }
-  const number = (name, label, unit, step = 'any') => <label key={name}>{label}<div><input name={name} type="number" step={step} value={form[name] ?? (name==='solid_conductivity_w_m_k'?(form.material==='copper'?391.1:200):'')} onChange={update} /><span>{unit}</span></div></label>
+  const number = (name, label, unit, step = 'any') => <label key={name}>{label}<div><input name={name} type="number" step={step} value={form[name] ?? ''} onChange={update} /><span>{unit}</span></div></label>
   const results = job?.results, validation = results?.validation, thermal = results?.thermal
   const active = activeStates.includes(job?.status)
-  const disabled = busy || !preview || preview.run_errors.length > 0 || !health?.openfoam?.available
+  const disabled = busy || !catalog || !preview || preview.run_errors.length > 0 || !health?.openfoam?.available
   const shownSpec = job?.inputs || form
-  const changed = job && Object.keys(defaults).some(k => job.inputs[k] !== form[k])
+  const changed = job && inputsDiffer(form,job.inputs)
   const residuals = results?.convergence?.history || job?.progress?.history || []
   const studyRows = [...study].sort((a,b) => ['coarse','medium','fine'].indexOf(a.inputs.mesh_level) - ['coarse','medium','fine'].indexOf(b.inputs.mesh_level))
   const heatedStudy = studyRows.some(s=>s.inputs.applied_heat_w>0)
   const solidStudy = studyRows.some(s=>s.inputs.thermal_mode==='conjugate'&&s.inputs.applied_heat_w>0)
 
   return <div className="app">
-    <header><div><h1>Pipe CFD <span className="version">0.4</span></h1><p>OpenFOAM · flow, solid wall conduction & computed field views</p></div>
+    <header><div><h1>Pipe CFD <span className="version">0.5</span></h1><p>OpenFOAM · flow, solid wall conduction & computed field views</p></div>
       <div className="header-actions"><span className={`badge ${health?.openfoam?.available ? 'good' : 'warn'}`}>{health?.openfoam?.available ? 'OpenFOAM 14 ready' : 'OpenFOAM unavailable'}</span>
         <button disabled={disabled} onClick={() => submit()}>Run simulation</button></div></header>
     <main><aside className="controls">
       <section><h2>Reference cases</h2><div className="preset-buttons">{Object.entries(presets).map(([key, p]) => <button className="secondary" key={key} title={p.description} onClick={() => { setForm(p.inputs); setError('') }}>{p.name}</button>)}</div></section>
       <section><h2>Pipe geometry</h2>{number('length_mm','Length','mm')}{number('inner_diameter_mm','Inner diameter','mm')}
         <details><summary>Wall geometry</summary>{number('wall_thickness_mm','Wall thickness','mm')}
-          <label>Material<select name="material" value={form.material} onChange={update}><option value="aluminium">Aluminium · EN AW-6060</option><option value="copper">Copper · C11000</option></select></label>
-          {number('solid_conductivity_w_m_k','Solid thermal conductivity','W/m·K')}
-          <p className="muted">Coupled heating uses this wall thickness and conductivity. Material selects a room-temperature preset; you can enter your own constant conductivity.</p></details></section>
-      <section><h2>Fluid & flow</h2>{number('inlet_velocity_m_s','Mean inlet velocity','m/s')}{number('density_kg_m3','Density','kg/m³')}
-        {number('dynamic_viscosity_pa_s','Dynamic viscosity','Pa·s')}
-        <p className="muted">Default properties: water near 20 °C. Enter properties for your temperature/fluid; values stay constant during a run.</p>
-        <label>Flow model<select name="flow_model" value={form.flow_model} onChange={update}><option value="auto">Automatic by Reynolds number</option><option value="laminar">Laminar</option><option value="kOmegaSST">Turbulent · k–ω SST</option></select></label></section>
+          {catalog&&<><label htmlFor="wall-material">Wall material</label><div className="preset-picker"><select id="wall-material" name="material" value={form.material} onChange={e=>setForm(old=>chooseMaterial(old,catalog,e.target.value))}>{Object.entries(catalog.materials).map(([key,m])=><option value={key} key={key}>{m.short_label}</option>)}</select><button className="secondary" onClick={()=>setEditor('solid')} aria-label="Edit wall material">Edit</button></div>
+          <p className="muted">{isEdited(form,catalog.materials[form.material])?'Edited properties':'Preset at 20 °C'} · constant during a run</p></>}</details></section>
+      <section><h2>Fluid & flow</h2>{catalog?<>
+        <label htmlFor="fluid-preset">Fluid</label><div className="preset-picker"><select id="fluid-preset" name="fluid" value={form.fluid||'custom'} onChange={e=>{setForm(old=>chooseFluid(old,catalog,e.target.value));if(e.target.value==='custom')setEditor('fluid')}}>
+          {Object.entries(catalog.fluids).map(([key,f])=><option key={key} value={key}>{f.short_label}</option>)}<option value="custom">Custom / benchmark properties</option></select><button className="secondary" onClick={()=>setEditor('fluid')} aria-label="Edit fluid">Edit</button></div>
+        <p className="muted">{form.fluid==='custom'?'Custom properties':isEdited(form,catalog.fluids[form.fluid])?'Edited properties':'Preset at 20 °C, 1 atm'}. {catalog.fluids[form.fluid]?.glycol_mass_fraction?'Water mixture. Glycol % is by mass. ':''}Properties stay constant.</p>
+        <InletControls form={form} catalog={catalog} setForm={setForm} flow={preview?.flow}/>
+        </>:<p className="muted">Loading fluid and unit presets…</p>}
+        <details><summary>Flow model</summary><label>Model<select name="flow_model" value={form.flow_model} onChange={update}><option value="auto">Automatic by Reynolds number</option><option value="laminar">Laminar</option><option value="kOmegaSST">Turbulent · k–ω SST</option></select></label></details></section>
       <section><h2>Heating</h2><label>Thermal model<select name="thermal_mode" value={form.thermal_mode} onChange={update}><option value="conjugate">Coupled fluid + solid wall</option><option value="fluid_only">Fluid only · prescribed inner flux</option></select></label>
         {number('applied_heat_w',form.thermal_mode==='conjugate'?'Heat input through outer wall':'Heat input through inner wall','W')}{number('inlet_temperature_c','Inlet temperature','°C')}
-        {number('specific_heat_j_kg_k','Specific heat capacity','J/kg·K')}{number('thermal_conductivity_w_m_k','Fluid thermal conductivity','W/m·K')}
         <p className="muted">0 W runs flow only. {form.thermal_mode==='conjugate'?'Power enters the outer wall. Heat conducts radially and along the solid into the fluid; solid ends are insulated.':'Power enters directly at the inner wall; solid conduction is disabled in this mode.'} Constant properties and frozen flow; no buoyancy or phase change.</p>
         {preview?.thermal.enabled&&<p className="muted">Energy-balance estimate: +{fmt(preview.thermal.ideal_temperature_rise_k)} K if all heat leaves with the fluid. Pr = {fmt(preview.thermal.prandtl)}.</p>}
         <details><summary>Thermal solver settings</summary>{number('turbulent_prandtl','Turbulent Prandtl number','')}{number('thermal_iterations','Temperature iterations','steps',50)}</details></section>
@@ -185,8 +190,11 @@ function App() {
         const tv=s.results?.thermal?.validation
         return <tr key={s.id}><td>{s.inputs.mesh_level}</td><td>{statusText(s.status)}</td><td>{fmt(f,6)}</td><td>{fmt(s.results?.validation.friction_error_percent)}%</td><td>{prev && f ? `${fmt(100*Math.abs(f-prev)/Math.abs(f))}%`:'—'}</td>{heatedStudy&&<><td>{fmt(nu,6)}</td><td>{fmt(solidStudy?tv?.wall_resistance_error_percent:tv?.nusselt_error_percent)}%</td><td>{previousNu&&nu?`${fmt(100*Math.abs(nu-previousNu)/Math.abs(nu))}%`:'—'}</td></>}{solidStudy&&<><td>{fmt(s.results?.thermal?.solid.maximum_temperature_c,6)}</td><td>{fmt(s.results?.thermal?.solid.mean_wall_drop_k,5)}</td></>}</tr>
       })}</tbody></table></div><p className="muted">{solidStudy?'Thermal reference error compares the mean solid-wall drop with cylindrical conduction. ':''}Inspect convergence and reference checks for every mesh. A small mesh-to-mesh change alone is not proof of model accuracy.</p></section>}
-      <footer>Pipe CFD 0.4 · Actual OpenFOAM flow and coupled fluid/solid temperatures · Axisymmetric pipe model · CAD and full 3D flow are future stages.</footer>
+      <footer>Pipe CFD 0.5 · Actual OpenFOAM flow and coupled fluid/solid temperatures · Axisymmetric pipe model · CAD and full 3D flow are future stages.</footer>
     </div></main>
+    {editor&&catalog&&<PropertyEditor title={editor==='solid'?'Edit wall material':'Edit fluid properties'} properties={editor==='solid'?solidProperties:fluidProperties} form={form}
+      preset={editor==='solid'?catalog.materials[form.material]:catalog.fluids[form.fluid]} solid={editor==='solid'}
+      onClose={()=>setEditor(null)} onApply={values=>{setForm(old=>({...old,...values}));setEditor(null)}}/>}
   </div>
 }
 export default App

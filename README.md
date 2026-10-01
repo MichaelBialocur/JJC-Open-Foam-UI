@@ -1,4 +1,4 @@
-# Pipe CFD · v0.4
+# Pipe CFD · v0.5
 
 A local React/FastAPI interface to **Foundation OpenFOAM 14**. Generate a straight circular pipe, inspect its 3D geometry, mesh it, and solve steady flow and optional coupled fluid–solid heating. Inspect actual pressure, speed, fluid temperature and solid temperature fields, and compare results with traceable analytical or experimental references.
 
@@ -32,7 +32,7 @@ The server binds to localhost. It is a local engineering tool, not an authentica
 3. In **Computed field viewer**, choose speed, pressure or temperature. Orbit, zoom, select a cutaway/axial/cross-section view, move the section slider and click a cell to probe its values. **End view** looks down the pipe; **Reset view** restores the initial camera.
 4. The axial colour map also supports probing. The optional section plot follows the slider. Colours are computed cell values without smoothing; a single global colour scale applies along the whole pipe.
 5. Select **Region → Fluid + solid** for both computed temperature fields on one colour scale, or **Solid wall** to inspect only the annulus. White lines in the axial map mark the interface. **Enlarge diameter for viewing** states its scale factor; uncheck for true proportions.
-6. Change wall thickness/material under **Wall geometry**. Aluminium and copper set documented room-temperature conductivities; an explicit conductivity override is supported. The temperature plot shows inner and outer walls; a separate wall-drop plot resolves their small difference.
+6. Change wall thickness/material under **Wall geometry**. Choose aluminium or copper, then **Edit** to customize conductivity, density or heat capacity. The temperature plot shows inner and outer walls; a separate wall-drop plot resolves their small difference.
 7. Click **Run three-mesh study** to compare flow and thermal metrics. **Heated pipe · analytical check** retains the fluid-only uniform inner-flux Nu benchmark. Use **Laminar verification · Re 100** for flow only or **Princeton experiment · Re 41,727** for the existing turbulent flow experiment.
 
 An unavailable OpenFOAM installation produces an explicit error. The software never returns analytical or reference curves as CFD output. Runs and results persist under `runs/`; startup marks unfinished runs as interrupted. Cancelled/failed runs keep their logs and cases. Existing v0.2 flow runs can be viewed directly; run a new heated case to get temperatures.
@@ -41,11 +41,29 @@ Exports include results JSON, velocity CSV, thermal-profile CSV, separate fluid 
 
 The 3D display revolves an axisymmetric solution; it does not add a circumferential flow calculation. WebGL is used when available. Without WebGL, the interactive SVG geometry/cross-section and 2D axial map remain available. Linear charts use decimal 1/2/5 tick steps; pressure and speed include a clearly marked zero while retaining any actual negative data. Temperature charts can use a focused range, and residuals use integer powers of ten.
 
+## Fluid, inlet units and material presets
+
+Under **Fluid & flow**, choose water, dry air, or water with 30%/50% ethylene or propylene glycol **by mass**. Presets use CoolProp 7.2.0 at **20 °C and 1 atm**. Select **Edit** to inspect or change density, dynamic viscosity, heat capacity and thermal conductivity. **Apply properties** saves the edits; **Cancel** discards them and **Reset to preset** restores the source values. Property inputs stay hidden until the editor is opened. Wall materials use the same workflow under **Wall geometry**.
+
+Choose an **Inlet boundary**, enter a value, and select its adjacent unit:
+
+| Boundary | Available units |
+|---|---|
+| Velocity | m/s, cm/s, mm/s, km/h, ft/s |
+| Volumetric flow | L/min, L/h, L/s, mL/min, m³/h, m³/s, CFM, US gal/min |
+| Mass flow | kg/h, kg/min, kg/s, g/s |
+
+Changing the boundary type or unit preserves the current physical flow. Editing the value changes the operating point. A fixed volumetric flow gives `U = Q/A`; a fixed mass flow gives `U = mass_flow/(rho A)`. Changing diameter or fluid density therefore updates the derived velocity as appropriate. The solver still applies a uniform mean-velocity inlet. Original input type, value and unit are retained with the run and its JSON export.
+
+**CFM means actual cubic feet per minute**, using the international foot. It does not mean SCFM or another standard-condition gas volume. Properties remain constant during the simulation; changing inlet temperature does not update the property values. Glycol presets represent generic solutions, without inhibitor/additive effects. The editor shows each preset's source and assumptions. Benchmark buttons retain their original exact properties under **Custom / benchmark properties**, rather than replacing them with the new catalog.
+
+See [property provenance, conversion checks and the glycol mesh study](INPUTS_AND_MATERIALS.md).
+
 ## Physics and numerical scope
 
 - Straight, smooth, circular pipe, a **5° axisymmetric wedge** with one circumferential cell.
 - Uniform velocity inlet, no-slip wall, zero gauge pressure at the outlet.
-- Constant density, dynamic viscosity, heat capacity and fluid conductivity entered by the user. Properties are **not** automatically temperature-dependent.
+- Constant density, dynamic viscosity, heat capacity and fluid conductivity from an editable preset or explicit user values. Properties are **not** automatically temperature-dependent.
 - Laminar below Re 2300; k–ω SST RANS from Re 4000. The transition interval is rejected explicitly. Regime cutoffs are application policy, not a universal prediction of transition.
 - SST uses radial grading, near-zero wall k (1e-12 m²/s²), `omegaWallFunction`, and `nutLowReWallFunction`. The UI estimates y+ from the developed pressure gradient and first wall-cell position; it is a screening estimate, not an exported turbulence-model y+ field.
 - Positive heat input enables a thermal solve on computed frozen velocity/flux/turbulence fields. In **Coupled fluid + solid wall** mode, native `foamMultiRun` fluid/solid modules solve radial and axial wall conduction with perfect thermal contact. Uniform power enters the **outer** wall; solid ends are insulated. Inlet fluid temperature is fixed and the outlet has zero temperature gradient. Wall thickness and conductivity affect the computed temperatures.
@@ -86,6 +104,7 @@ The final command runs all four presets on all three meshes and saves `validatio
 | Component | Responsibility |
 |---|---|
 | `backend/app/models.py` | Validated inputs, regimes, benchmark presets |
+| `backend/app/material-catalog.json` | Shared unit factors and sourced fluid/wall presets |
 | `backend/app/cases.py` | Pipe geometry and OpenFOAM case generation |
 | `backend/app/runner.py` | Job queue, processes, cancellation and saved run records |
 | `backend/app/results.py` | Field parsing, pressure/flow metrics and validation gates |

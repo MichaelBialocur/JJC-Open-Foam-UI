@@ -12,6 +12,10 @@ Round plot ticks and explicit zero baselines; interactive 3D pipe geometry; comp
 
 Native coupled fluid/solid temperature solves with radial and axial wall conduction, outer-wall heating, insulated solid ends and perfect thermal contact. Wall material, conductivity and thickness affect the solution. Fluid/solid/combined temperature views, both wall-temperature profiles and solid VTK export are included. Three meshes, material/thickness sensitivity and independent interface/energy checks are recorded in [CONJUGATE_BENCHMARKS.md](CONJUGATE_BENCHMARKS.md).
 
+## Delivered in v0.5
+
+Velocity, volumetric-flow and mass-flow inlet choices with adjacent unit selectors, including L/min, kg/h and actual CFM. Compact fluid and wall-material selectors open separate property editors. Sourced water, air and glycol presets use constant 20 °C properties; aluminium and copper remain editable. Unit-equivalence tests preserve the existing benchmark solver inputs; the additional glycol mass-flow mesh study is documented in [INPUTS_AND_MATERIALS.md](../INPUTS_AND_MATERIALS.md).
+
 ## Next: stronger reference evidence and thermal boundary options
 
 First strengthen the flow baseline: the initial turbulent study still changes Darcy f by 3.74% from medium to fine. Extend mesh/angular sensitivity and compare corrected experimental data before claiming mesh independence or general model accuracy.

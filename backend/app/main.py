@@ -13,6 +13,7 @@ from .models import PipeDefinition, PRESETS
 from .references import reference_for
 from .runner import ACTIVE, JobManager, health as foam_health
 from .fields import fields_json, meridional_vtk
+from .properties import CATALOG
 
 
 @asynccontextmanager
@@ -22,7 +23,7 @@ async def lifespan(app):
     app.state.jobs.close()
 
 
-app = FastAPI(title="Pipe CFD", version="0.4.0", lifespan=lifespan)
+app = FastAPI(title="Pipe CFD", version="0.5.0", lifespan=lifespan)
 
 
 @app.get("/")
@@ -39,6 +40,11 @@ def health():
 @app.get("/api/presets")
 def presets():
     return PRESETS
+
+
+@app.get("/api/materials")
+def materials():
+    return CATALOG
 
 
 @app.post("/api/pipe/preview")

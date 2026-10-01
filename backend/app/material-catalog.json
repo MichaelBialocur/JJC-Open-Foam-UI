@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "property_engine": "CoolProp 7.2.0",
+  "fluids": {
+    "water": {
+      "label": "Water",
+      "short_label": "Water",
+      "temperature_c": 20,
+      "pressure_pa": 101325,
+      "glycol_mass_fraction": null,
+      "coolprop_fluid": "Water",
+      "values": {
+        "density_kg_m3": 998.2071505,
+        "dynamic_viscosity_pa_s": 0.001001596143,
+        "specific_heat_j_kg_k": 4184.050925,
+        "thermal_conductivity_w_m_k": 0.5980123555
+      },
+      "source": {
+        "label": "CoolProp 7.2.0 · Water",
+        "url": "https://coolprop.org/fluid_properties/fluids/Water.html"
+      },
+      "note": "Liquid water at 1 atm."
+    },
+    "air": {
+      "label": "Dry air",
+      "short_label": "Dry air",
+      "temperature_c": 20,
+      "pressure_pa": 101325,
+      "glycol_mass_fraction": null,
+      "coolprop_fluid": "Air",
+      "values": {
+        "density_kg_m3": 1.204575182,
+        "dynamic_viscosity_pa_s": 1.820567518e-05,
+        "specific_heat_j_kg_k": 1006.144032,
+        "thermal_conductivity_w_m_k": 0.0258738283
+      },
+      "source": {
+        "label": "CoolProp 7.2.0 · Air",
+        "url": "https://coolprop.org/fluid_properties/fluids/Air.html"
+      },
+      "note": "Dry air at 1 atm; humidity and pressure variation are not modeled."
+    },
+    "water_eg30": {
+      "label": "Water + ethylene glycol · 30%",
+      "short_label": "30% ethylene glycol",
+      "temperature_c": 20,
+      "pressure_pa": 101325,
+      "glycol_mass_fraction": 0.3,
+      "coolprop_fluid": "INCOMP::MEG-30%",
+      "values": {
+        "density_kg_m3": 1038.045507,
+        "dynamic_viscosity_pa_s": 0.002166449509,
+        "specific_heat_j_kg_k": 3718.251014,
+        "thermal_conductivity_w_m_k": 0.4648972237
+      },
+      "source": {
+        "label": "CoolProp 7.2.0 · Melinder aqueous-mixture correlation",
+        "url": "https://coolprop.org/fluid_properties/Incompressibles.html"
+      },
+      "note": "Glycol concentration is by mass, not by volume. Generic aqueous solution; inhibitor/additive effects are not represented."
+    },
+    "water_eg50": {
+      "label": "Water + ethylene glycol · 50%",
+      "short_label": "50% ethylene glycol",
+      "temperature_c": 20,
+      "pressure_pa": 101325,
+      "glycol_mass_fraction": 0.5,
+      "coolprop_fluid": "INCOMP::MEG-50%",
+      "values": {
+        "density_kg_m3": 1064.928663,
+        "dynamic_viscosity_pa_s": 0.003693211431,
+        "specific_heat_j_kg_k": 3312.041904,
+        "thermal_conductivity_w_m_k": 0.3891483531
+      },
+      "source": {
+        "label": "CoolProp 7.2.0 · Melinder aqueous-mixture correlation",
+        "url": "https://coolprop.org/fluid_properties/Incompressibles.html"
+      },
+      "note": "Glycol concentration is by mass, not by volume. Generic aqueous solution; inhibitor/additive effects are not represented."
+    },
+    "water_pg30": {
+      "label": "Water + propylene glycol · 30%",
+      "short_label": "30% propylene glycol",
+      "temperature_c": 20,
+      "pressure_pa": 101325,
+      "glycol_mass_fraction": 0.3,
+      "coolprop_fluid": "INCOMP::MPG-30%",
+      "values": {
+        "density_kg_m3": 1023.784966,
+        "dynamic_viscosity_pa_s": 0.002964975516,
+        "specific_heat_j_kg_k": 3857.00401,
+        "thermal_conductivity_w_m_k": 0.444428829
+      },
+      "source": {
+        "label": "CoolProp 7.2.0 · Melinder aqueous-mixture correlation",
+        "url": "https://coolprop.org/fluid_properties/Incompressibles.html"
+      },
+      "note": "Glycol concentration is by mass, not by volume. Generic aqueous solution; inhibitor/additive effects are not represented."
+    },
+    "water_pg50": {
+      "label": "Water + propylene glycol · 50%",
+      "short_label": "50% propylene glycol",
+      "temperature_c": 20,
+      "pressure_pa": 101325,
+      "glycol_mass_fraction": 0.5,
+      "coolprop_fluid": "INCOMP::MPG-50%",
+      "values": {
+        "density_kg_m3": 1039.060551,
+        "dynamic_viscosity_pa_s": 0.006393611173,
+        "specific_heat_j_kg_k": 3530.194859,
+        "thermal_conductivity_w_m_k": 0.3594636375
+      },
+      "source": {
+        "label": "CoolProp 7.2.0 · Melinder aqueous-mixture correlation",
+        "url": "https://coolprop.org/fluid_properties/Incompressibles.html"
+      },
+      "note": "Glycol concentration is by mass, not by volume. Generic aqueous solution; inhibitor/additive effects are not represented."
+    }
+  },
+  "materials": {
+    "aluminium": {
+      "label": "Aluminium · EN AW-6060",
+      "short_label": "Aluminium",
+      "temperature_c": 20,
+      "values": {
+        "solid_conductivity_w_m_k": 200,
+        "solid_density_kg_m3": 2700,
+        "solid_specific_heat_j_kg_k": 898
+      },
+      "source": {
+        "label": "thyssenkrupp · EN AW-6060",
+        "url": "https://www.thyssenkrupp-materials.co.uk/aluminium-6060.html"
+      },
+      "note": "Conductivity uses the lower end of the published 200–220 W/(m·K) range. Density is 2700 kg/m³; the web table has a density-unit typo."
+    },
+    "copper": {
+      "label": "Copper · C11000",
+      "short_label": "Copper",
+      "temperature_c": 20,
+      "values": {
+        "solid_conductivity_w_m_k": 391.1,
+        "solid_density_kg_m3": 8910,
+        "solid_specific_heat_j_kg_k": 393.5
+      },
+      "source": {
+        "label": "Aviva Metals · C11000",
+        "url": "https://www.avivametals.com/collections/copper-alloys/beryllium-copper/c11000-cda-110-cu-etp-electrolytic-tough-pitch-etp-copper"
+      },
+      "note": "Representative constant properties retained from the verified v0.4 material definition."
+    }
+  },
+  "inlet_units": {
+    "velocity": {
+      "label": "Velocity",
+      "default_unit": "m/s",
+      "units": [
+        {
+          "id": "m/s",
+          "label": "m/s",
+          "factor_to_si": 1
+        },
+        {
+          "id": "cm/s",
+          "label": "cm/s",
+          "factor_to_si": 0.01
+        },
+        {
+          "id": "mm/s",
+          "label": "mm/s",
+          "factor_to_si": 0.001
+        },
+        {
+          "id": "km/h",
+          "label": "km/h",
+          "factor_to_si": 0.2777777777777778
+        },
+        {
+          "id": "ft/s",
+          "label": "ft/s",
+          "factor_to_si": 0.3048
+        }
+      ]
+    },
+    "volumetric_flow": {
+      "label": "Volumetric flow",
+      "default_unit": "L/min",
+      "units": [
+        {
+          "id": "L/min",
+          "label": "L/min",
+          "factor_to_si": 1.6666666666666667e-05
+        },
+        {
+          "id": "L/h",
+          "label": "L/h",
+          "factor_to_si": 2.7777777777777776e-07
+        },
+        {
+          "id": "L/s",
+          "label": "L/s",
+          "factor_to_si": 0.001
+        },
+        {
+          "id": "mL/min",
+          "label": "mL/min",
+          "factor_to_si": 1.6666666666666667e-08
+        },
+        {
+          "id": "m3/h",
+          "label": "m³/h",
+          "factor_to_si": 0.0002777777777777778
+        },
+        {
+          "id": "m3/s",
+          "label": "m³/s",
+          "factor_to_si": 1
+        },
+        {
+          "id": "CFM",
+          "label": "CFM (ft³/min)",
+          "factor_to_si": 0.0004719474432000001
+        },
+        {
+          "id": "US_gpm",
+          "label": "US gal/min",
+          "factor_to_si": 6.30901964e-05
+        }
+      ]
+    },
+    "mass_flow": {
+      "label": "Mass flow",
+      "default_unit": "kg/h",
+      "units": [
+        {
+          "id": "kg/h",
+          "label": "kg/h",
+          "factor_to_si": 0.0002777777777777778
+        },
+        {
+          "id": "kg/min",
+          "label": "kg/min",
+          "factor_to_si": 0.016666666666666666
+        },
+        {
+          "id": "kg/s",
+          "label": "kg/s",
+          "factor_to_si": 1
+        },
+        {
+          "id": "g/s",
+          "label": "g/s",
+          "factor_to_si": 0.001
+        }
+      ]
+    }
+  },
+  "unit_source": "https://www.nist.gov/pml/us-surveyfoot/revised-unit-conversion-factors",
+  "unit_note": "International foot = 0.3048 m exactly. CFM denotes actual volume, not standard/normal volume."
+}

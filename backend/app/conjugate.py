@@ -71,7 +71,7 @@ mixture {{ specie {{ molWeight 18; }} equationOfState {{ rho {spec.density_kg_m3
         put("0/fluid/alphat", field("alphat", "[1 -1 -1 0 0 0 0]", "0", "type calculated; value uniform 0;",
                                   "type calculated; value uniform 0;", "type fixedValue; value uniform 0;"))
     # Only k affects this steady solid equation; rho/Cv are representative constants.
-    rho, cv = (2700, 898) if spec.material == "aluminium" else (8910, 393.5)
+    rho, cv = spec.solid_density, spec.solid_specific_heat
     put("constant/solid/physicalProperties", header("physicalProperties") + f"""thermoType constSolidThermo;
 rho {{ type uniform; value {rho}; }}
 Cv {{ type uniform; value {cv}; }}
